@@ -53,7 +53,7 @@ export default class Box extends Component {
             {({getRootProps, getInputProps}) => (
               <div className="upload" {...getRootProps()}>
                 <input {...getInputProps()}></input>
-                <p>Arras arquivos ou clique aqui</p>
+                <p>Arraste arquivos ou clique aqui</p>
               </div>
             )}
           </DropZone>
