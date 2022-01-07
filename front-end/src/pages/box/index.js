@@ -36,7 +36,11 @@ export default class Box extends Component {
       const data = new FormData()
       data.append(`file`, element)
       const box = this.props.match.params.id
-      api.post(`boxes/${box}/files`, data)
+      api.post(`boxes/${box}/files`, data).then(() => {
+        api.get(`boxes/${box}`).then(response => {
+          this.setState({ box: response.data })
+        })
+      })
     });
   }
 
@@ -60,7 +64,7 @@ export default class Box extends Component {
 
           {this.state.box.files && this.state.box.files.map(file => (
             <li key={file._id}>
-              <a className="fileInfo" href={file.url}>
+              <a className="fileInfo" href={file.url} target={'_blank'}>
                 <MdInsertDriveFile size={24} color="#A%Cfff"></MdInsertDriveFile>
                 <strong>{file.title}</strong>
               </a>
