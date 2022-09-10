@@ -5,9 +5,9 @@ import sendIntecao from './services/sendIntecao'
 import Modal from './components/modal'
 
 function App() {
-  const [insta, setInsta] = useState('jeanlucafp')
-  const [email, setEmail] = useState('jeanlucafp@gmail.com')
-  const [whats, setWhats] = useState('48998457797')
+  const [insta, setInsta] = useState('')
+  const [email, setEmail] = useState('')
+  const [whats, setWhats] = useState('')
   const [checked, setChecked] = useState(false)
   const [success, setSuccess] = useState(false)
   const [failure, setFailure] = useState(false)
