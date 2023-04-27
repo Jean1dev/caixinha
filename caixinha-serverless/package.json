@@ -7,7 +7,7 @@
     "test": "echo \"No tests yet...\""
   },
   "dependencies": {
-    "caixinha-core": "^0.0.3",
+    "caixinha-core": "^0.0.4",
     "mongoose": "^6.6.0"
   }
 }
