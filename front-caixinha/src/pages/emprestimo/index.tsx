@@ -11,7 +11,6 @@ import {
 } from "@mui/material"
 import { FormEvent, useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
-import { BASE_URL } from '../env'
 import { doEmprestimo } from '../api/api.service'
 
 const inter = Inter({ subsets: ['latin'] })
@@ -33,7 +32,7 @@ export default function Emprestimo() {
         if (user) {
             setSolicitacao({ ...solicitacao, memberName: user as string })
         }
-    }, [router])
+    }, [user])
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;

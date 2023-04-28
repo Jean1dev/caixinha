@@ -1,4 +1,4 @@
-import { BASE_URL } from "../env"
+const BASE_URL = 'https://emprestimo-caixinha.azurewebsites.net/api'
 
 const dev = process.env.NODE_ENV === 'development'
 console.log('NODE ENV', dev)

@@ -3,7 +3,6 @@ import { Inter } from 'next/font/google'
 import styles from '@/styles/Home.module.css'
 import { Card, CardMedia, CardContent, Typography, CardActions, Button } from '@mui/material'
 import React from 'react'
-import { BASE_URL } from './env'
 import { useRouter } from 'next/router'
 import { getCaixinhas } from './api/api.service'
 
