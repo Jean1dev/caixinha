@@ -1,57 +1,32 @@
 import Head from 'next/head'
 import { Inter } from 'next/font/google'
 import styles from '@/styles/Home.module.css'
-import {
-  Box,
-  Button,
-  FormControl,
-  Grid,
-  InputAdornment,
-  TextField,
-} from "@mui/material"
-import { FormEvent, useEffect, useState } from 'react'
+import { Card, CardMedia, CardContent, Typography, CardActions, Button } from '@mui/material'
+import React from 'react'
+import { BASE_URL } from './env'
 import { useRouter } from 'next/router'
+import { getCaixinhas } from './api/api.service'
 
 const inter = Inter({ subsets: ['latin'] })
 
-export default function Home() {
+export interface Caixinha {
+  members: any[]
+  currentBalance: number
+  deposits: any[]
+  loans: any[]
+  id: string
+}
+
+export default function Home({ data }: any) {
   const router = useRouter()
-  const [isLoading, setLoading] = useState(false)
-  const [solicitacao, setSolicitacao] = useState({
-    valor: 0,
-    juros: 0,
-    parcela: 0,
-    motivo: "",
-    memberName: ""
-  })
+  const caixinha: Caixinha = data[0]
 
-  const { user } = router.query
-
-  useEffect(() => {
-    if (user) {
-      setSolicitacao({ ...solicitacao, memberName: user as string })
-    }
-  }, [router])
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setSolicitacao({ ...solicitacao, [name]: value });
-  }
-
-  const request = (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault()
-    setLoading(true)
-    fetch('https://emprestimo-caixinha.azurewebsites.net/api/emprestimo?code=Q47dylJAkJc3xSGB2RNiBkLzLms-lhvWFbyRE4qrlCriAzFuN_CxsA==&clientId=default', {
-      method: 'POST',
-      body: JSON.stringify(solicitacao),
-    }).then(() => {
-      router.push('/sucesso')
-    }).catch(err => {
-      console.log(err)
+  const join = () => {
+    router.push({
+      pathname: '/join',
+      query: { id: caixinha.id },
     })
   }
-
-  if (isLoading) return <p>Loading...</p>
 
   return (
     <>
@@ -62,93 +37,36 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main className={`${styles.main} ${inter.className}`}>
-        <Box p={2}>
-          <form onSubmit={request}>
-            <Grid container spacing={3}>
-              <Grid item xs={12}>
-                <FormControl fullWidth>
-                  <TextField
-                    required
-                    name="memberName"
-                    label="nome"
-                    disabled={true}
-                    value={solicitacao.memberName}
-                    defaultValue={solicitacao.memberName}
-                    onChange={handleChange}
-                    inputProps={{ "data-testid": "name" }}
-                  />
-                </FormControl>
-              </Grid>
-
-              <Grid item xs={12}>
-                <FormControl fullWidth>
-                  <TextField
-                    id="outlined-multiline-static"
-                    label="Motivo"
-                    name='motivo'
-                    multiline
-                    value={solicitacao.motivo}
-                    rows={4}
-                    defaultValue={solicitacao.motivo}
-                    onChange={handleChange}
-                  />
-                </FormControl>
-              </Grid>
-
-              <Box p={2}>
-
-                <TextField
-                  label="Valor solicitado"
-                  id="outlined-start-adornment"
-                  defaultValue={solicitacao.valor}
-                  value={solicitacao.valor}
-                  onChange={handleChange}
-                  name='valor'
-                  sx={{ m: 1, width: '25ch' }}
-                  InputProps={{
-                    startAdornment: <InputAdornment position="start">R$</InputAdornment>,
-                  }}
-                />
-                <TextField
-                  label="Juros a ser pago"
-                  id="outlined-start-adornment"
-                  onChange={handleChange}
-                  name='juros'
-                  value={solicitacao.juros}
-                  sx={{ m: 1, width: '25ch' }}
-                  defaultValue={solicitacao.juros}
-                  InputProps={{
-                    startAdornment: <InputAdornment position="start">%</InputAdornment>,
-                  }}
-                />
-                <TextField
-                  onChange={handleChange}
-                  name='parcela'
-                  value={solicitacao.parcela}
-                  label="Quantidade de parcelas"
-                  id="outlined-start-adornment"
-                  sx={{ m: 1, width: '25ch' }}
-                  defaultValue={solicitacao.parcela}
-                />
-
-              </Box>
-
-              <Grid item xs={12}>
-                <Box display="flex" gap={2}>
-
-                  <Button
-                    type="submit"
-                    variant="contained"
-                    color="primary"
-                  >
-                    Enviar
-                  </Button>
-                </Box>
-              </Grid>
-            </Grid>
-          </form>
-        </Box>
+        <Card sx={{ maxWidth: 345 }}>
+          <CardMedia
+            sx={{ height: 140 }}
+            image="https://mui.com/static/images/cards/contemplative-reptile.jpg"
+            title="green iguana"
+          />
+          <CardContent>
+            <Typography gutterBottom variant="h5" component="div">
+              Discord no Zap
+            </Typography>
+            <Typography variant="body2" color="text.secondary">
+              A primeira caixinha feita pelos amigos
+            </Typography>
+            <Typography variant="body2" color="text.secondary">
+              quantidade de membros nela {caixinha.members.length}
+            </Typography>
+            <Typography variant="body2" color="text.secondary">
+              valor disponivel na caixinha {caixinha.currentBalance}
+            </Typography>
+          </CardContent>
+          <CardActions>
+            <Button onClick={join} size="small">Juntar-se</Button>
+          </CardActions>
+        </Card>
       </main>
     </>
   )
+}
+
+export async function getServerSideProps() {
+  const data = await getCaixinhas()
+  return { props: { data } }
 }
