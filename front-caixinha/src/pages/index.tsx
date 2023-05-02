@@ -4,14 +4,7 @@ import React from 'react'
 import { useRouter } from 'next/router'
 import { getCaixinhas } from './api/api.service'
 import Layout from '@/components/Layout'
-
-export interface Caixinha {
-  members: any[]
-  currentBalance: number
-  deposits: any[]
-  loans: any[]
-  id: string
-}
+import { Caixinha } from '@/types/types'
 
 export default function Home({ data }: any) {
   const router = useRouter()

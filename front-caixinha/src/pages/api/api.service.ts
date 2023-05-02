@@ -1,9 +1,11 @@
+import { Caixinha } from "@/types/types"
+
 const BASE_URL = 'https://emprestimo-caixinha.azurewebsites.net/api'
 
 const dev = process.env.NODE_ENV === 'development'
 console.log('NODE ENV', dev)
 
-function retornaComAtraso(value: any) {
+function retornaComAtraso(value: any): Promise<any> {
     return new Promise((resolve) => {
         setTimeout(() => {
             resolve(value)
@@ -12,7 +14,7 @@ function retornaComAtraso(value: any) {
 }
 
 
-export async function getCaixinhas() {
+export async function getCaixinhas(): Promise<Caixinha[]> {
     if (dev) {
         return retornaComAtraso([
             {
@@ -38,5 +40,16 @@ export async function doEmprestimo(params: any) {
     await fetch(`${BASE_URL}/emprestimo?code=Q47dylJAkJc3xSGB2RNiBkLzLms-lhvWFbyRE4qrlCriAzFuN_CxsA==&clientId=default`, {
         method: 'POST',
         body: JSON.stringify(params),
+    })
+}
+
+export async function joinABox(params: any) {
+    if (dev) {
+        return retornaComAtraso(true)
+    }
+
+    await fetch(`${BASE_URL}/user-join-caixinha`, {
+        method: 'POST',
+        body: JSON.stringify(params)
     })
 }
