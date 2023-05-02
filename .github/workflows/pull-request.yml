@@ -3,14 +3,15 @@ name: Pull request CI
 on:
   pull_request:
     branches: [ "master" ]
+    
+defaults:
+  run:
+    working-directory: ./caixinha-serverless
 
 jobs:
   build:
 
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: ./caixinha-serverless
 
     strategy:
       matrix:
