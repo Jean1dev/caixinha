@@ -1,23 +1,27 @@
-const CaixinhaCore = require('caixinha-core/dist/lib')
-const SaveData = require('./apply')
+const { Member, Box, Loan } = require('caixinha-core/dist/src')
+const { connect, createNewEmprestimo, getDiscordNoZapBox } = require('../nosql/mongo-operations')
 
 module.exports = async function (context, req) {
     try {
         const { valor, juros, parcela, motivo, memberName } = req.body
 
-        const member = new CaixinhaCore.default.Member(memberName)
-        const box = new CaixinhaCore.default.Box()
-        box['currentBalance'] = 85
-        const emprestimo = new CaixinhaCore.default.Loan({
+        await connect()
+
+        const member = new Member(memberName)
+        const boxEntity = await getDiscordNoZapBox()
+
+        const box = Box.from(boxEntity)
+        const emprestimo = new Loan({
             box,
             member,
             valueRequested: valor,
             interest: juros,
-            fees: parcela
-            //motivo
+            fees: parcela,
+            description: motivo
         })
 
-        await SaveData({ valor, juros, parcela, motivo, memberName })
+        
+        await createNewEmprestimo({ valor, juros, parcela, motivo, memberName })
         context.res = {
             body: emprestimo
         }
