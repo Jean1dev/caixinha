@@ -31,7 +31,7 @@ exports.getBoxById = function (id) {
 }
 
 exports.getDiscordNoZapBox = function () {
-    return CaixinhaSchema.findById(new mongoose.Types.ObjectId('644ab7f5f10d4800c629a1d2'))
+    return CaixinhaSchema.findById(new mongoose.Types.ObjectId(process.env.CAIXINHA_ID))
 }
 
 exports.getAllCaixinhas = function() {
