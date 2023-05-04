@@ -2,6 +2,7 @@ import Brightness4Icon from "@mui/icons-material/Brightness4";
 import Brightness7Icon from "@mui/icons-material/Brightness7";
 import MenuIcon from "@mui/icons-material/Menu";
 import { Box, Button, IconButton, Toolbar } from "@mui/material";
+import { signIn, signOut, useSession } from "next-auth/react";
 
 export function Header({
   toggle,
@@ -12,6 +13,10 @@ export function Header({
   theme: string;
   handleDrawerToggle?: () => void;
 }) {
+  const { status } = useSession()
+  const handleSignIn = async () => await signIn('keycloak')
+  const handleSignOut = async () => await signOut()
+  
   return (
     <Box>
       <Toolbar>
@@ -30,7 +35,14 @@ export function Header({
           {theme === "dark" ? <Brightness7Icon /> : <Brightness4Icon />}
         </IconButton>
 
-        <Button color="inherit">Login</Button>
+        {status == 'unauthenticated' && (
+          <Button onClick={handleSignIn} color="inherit">Login</Button>
+        )}
+
+        {status == 'authenticated' && (
+          <Button onClick={handleSignOut} color="inherit">Logout</Button>
+        )}
+
       </Toolbar>
     </Box>
   );
