@@ -5,7 +5,7 @@ export default NextAuth({
   providers: [
     KeycloakProvider({
       clientId: 'caixinha-client-id',
-      clientSecret: 'eafccc53-8bb1-4945-8fe1-3a31f094356d',
+      clientSecret: `${process.env.AUTH_SECRET}`,
       issuer: 'https://lemur-5.cloud-iam.com/auth/realms/caixinha-auth-server',
     })
   ]
