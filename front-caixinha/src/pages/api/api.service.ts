@@ -19,7 +19,9 @@ export async function getCaixinhas(): Promise<Caixinha[]> {
         return retornaComAtraso([
             {
                 "members": [],
-                "currentBalance": 85,
+                "currentBalance": {
+                    "value": 85
+                },
                 "deposits": [],
                 "loans": [],
                 "id": "644ab7f5f10d4800c629a1d2"

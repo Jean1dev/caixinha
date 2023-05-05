@@ -43,7 +43,7 @@ export default function Home({ data }: any) {
               quantidade de membros nela {caixinha.members.length}
             </Typography>
             <Typography variant="body2" color="text.secondary">
-              valor disponivel na caixinha {caixinha.currentBalance}
+              valor disponivel na caixinha {caixinha.currentBalance.value}
             </Typography>
           </CardContent>
           <CardActions>

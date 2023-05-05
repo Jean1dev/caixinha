@@ -80,7 +80,7 @@ export default function Join() {
                         <Grid item xs={12} md={6} sx={{ "& .MuiTextField-root": { my: 2 } }}>
                             <Box mt={2} mb={2}>
                                 <p>Total de membros dessa caixinha {box.members.length}</p>
-                                <p>Valor atual R${box.currentBalance}</p>
+                                <p>Valor atual R${box.currentBalance.value}</p>
                             </Box>
                         </Grid>
 

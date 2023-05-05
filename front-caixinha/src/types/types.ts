@@ -1,6 +1,6 @@
 export interface Caixinha {
     members: any[]
-    currentBalance: number
+    currentBalance: any
     deposits: any[]
     loans: any[]
     id: string
