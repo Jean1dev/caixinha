@@ -11,7 +11,6 @@ const CaixinhaSchema = new Mongoose.Schema({
     },
     deposits: {
         type: Array,
-        required: false
     },
     members: {
         type: Array,
@@ -22,4 +21,4 @@ const CaixinhaSchema = new Mongoose.Schema({
     collection: 'caixinhas'
 })
 
-module.exports =  Mongoose.model('CaixinhaSchema', CaixinhaSchema)
+module.exports = Mongoose.model('CaixinhaSchema', CaixinhaSchema)

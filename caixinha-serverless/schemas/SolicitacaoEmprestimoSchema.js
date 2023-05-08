@@ -1,29 +1,25 @@
-const Mongoose= require('mongoose')
+const Mongoose = require('mongoose')
 
 const SolicitacaoEmprestimo = new Mongoose.Schema({
-    valor: {
-        type: String,
-        required: true
-    },
-    juros: {
-        type: String,
-        required: true
-    },
-    parcela: {
-        type: String,
-        required: true
-    },
-    motivo: {
-        type: String,
-        required: true
-    },
-    memberName: {
-        type: String,
-        required: true
-    },
+    approved: Boolean,
+    member: { name: String, email: String },
+    date: Date,
+    valueRequested: { value: Number },
+    fees: { value: Number },
+    interest: { value: Number },
+    box: { _id: String, currentBalance: { value: Number } },
+    approvals: Number,
+    description: String,
+    payments: [],
+    memberName: String,
+    requiredNumberOfApprovals: Number,
+    billingDates: [String]
 }, {
     timestamps: true,
-    collection: 'solicitacao_emprestimo'
+    collection: 'solicitacao_emprestimo',
+
 })
 
-module.exports = Mongoose.model('SolicitacaoEmprestimo', SolicitacaoEmprestimo)
+const schema =  Mongoose.model('SolicitacaoEmprestimo', SolicitacaoEmprestimo)
+
+module.exports = schema

@@ -17,8 +17,8 @@ exports.connect = function () {
     })
 }
 
-exports.createNewEmprestimo = function ({ valor, juros, parcela, motivo, memberName }) {
-    return new SolicitacaoEmprestimoSchema({ valor, juros, parcela, motivo, memberName })
+exports.createNewEmprestimo = function (emprestimo) {
+    return new SolicitacaoEmprestimoSchema(emprestimo)
         .save()
 }
 
@@ -36,4 +36,8 @@ exports.getDiscordNoZapBox = function () {
 
 exports.getAllCaixinhas = function() {
     return CaixinhaSchema.find({})
+}
+
+exports.getEmprestimoById = function (id) {
+    return SolicitacaoEmprestimoSchema.findById(new mongoose.Types.ObjectId(id))
 }
