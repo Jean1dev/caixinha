@@ -13,6 +13,21 @@ function retornaComAtraso(value: any): Promise<any> {
     })
 }
 
+async function asyncFetch(url: string, method: string, body?: any): Promise<any> {
+    try {
+        const response = await fetch(url, { method, body })
+        if (!response.ok) {
+            const json = await response.json()
+            throw new Error(`HTTP error! Status: ${response.status} - ${json}`)
+        }
+
+        const data = await response.json()
+        return data
+    } catch (error) {
+        throw new Error('Http error')
+    }
+}
+
 
 export async function getCaixinhas(): Promise<Caixinha[]> {
     if (dev) {
@@ -29,9 +44,7 @@ export async function getCaixinhas(): Promise<Caixinha[]> {
         ])
     }
 
-    const res = await fetch(`${BASE_URL}/get-caixinhas`)
-    const data = await res.json()
-    return data
+    return asyncFetch(`${BASE_URL}/get-caixinhas`, 'GET')
 }
 
 export async function doEmprestimo(params: any) {
@@ -39,10 +52,9 @@ export async function doEmprestimo(params: any) {
         return retornaComAtraso(true)
     }
 
-    await fetch(`${BASE_URL}/emprestimo?code=Q47dylJAkJc3xSGB2RNiBkLzLms-lhvWFbyRE4qrlCriAzFuN_CxsA==&clientId=default`, {
-        method: 'POST',
-        body: JSON.stringify(params),
-    })
+    return asyncFetch(`${BASE_URL}/emprestimo?code=Q47dylJAkJc3xSGB2RNiBkLzLms-lhvWFbyRE4qrlCriAzFuN_CxsA==&clientId=default`,
+        'POST',
+        JSON.stringify(params))
 }
 
 export async function joinABox(params: any) {
@@ -50,8 +62,7 @@ export async function joinABox(params: any) {
         return retornaComAtraso(true)
     }
 
-    await fetch(`${BASE_URL}/user-join-caixinha`, {
-        method: 'POST',
-        body: JSON.stringify(params)
-    })
+    return asyncFetch(`${BASE_URL}/user-join-caixinha`,
+        'POST',
+        JSON.stringify(params))
 }

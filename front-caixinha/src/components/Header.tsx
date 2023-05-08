@@ -3,6 +3,8 @@ import Brightness7Icon from "@mui/icons-material/Brightness7";
 import MenuIcon from "@mui/icons-material/Menu";
 import { Box, Button, IconButton, Toolbar } from "@mui/material";
 import { signIn, signOut, useSession } from "next-auth/react";
+import { useState } from "react";
+import MiniDrawer from "./Drawer";
 
 export function Header({
   toggle,
@@ -16,10 +18,34 @@ export function Header({
   const { status } = useSession()
   const handleSignIn = async () => await signIn('keycloak')
   const handleSignOut = async () => await signOut()
-  
+  const [open, setOpen] = useState(false);
+
+  const handleDrawerOpen = () => {
+    setOpen(true);
+  };
+
+  const handleDrawerClose = () => {
+    setOpen(false);
+  };
+
   return (
     <Box>
       <Toolbar>
+        {status == 'authenticated' && (
+          <IconButton 
+            onClick={handleDrawerOpen} 
+            edge="start" 
+            color="inherit" 
+            aria-label="menu" 
+            sx={{ mr: 2 }}>
+            <MenuIcon
+              sx={{
+                marginRight: 5,
+                ...(open && { display: 'none' }),
+              }}
+             />
+          </IconButton>
+        )}
         <IconButton
           size="large"
           edge="start"
@@ -44,6 +70,11 @@ export function Header({
         )}
 
       </Toolbar>
+      {
+        status == 'authenticated' && (
+          <MiniDrawer open={open} handleDrawerClose={handleDrawerClose} />
+        )
+      }
     </Box>
   );
 }

@@ -44,7 +44,9 @@ export default function Emprestimo() {
         doEmprestimo(solicitacao).then(() => {
             router.push('/sucesso')
         }).catch(err => {
+            alert('houve um problema cheque o log no console')
             console.log(err)
+            setLoading(false)
         })
     }
 

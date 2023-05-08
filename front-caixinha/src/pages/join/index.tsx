@@ -45,12 +45,10 @@ export default function Join() {
         joinABox(payload).then(() => {
             alert('Agora voce é um membro dessa caixinha')
             router.back()
-        }).catch(e => {
-            if (e.response) {
-                alert(e.response.data.message)
-            } else {
-                console.log(e)
-            }
+        }).catch(err => {
+            alert('houve um problema cheque o log no console')
+            console.log(err)
+            setLoading(false)
         })
     }
 
