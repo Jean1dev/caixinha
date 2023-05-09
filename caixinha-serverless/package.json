@@ -6,7 +6,7 @@
     "start": "func start"
   },
   "dependencies": {
-    "caixinha-core": "^0.0.6",
+    "caixinha-core": "^0.0.7",
     "mongodb": "^5.4.0"
   }
 }
