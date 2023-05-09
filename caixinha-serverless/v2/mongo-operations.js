@@ -1,10 +1,11 @@
-const { MongoClient, ObjectId } = require("mongodb");
+const { MongoClient, ObjectId, ServerApiVersion } = require("mongodb");
 
 const uri = process.env.MONGO_CONNECTION || 'mongodb://localhost:27017/caixinha'
-const splited = uri.split('/')
-const database = splited[splited.length - 1]
+const database = 'caixinha'
 
-const client = new MongoClient(uri);
+const client = new MongoClient(uri, {
+    serverApi: ServerApiVersion.v1
+});
 
 async function connect() {
     await client.connect()
