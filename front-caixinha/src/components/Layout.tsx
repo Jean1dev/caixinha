@@ -2,8 +2,6 @@ import { AppBar, Container, ThemeProvider } from "@mui/material";
 import { Header } from "./Header";
 import { useAppTheme } from "@/hooks/useAppTheme";
 
-//const drawerWidth = 240
-
 export default function Layout({ children }: { children: React.ReactNode }) {
     const [currentTheme, toggleCurrentTheme] = useAppTheme()
 
@@ -11,10 +9,6 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         <ThemeProvider theme={currentTheme}>
             <AppBar
                 position="fixed"
-            // sx={{
-            //     width: { sm: `calc(100% - ${drawerWidth}px)` },
-            //     ml: { sm: `${drawerWidth}px` },
-            // }}
             >
                 <Header
                     handleDrawerToggle={() => { }}

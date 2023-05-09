@@ -22,7 +22,8 @@ export default function Emprestimo() {
         juros: 0,
         parcela: 0,
         motivo: "",
-        memberName: ""
+        memberName: "",
+        email: '',
     })
 
     const { user } = router.query
@@ -44,7 +45,9 @@ export default function Emprestimo() {
         doEmprestimo(solicitacao).then(() => {
             router.push('/sucesso')
         }).catch(err => {
+            alert('houve um problema cheque o log no console')
             console.log(err)
+            setLoading(false)
         })
     }
 
@@ -71,6 +74,21 @@ export default function Emprestimo() {
                                         disabled={true}
                                         value={solicitacao.memberName}
                                         defaultValue={solicitacao.memberName}
+                                        onChange={handleChange}
+                                        inputProps={{ "data-testid": "name" }}
+                                    />
+                                </FormControl>
+                            </Grid>
+
+                            <Grid item xs={12}>
+                                <FormControl fullWidth>
+                                    <TextField
+                                        required
+                                        name="email"
+                                        label="email"
+                                        type='email'
+                                        value={solicitacao.email}
+                                        defaultValue={solicitacao.email}
                                         onChange={handleChange}
                                         inputProps={{ "data-testid": "name" }}
                                     />
