@@ -7,7 +7,6 @@
   },
   "dependencies": {
     "caixinha-core": "^0.0.6",
-    "mongodb": "^5.4.0",
-    "mongoose": "^6.6.0"
+    "mongodb": "^5.4.0"
   }
 }

@@ -10,10 +10,10 @@ module.exports = async function (context, _req) {
             .map(boxEntity => {
                 const item = Box.from(boxEntity)
                 item['id'] = boxEntity._id
-                item['loans'] = []
-                item['deposits'] = []
+                delete item['loans']
+                delete item['deposits']
                 item['members'] = boxEntity.members.map(m => ({
-                    memberName: m.memberName,
+                    memberName: m.name,
                     email: m.email
                 }))
                 return item

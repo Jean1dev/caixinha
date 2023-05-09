@@ -1,13 +1,46 @@
-module.exports = async function (context, req) {
-    context.log('JavaScript HTTP trigger function processed a request.');
+const { connect, find } = require('../v2/mongo-operations')
 
-    const name = (req.query.name || (req.body && req.body.name));
-    const responseMessage = name
-        ? "Hello, " + name + ". This HTTP triggered function executed successfully."
-        : "This HTTP triggered function executed successfully. Pass a name in the query string or in the request body for a personalized response.";
+module.exports = async function (context, req) {
+    const { name, email } = req.query
+    const collectionName = 'caixinhas'
+
+    await connect()
+
+    const caixinhas = await find(collectionName, {
+        "members.name": name, "members.email": email
+    })
+
+    const returnData = {
+        caixinhas: caixinhas.map(c => ({
+            currentBalance: c.currentBalance.value,
+            myLoans: c.loans.filter(l => l.memberName === name).map(item => ({
+                requiredNumberOfApprovals: item.requiredNumberOfApprovals,
+                description: item.description,
+                approvals: item.approvals,
+                interest: item.interest.value,
+                fees: item.fees.value,
+                valueRequested: item.valueRequested.value,
+                date: item.date,
+                totalValue: item.totalValue.value,
+                approved: item.approved,
+                uid: item.uid
+            })),
+            loansForApprove: c.loans.filter(l => l.memberName != name).map(item => ({
+                requiredNumberOfApprovals: item.requiredNumberOfApprovals,
+                description: item.description,
+                approvals: item.approvals,
+                interest: item.interest.value,
+                fees: item.fees.value,
+                valueRequested: item.valueRequested.value,
+                date: item.date,
+                totalValue: item.totalValue.value,
+                approved: item.approved,
+                uid: item.uid
+            })),
+        }))
+    }
 
     context.res = {
-        // status: 200, /* Defaults to 200 */
-        body: responseMessage
-    };
+        body: returnData
+    }
 }

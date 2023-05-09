@@ -1,24 +1,23 @@
 const { Member, Box } = require('caixinha-core/dist/src')
-const { connect, createNewMember, getBoxById } = require('../nosql/mongo-operations')
+const { connect, getDocumentById, replaceDocumentById } = require('../v2/mongo-operations')
 
 module.exports = async function (context, req) {
     try {
-        const { nick: memberName, email, boxId } = req.body
-        const member = new Member(memberName)
+        const { nick: name, email, boxId } = req.body
+        const member = Member.build({ name: name, email })
 
         await connect()
 
-        const boxEntity = await getBoxById(boxId)
+        const caixinhaCollection = 'caixinhas'
+        const boxEntity = await getDocumentById(boxId, caixinhaCollection)
 
-        if (!boxEntity) 
+        if (!boxEntity)
             throw new Error('Box not found')
 
         const box = Box.from(boxEntity)
         box.joinMember(member)
 
-        const memberEntity = await createNewMember({ memberName, email })
-        boxEntity.members.push(memberEntity)
-        await boxEntity.save()
+        await replaceDocumentById(boxEntity._id, caixinhaCollection, box)
 
     } catch (error) {
         context.res = {

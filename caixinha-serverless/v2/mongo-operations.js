@@ -22,7 +22,7 @@ async function replaceDocumentById(id, collection, replaceDocument) {
 
 async function insertDocument(collection, document) {
     const collectionName = client.db(database).collection(collection)
-    await collectionName.insertOne(document)
+    return collectionName.insertOne(document)
 }
 
 async function find(collection, projection) {
