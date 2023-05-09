@@ -1,4 +1,4 @@
-import { Caixinha } from "@/types/types"
+import { Caixinha, IMeusEmprestimos } from "@/types/types"
 
 const BASE_URL = 'https://emprestimo-caixinha.azurewebsites.net/api'
 
@@ -28,6 +28,48 @@ async function asyncFetch(url: string, method: string, body?: any): Promise<any>
     }
 }
 
+export async function getMeusEmprestimos(): Promise<IMeusEmprestimos> {
+    if (dev) {
+        return retornaComAtraso({
+            "caixinhas": [
+                {
+                    "currentBalance": 84,
+                    "myLoans": [],
+                    "loansForApprove": [
+                        {
+                            "requiredNumberOfApprovals": 2,
+                            "description": "sera que foi mesmo?",
+                            "approvals": 2,
+                            "interest": 3,
+                            "fees": 0,
+                            "valueRequested": 1,
+                            "date": "2023-05-09T14:09:57.110Z",
+                            "totalValue": 1.03,
+                            "approved": true,
+                            "uid": "013b1172-f830-41bf-9f36-92177c66bf6c",
+                            "memberName": "augusto"
+                        },
+                        {
+                            "requiredNumberOfApprovals": 2,
+                            "description": "sera que foi mesmo?",
+                            "approvals": 2,
+                            "interest": 3,
+                            "fees": 0,
+                            "valueRequested": 1,
+                            "date": "2023-05-09T14:09:57.110Z",
+                            "totalValue": 1.03,
+                            "approved": true,
+                            "uid": "013b1172-f830-41bf-9f36-92177c66bf6c",
+                            "memberName": "augusto"
+                        }
+                    ]
+                }
+            ]
+        })
+    }
+
+    return asyncFetch(`${BASE_URL}/meus-emprestimos`, 'GET')
+}
 
 export async function getCaixinhas(): Promise<Caixinha[]> {
     if (dev) {
@@ -37,8 +79,6 @@ export async function getCaixinhas(): Promise<Caixinha[]> {
                 "currentBalance": {
                     "value": 85
                 },
-                "deposits": [],
-                "loans": [],
                 "id": "644ab7f5f10d4800c629a1d2"
             }
         ])

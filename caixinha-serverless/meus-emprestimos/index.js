@@ -23,7 +23,8 @@ module.exports = async function (context, req) {
                 date: item.date,
                 totalValue: item.totalValue.value,
                 approved: item.approved,
-                uid: item.uid
+                uid: item.uid,
+                memberName: item.memberName
             })),
             loansForApprove: c.loans.filter(l => l.memberName != name).map(item => ({
                 requiredNumberOfApprovals: item.requiredNumberOfApprovals,
@@ -35,7 +36,8 @@ module.exports = async function (context, req) {
                 date: item.date,
                 totalValue: item.totalValue.value,
                 approved: item.approved,
-                uid: item.uid
+                uid: item.uid,
+                memberName: item.memberName
             })),
         }))
     }

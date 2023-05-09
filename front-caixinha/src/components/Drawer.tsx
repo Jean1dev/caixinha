@@ -108,9 +108,10 @@ export default function MiniDrawer({ open, handleDrawerClose }: any) {
             </List>
             <Divider />
             <List>
-                {[].map((text, index) => (
+                {['Home'].map((text, index) => (
                     <ListItem key={text} disablePadding sx={{ display: 'block' }}>
                         <ListItemButton
+                            onClick={() => router.back()}
                             sx={{
                                 minHeight: 48,
                                 justifyContent: open ? 'initial' : 'center',
