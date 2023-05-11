@@ -1,9 +1,23 @@
 import { Caixinha, IMeusEmprestimos } from "@/types/types"
+import axios from 'axios'
 
 const BASE_URL = 'https://emprestimo-caixinha.azurewebsites.net/api'
 
 const dev = process.env.NODE_ENV === 'development'
 console.log('NODE ENV', dev)
+
+const http = axios.create({
+    baseURL: BASE_URL,
+    timeout: 10000
+})
+
+http.interceptors.response.use((response) => {
+    return response
+}, (error) => {
+    console.log(error.response?.data);
+
+    throw error
+})
 
 function retornaComAtraso(value: any): Promise<any> {
     return new Promise((resolve) => {
@@ -15,14 +29,17 @@ function retornaComAtraso(value: any): Promise<any> {
 
 async function asyncFetch(url: string, method: string, body?: any): Promise<any> {
     try {
-        const response = await fetch(url, { method, body })
-        if (!response.ok) {
-            const json = await response.json()
-            throw new Error(`HTTP error! Status: ${response.status} - ${json}`)
+        const response = await http({
+            url,
+            method,
+            data: body
+        })
+
+        if (response.status == 200) {
+            return response.data
         }
 
-        const data = await response.json()
-        return data
+        debugger
     } catch (error) {
         throw new Error('Http error')
     }
