@@ -28,7 +28,7 @@ async function asyncFetch(url: string, method: string, body?: any): Promise<any>
     }
 }
 
-export async function getMeusEmprestimos(): Promise<IMeusEmprestimos> {
+export async function getMeusEmprestimos({ name, email }: any): Promise<IMeusEmprestimos> {
     if (dev) {
         return retornaComAtraso({
             "caixinhas": [
@@ -68,7 +68,7 @@ export async function getMeusEmprestimos(): Promise<IMeusEmprestimos> {
         })
     }
 
-    return asyncFetch(`${BASE_URL}/meus-emprestimos`, 'GET')
+    return asyncFetch(`${BASE_URL}/meus-emprestimos?name=${name}&email=${email}`, 'GET')
 }
 
 export async function getCaixinhas(): Promise<Caixinha[]> {
