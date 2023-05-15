@@ -4,14 +4,26 @@ import { getMeusEmprestimos } from "../api/api.service";
 import { IMeusEmprestimos } from "@/types/types";
 import EmprestimoList from "./emprestimos.list";
 import { Box, Button, Divider } from "@mui/material";
+import { useSession } from "next-auth/react";
 
 export default function MeusEmprestimos() {
     const [loading, setLoading] = useState(true)
     const [data, setData] = useState<IMeusEmprestimos | null>(null)
+    const { data: session } = useSession()
 
     useEffect(() => {
-        getMeusEmprestimos().then((data: IMeusEmprestimos) => {
-            setData(data)
+        getMeusEmprestimos({ name: session?.user?.name, email: session?.user?.email }).then((data: IMeusEmprestimos) => {
+            if (!data.caixinhas.length) {
+                setData({
+                    caixinhas: [{
+                        currentBalance: 54,
+                        loansForApprove: [],
+                        myLoans: []
+                    }]
+                })
+            } else {
+                setData(data)
+            }
             setLoading(false)
         })
     }, [])

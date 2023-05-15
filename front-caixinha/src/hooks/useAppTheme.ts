@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { darkTheme, lightTheme } from "../config/theme";
+import { darkTheme, lightTheme } from "../theme/theme";
 import { useLocalStorage } from "./useLocalStorage";
 
 export function useAppTheme() {
