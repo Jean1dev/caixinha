@@ -1,6 +1,5 @@
 import { ThemeProvider, styled } from "@mui/material";
 import { useAppTheme } from "@/hooks/useAppTheme";
-import { useState } from "react";
 import { TopNav } from "./top-nav";
 
 const SIDE_NAV_WIDTH = 280;
@@ -23,11 +22,10 @@ const LayoutContainer = styled('div')({
 
 export default function Layout({ children }: { children: React.ReactNode }) {
     const [currentTheme, toggleCurrentTheme] = useAppTheme()
-    const [openNav, setOpenNav] = useState(false);
 
     return (
         <ThemeProvider theme={currentTheme}>
-            <TopNav onNavOpen={() => setOpenNav(true)} />
+            <TopNav/>
             {/* <SideNav
                 onClose={() => setOpenNav(false)}
                 open={openNav}
@@ -39,21 +37,4 @@ export default function Layout({ children }: { children: React.ReactNode }) {
             </LayoutRoot>
         </ThemeProvider>
     );
-
-    // return (
-    //     <ThemeProvider theme={currentTheme}>
-    //         <AppBar
-    //             position="fixed"
-    //         >
-    //             <Header
-    //                 handleDrawerToggle={() => { }}
-    //                 toggle={toggleCurrentTheme}
-    //                 theme={currentTheme.palette.mode === "dark" ? "dark" : "light"}
-    //             />
-    //         </AppBar>
-    //         <Container maxWidth="lg" sx={{ color: "white", my: 12 }}>
-    //             {children}
-    //         </Container>
-    //     </ThemeProvider>
-    // )
 }

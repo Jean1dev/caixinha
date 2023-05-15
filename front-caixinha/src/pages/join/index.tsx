@@ -4,8 +4,10 @@ import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { getCaixinhas, joinABox } from "../api/api.service";
 import { Caixinha } from "@/types/types";
+import { useSession } from "next-auth/react";
 
 export default function Join() {
+    const { status, data } = useSession()
     const [loading, setLoading] = useState(true)
     const [formData, setFormData] = useState({
         nick: '',
@@ -30,6 +32,17 @@ export default function Join() {
             }
         })
     }, [router.query.id])
+
+    useEffect(() => {
+        if (status === 'authenticated') {
+            setFormData({
+                //@ts-ignore
+                nick: data['user']['name'],
+                //@ts-ignore
+                email: data['user']['email']
+            })
+        }
+    }, [status])
 
     if (loading)
         return <h1>Carregando</h1>
