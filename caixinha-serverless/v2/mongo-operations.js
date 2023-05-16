@@ -16,6 +16,16 @@ async function getDocumentById(id, collection) {
     return collectionName.findOne({ _id: new ObjectId(id) })
 }
 
+async function getByIdOrThrow(id, collection) {
+    const collectionName = client.db(database).collection(collection)
+    const entity = await collectionName.findOne({ _id: new ObjectId(id) })
+    if (!entity) {
+        throw new Error(`Enitity in ${collection} not found`)
+    }
+
+    return entity
+}
+
 async function replaceDocumentById(id, collection, replaceDocument) {
     const collectionName = client.db(database).collection(collection)
     await collectionName.replaceOne({ _id: new ObjectId(id) }, replaceDocument)
@@ -36,5 +46,6 @@ module.exports = {
     getDocumentById,
     replaceDocumentById,
     insertDocument,
-    find
+    find,
+    getByIdOrThrow
 }

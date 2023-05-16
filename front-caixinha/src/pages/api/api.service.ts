@@ -2,6 +2,8 @@ import { Caixinha, IMeusEmprestimos } from "@/types/types"
 import axios from 'axios'
 
 const BASE_URL = 'https://emprestimo-caixinha.azurewebsites.net/api'
+const URL_STORAGE_SERVER = 'https://storage-manager-svc.herokuapp.com'
+const BUCKET_STORAGE = 'binnoroteirizacao'
 
 const dev = process.env.NODE_ENV === 'development'
 console.log('NODE ENV', dev)
@@ -18,6 +20,32 @@ http.interceptors.response.use((response) => {
 
     throw error
 })
+
+http.get(`${URL_STORAGE_SERVER}/v1/s3/buckets`).then(({ data }) => {
+    console.log(data)
+}).catch(() => {
+    console.log('do nothing')
+})
+
+export async function uploadResource(resourceFile: string | Blob) {
+    const form = new FormData();
+    form.append("file", resourceFile);
+
+    const options = {
+        method: 'POST',
+        url: `${URL_STORAGE_SERVER}/v1/s3`,
+        params: { bucket: BUCKET_STORAGE },
+        headers: {
+            'Content-Type': 'multipart/form-data',
+            'content-type': 'multipart/form-data; boundary=---011000010111000001101001'
+        },
+        data: form
+    };
+
+    const response = await http.request(options)
+    return response.data
+}
+
 
 function retornaComAtraso(value: any): Promise<any> {
     return new Promise((resolve) => {
@@ -110,6 +138,16 @@ export async function doEmprestimo(params: any) {
     }
 
     return asyncFetch(`${BASE_URL}/emprestimo?code=Q47dylJAkJc3xSGB2RNiBkLzLms-lhvWFbyRE4qrlCriAzFuN_CxsA==&clientId=default`,
+        'POST',
+        JSON.stringify(params))
+}
+
+export async function doDeposito(params: any) {
+    if (dev) {
+        return retornaComAtraso(true)
+    }
+
+    return asyncFetch(`${BASE_URL}/deposito`,
         'POST',
         JSON.stringify(params))
 }

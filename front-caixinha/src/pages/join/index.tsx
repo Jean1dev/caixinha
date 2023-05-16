@@ -81,7 +81,7 @@ export default function Join() {
                 <Paper>
                     <Box p={2}>
                         <Box mb={2}>
-                            <Typography variant="h4">Join a box - {box.id}</Typography>
+                            <Typography variant="h4">Participar da caixinha</Typography>
                         </Box>
                     </Box>
 
