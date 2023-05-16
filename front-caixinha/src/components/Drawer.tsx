@@ -13,6 +13,7 @@ import ListItemText from '@mui/material/ListItemText';
 import InboxIcon from '@mui/icons-material/MoveToInbox';
 import MailIcon from '@mui/icons-material/Mail';
 import { useRouter } from 'next/router';
+import NextLink from 'next/link';
 
 const drawerWidth = 240;
 
@@ -64,6 +65,17 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' 
     }),
 );
 
+const routes = [
+    {
+        text: 'Meus emprestimos',
+        path: 'meus-emprestimos'
+    },
+    {
+        text: 'Depositos',
+        path: 'deposito'
+    }
+]
+
 export default function MiniDrawer({ open, handleDrawerClose }: any) {
     const theme = useTheme()
     const router = useRouter()
@@ -82,10 +94,10 @@ export default function MiniDrawer({ open, handleDrawerClose }: any) {
             </DrawerHeader>
             <Divider />
             <List>
-                {['Meus emprestimos'].map((text, index) => (
-                    <ListItem key={text} disablePadding sx={{ display: 'block' }}>
+                {routes.map((it, index) => (
+                    <ListItem key={it.text} disablePadding sx={{ display: 'block' }}>
                         <ListItemButton
-                            onClick={() => router.push('meus-emprestimos')}
+                            onClick={() => router.push(it.path)}
                             sx={{
                                 minHeight: 48,
                                 justifyContent: open ? 'initial' : 'center',
@@ -93,6 +105,7 @@ export default function MiniDrawer({ open, handleDrawerClose }: any) {
                             }}
                         >
                             <ListItemIcon
+                                onClick={() => router.push(it.path)}
                                 sx={{
                                     minWidth: 0,
                                     mr: open ? 3 : 'auto',
@@ -101,7 +114,7 @@ export default function MiniDrawer({ open, handleDrawerClose }: any) {
                             >
                                 {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
                             </ListItemIcon>
-                            <ListItemText primary={text} sx={{ opacity: open ? 1 : 0 }} />
+                            <ListItemText primary={it.text} sx={{ opacity: open ? 1 : 0 }} />
                         </ListItemButton>
                     </ListItem>
                 ))}
@@ -111,7 +124,8 @@ export default function MiniDrawer({ open, handleDrawerClose }: any) {
                 {['Home'].map((text, index) => (
                     <ListItem key={text} disablePadding sx={{ display: 'block' }}>
                         <ListItemButton
-                            onClick={() => router.back()}
+                            LinkComponent={NextLink}
+                            href="/"
                             sx={{
                                 minHeight: 48,
                                 justifyContent: open ? 'initial' : 'center',

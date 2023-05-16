@@ -5,8 +5,10 @@ import { IMeusEmprestimos } from "@/types/types";
 import EmprestimoList from "./emprestimos.list";
 import { Box, Button, Divider } from "@mui/material";
 import { useSession } from "next-auth/react";
+import { useRouter } from "next/router";
 
 export default function MeusEmprestimos() {
+    const router = useRouter()
     const [loading, setLoading] = useState(true)
     const [data, setData] = useState<IMeusEmprestimos | null>(null)
     const { data: session } = useSession()
@@ -36,7 +38,7 @@ export default function MeusEmprestimos() {
                         variant="contained"
                         color="secondary"
                         style={{ marginBottom: "1rem" }}
-                        onClick={() => alert('WIP')}
+                        onClick={() => router.push('emprestimo')}
                     >
                         Solicitar novo emprestimo
                     </Button>

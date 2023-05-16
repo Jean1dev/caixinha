@@ -2,37 +2,32 @@ import Head from 'next/head'
 import {
     Box,
     Button,
+    Chip,
     FormControl,
     Grid,
     InputAdornment,
     TextField,
 } from "@mui/material"
-import { FormEvent, useEffect, useState } from 'react'
+import CloudUploadIcon from '@mui/icons-material/CloudUpload';
+import CheckIcon from '@mui/icons-material/Check';
+import { FormEvent, Key, useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
-import { doEmprestimo } from '../api/api.service'
+import { doDeposito, uploadResource } from '../api/api.service'
 import Layout from '@/components/Layout'
 import { useSession } from 'next-auth/react'
 
-export default function Emprestimo() {
+
+export default function Deposito() {
     const { data, status } = useSession()
     const router = useRouter()
     const [isLoading, setLoading] = useState(false)
+    const [arquivos, setArquivo] = useState<any>([])
     const [solicitacao, setSolicitacao] = useState({
         valor: 0,
-        juros: 0,
-        parcela: 0,
-        motivo: "",
+        fileUrl: '',
         memberName: "",
         email: '',
     })
-
-    const { user } = router.query
-
-    useEffect(() => {
-        if (user) {
-            setSolicitacao({ ...solicitacao, memberName: user as string })
-        }
-    }, [])
 
     useEffect(() => {
         if (status === 'authenticated') {
@@ -54,13 +49,57 @@ export default function Emprestimo() {
     const request = (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault()
         setLoading(true)
-        doEmprestimo(solicitacao).then(() => {
+        doDeposito({
+            caixinhaId: '645a5af40ece58b8c0fa93a6',
+            name: solicitacao.memberName,
+            email: solicitacao.email,
+            valor: solicitacao.valor
+        }).then(() => {
             router.push('/sucesso')
         }).catch(err => {
             alert('houve um problema cheque o log no console')
             console.log(err)
             setLoading(false)
         })
+    }
+
+    const addComprovante = () => {
+        let input = document.createElement('input');
+        input.type = 'file';
+
+        input.addEventListener('change', function (event: any) {
+            let arquivo = event.target.files[0];
+
+            console.log('Arquivo selecionado:', arquivo);
+            setArquivo([...arquivos, { file: arquivo, name: arquivo.name }])
+
+        });
+
+        input.click()
+    }
+
+    const uploadItem = (resource: any) => {
+        console.log(resource.name)
+
+        uploadResource(resource.file).then((fileUrl: string) => {
+            //@ts-ignore
+            const novaLista = arquivos.filter(it => it.name !== resource.name)
+            novaLista.push({ file: resource, name: resource.name, status: 'success' })
+            setArquivo(novaLista)
+            setSolicitacao({ ...solicitacao, fileUrl })
+        }).catch(() => alert('Ocorreu um problema ao enviar o arquivo'))
+    }
+
+    const getChipByItem = (item: any) => {
+        if (item.status === 'success') {
+            return (
+                <Chip key={item.index} label={item?.name} onDelete={() => { alert('adicionado') }} deleteIcon={<CheckIcon />} />
+            )
+        }
+
+        return (
+            <Chip key={item.index} label={item?.name} variant="outlined" onDelete={() => { uploadItem(item) }} deleteIcon={<CloudUploadIcon />} />
+        )
     }
 
     if (isLoading) return <p>Loading...</p>
@@ -107,25 +146,10 @@ export default function Emprestimo() {
                                 </FormControl>
                             </Grid>
 
-                            <Grid item xs={12}>
-                                <FormControl fullWidth>
-                                    <TextField
-                                        id="outlined-multiline-static"
-                                        label="Motivo"
-                                        name='motivo'
-                                        multiline
-                                        value={solicitacao.motivo}
-                                        rows={4}
-                                        defaultValue={solicitacao.motivo}
-                                        onChange={handleChange}
-                                    />
-                                </FormControl>
-                            </Grid>
-
                             <Box p={2}>
 
                                 <TextField
-                                    label="Valor solicitado"
+                                    label="Valor depositado"
                                     id="outlined-start-adornment"
                                     defaultValue={solicitacao.valor}
                                     value={solicitacao.valor}
@@ -136,29 +160,27 @@ export default function Emprestimo() {
                                         startAdornment: <InputAdornment position="start">R$</InputAdornment>,
                                     }}
                                 />
-                                <TextField
-                                    label="Juros a ser pago"
-                                    id="outlined-start-adornment"
-                                    onChange={handleChange}
-                                    name='juros'
-                                    value={solicitacao.juros}
-                                    sx={{ m: 1, width: '25ch' }}
-                                    defaultValue={solicitacao.juros}
-                                    InputProps={{
-                                        startAdornment: <InputAdornment position="start">%</InputAdornment>,
-                                    }}
-                                />
-                                <TextField
-                                    onChange={handleChange}
-                                    name='parcela'
-                                    value={solicitacao.parcela}
-                                    label="Quantidade de parcelas"
-                                    id="outlined-start-adornment"
-                                    sx={{ m: 1, width: '25ch' }}
-                                    defaultValue={solicitacao.parcela}
-                                />
 
                             </Box>
+
+                            <Grid item xs={12}>
+                                <Box display="flex" gap={2}>
+                                    {arquivos.map((item: { name: string, index: Key }) =>
+                                        getChipByItem(item)
+                                    )}
+
+                                </Box>
+                                <Box display="flex" gap={2}>
+
+                                    <Button
+                                        onClick={addComprovante}
+                                        variant="contained"
+                                        color="secondary"
+                                    >
+                                        Adicionar Comprovante
+                                    </Button>
+                                </Box>
+                            </Grid>
 
                             <Grid item xs={12}>
                                 <Box display="flex" gap={2}>

@@ -1,14 +1,11 @@
 //import NotificationsActiveIcon from '@mui/icons-material/NotificationsActive';
-import HorizontalSplitIcon from '@mui/icons-material/HorizontalSplit';
 import MenuIcon from '@mui/icons-material/Menu';
 import {
     Avatar,
     Box,
     IconButton,
     Stack,
-    SvgIcon,
     Typography,
-    useMediaQuery
 } from '@mui/material';
 import { alpha } from '@mui/material/styles';
 import { AccountPopover } from './account-popover';
@@ -20,9 +17,7 @@ import MiniDrawer from './Drawer';
 const SIDE_NAV_WIDTH = 280;
 const TOP_NAV_HEIGHT = 64;
 
-export const TopNav = (props: any) => {
-    const { onNavOpen } = props;
-    const lgUp = useMediaQuery((theme: any) => theme.breakpoints.up('lg'));
+export const TopNav = () => {
     const accountPopover = usePopover();
     const [open, setOpen] = useState(false);
     const { status } = useSession()
@@ -43,7 +38,7 @@ export const TopNav = (props: any) => {
                     component="header"
                     sx={{
                         backdropFilter: 'blur(6px)',
-                        backgroundColor: (theme) => alpha(theme.palette.background.default, 0.8),
+                        backgroundColor: (theme) => alpha(theme.palette.background.default, 0.2),
                         position: 'sticky',
                         left: {
                             lg: `${SIDE_NAV_WIDTH}px`
@@ -70,13 +65,6 @@ export const TopNav = (props: any) => {
                             direction="row"
                             spacing={2}
                         >
-                            {!lgUp && (
-                                <IconButton onClick={onNavOpen}>
-                                    <SvgIcon fontSize="small">
-                                        <HorizontalSplitIcon />
-                                    </SvgIcon>
-                                </IconButton>
-                            )}
                             <IconButton
                                 onClick={handleDrawerOpen}
                                 edge="start"
