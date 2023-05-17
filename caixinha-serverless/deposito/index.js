@@ -10,7 +10,7 @@ module.exports = async function (context, req) {
         const boxEntity = await getByIdOrThrow(caixinhaId, collection)
         const box = Box.fromJson(boxEntity)
         const deposit = new Deposit({
-            value: valor,
+            value: Number(valor),
             member: Member.build({ name, email })
         })
 

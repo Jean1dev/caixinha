@@ -4,6 +4,7 @@ export interface Caixinha {
   deposits: any[]
   loans: any[]
   id: string
+  name?: string
 }
 
 export interface IMeusEmprestimos {

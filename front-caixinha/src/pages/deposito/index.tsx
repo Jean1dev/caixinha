@@ -15,10 +15,13 @@ import { useRouter } from 'next/router'
 import { doDeposito, uploadResource } from '../api/api.service'
 import Layout from '@/components/Layout'
 import { useSession } from 'next-auth/react'
+import { useCaixinhaSelect } from '@/hooks/useCaixinhaSelect';
+import { toast } from 'react-toastify';
 
 
 export default function Deposito() {
     const { data, status } = useSession()
+    const [caixinha] = useCaixinhaSelect()
     const router = useRouter()
     const [isLoading, setLoading] = useState(false)
     const [arquivos, setArquivo] = useState<any>([])
@@ -45,21 +48,21 @@ export default function Deposito() {
         const { name, value } = e.target;
         setSolicitacao({ ...solicitacao, [name]: value });
     }
-
+    
     const request = (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault()
         setLoading(true)
         doDeposito({
-            caixinhaId: '645a5af40ece58b8c0fa93a6',
+            caixinhaId: caixinha?.id,
             name: solicitacao.memberName,
             email: solicitacao.email,
             valor: solicitacao.valor
         }).then(() => {
             router.push('/sucesso')
         }).catch(err => {
-            alert('houve um problema cheque o log no console')
             console.log(err)
             setLoading(false)
+            setTimeout(() => toast(err.message, { hideProgressBar: true, autoClose: 4000, type: 'error', position: 'bottom-right' }), 50)
         })
     }
 
@@ -82,6 +85,7 @@ export default function Deposito() {
         console.log(resource.name)
 
         uploadResource(resource.file).then((fileUrl: string) => {
+            setTimeout(() => toast('upload realizado,', { hideProgressBar: true, autoClose: 4000, type: 'info', position: 'bottom-right' }), 50)
             //@ts-ignore
             const novaLista = arquivos.filter(it => it.name !== resource.name)
             novaLista.push({ file: resource, name: resource.name, status: 'success' })
@@ -155,6 +159,7 @@ export default function Deposito() {
                                     value={solicitacao.valor}
                                     onChange={handleChange}
                                     name='valor'
+                                    type='number'
                                     sx={{ m: 1, width: '25ch' }}
                                     InputProps={{
                                         startAdornment: <InputAdornment position="start">R$</InputAdornment>,

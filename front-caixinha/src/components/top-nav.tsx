@@ -13,6 +13,7 @@ import { usePopover } from '@/hooks/usePopover';
 import { useState } from 'react';
 import { signIn, useSession } from 'next-auth/react';
 import MiniDrawer from './Drawer';
+import ApplicationSelectCaixinha from './application-select.caixinha';
 
 const SIDE_NAV_WIDTH = 280;
 const TOP_NAV_HEIGHT = 64;
@@ -44,9 +45,9 @@ export const TopNav = () => {
                             lg: `${SIDE_NAV_WIDTH}px`
                         },
                         top: 0,
-                        //   width: {
+                        // width: {
                         //     lg: `calc(100% - ${SIDE_NAV_WIDTH}px)`
-                        //   },
+                        // },
                         zIndex: (theme) => theme.zIndex.appBar
                     }}
                 >
@@ -97,6 +98,7 @@ export const TopNav = () => {
                                     </Badge>
                                 </IconButton>
                             </Tooltip> */}
+                            <ApplicationSelectCaixinha />
                             <Avatar
                                 onClick={accountPopover.handleOpen}
                                 ref={accountPopover.anchorRef}

@@ -28,7 +28,7 @@ export default function MeusEmprestimos() {
             }
             setLoading(false)
         })
-    }, [])
+    }, [session])
 
     return (
         <Layout>

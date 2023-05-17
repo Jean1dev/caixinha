@@ -1,20 +1,20 @@
 const { Member, Box, Loan } = require('caixinha-core/dist/src')
-const { connect, getDocumentById, replaceDocumentById, insertDocument } = require('../v2/mongo-operations')
+const { connect, replaceDocumentById, insertDocument, getByIdOrThrow } = require('../v2/mongo-operations')
 
 module.exports = async function (context, req) {
     try {
-        const { valor, juros, parcela, motivo, memberName, email } = req.body
+        const { valor, juros, parcela, motivo, name, email, caixinhaID } = req.body
 
         await connect()
-        const member = Member.build({ name: memberName, email })
-        const boxEntity = await getDocumentById(process.env.CAIXINHA_ID, 'caixinhas')
+        const member = Member.build({ name, email })
+        const boxEntity = await getByIdOrThrow(caixinhaID || process.env.CAIXINHA_ID, 'caixinhas')
 
         const box = Box.from(boxEntity)
         const emprestimo = new Loan({
             box,
             member,
-            valueRequested: valor,
-            interest: juros,
+            valueRequested: Number(valor),
+            interest: Number(juros),
             fees: 0,
             description: motivo
         })

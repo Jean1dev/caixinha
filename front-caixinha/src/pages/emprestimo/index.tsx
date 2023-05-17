@@ -12,34 +12,29 @@ import { useRouter } from 'next/router'
 import { doEmprestimo } from '../api/api.service'
 import Layout from '@/components/Layout'
 import { useSession } from 'next-auth/react'
+import { toast } from 'react-toastify'
+import { useCaixinhaSelect } from '@/hooks/useCaixinhaSelect'
 
 export default function Emprestimo() {
     const { data, status } = useSession()
     const router = useRouter()
+    const [caixinha] = useCaixinhaSelect()
     const [isLoading, setLoading] = useState(false)
     const [solicitacao, setSolicitacao] = useState({
         valor: 0,
         juros: 0,
         parcela: 0,
         motivo: "",
-        memberName: "",
+        name: "",
         email: '',
     })
-
-    const { user } = router.query
-
-    useEffect(() => {
-        if (user) {
-            setSolicitacao({ ...solicitacao, memberName: user as string })
-        }
-    }, [])
 
     useEffect(() => {
         if (status === 'authenticated') {
             setSolicitacao({
                 ...solicitacao,
                 //@ts-ignore
-                memberName: data['user']['name'],
+                name: data['user']['name'],
                 //@ts-ignore
                 email: data['user']['email']
             })
@@ -54,12 +49,12 @@ export default function Emprestimo() {
     const request = (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault()
         setLoading(true)
-        doEmprestimo(solicitacao).then(() => {
+        doEmprestimo({ ...solicitacao, caixinhaID: caixinha?.id }).then(() => {
             router.push('/sucesso')
         }).catch(err => {
-            alert('houve um problema cheque o log no console')
             console.log(err)
             setLoading(false)
+            setTimeout(() => toast(err.message, { hideProgressBar: true, autoClose: 4000, type: 'error', position: 'bottom-right' }), 50)
         })
     }
 
@@ -81,11 +76,11 @@ export default function Emprestimo() {
                                 <FormControl fullWidth>
                                     <TextField
                                         required
-                                        name="memberName"
+                                        name="name"
                                         label="nome"
                                         disabled={true}
-                                        value={solicitacao.memberName}
-                                        defaultValue={solicitacao.memberName}
+                                        value={solicitacao.name}
+                                        defaultValue={solicitacao.name}
                                         onChange={handleChange}
                                         inputProps={{ "data-testid": "name" }}
                                     />
@@ -131,6 +126,7 @@ export default function Emprestimo() {
                                     value={solicitacao.valor}
                                     onChange={handleChange}
                                     name='valor'
+                                    type='number'
                                     sx={{ m: 1, width: '25ch' }}
                                     InputProps={{
                                         startAdornment: <InputAdornment position="start">R$</InputAdornment>,
@@ -141,6 +137,7 @@ export default function Emprestimo() {
                                     id="outlined-start-adornment"
                                     onChange={handleChange}
                                     name='juros'
+                                    type='number'
                                     value={solicitacao.juros}
                                     sx={{ m: 1, width: '25ch' }}
                                     defaultValue={solicitacao.juros}
@@ -151,6 +148,7 @@ export default function Emprestimo() {
                                 <TextField
                                     onChange={handleChange}
                                     name='parcela'
+                                    type='number'
                                     value={solicitacao.parcela}
                                     label="Quantidade de parcelas"
                                     id="outlined-start-adornment"

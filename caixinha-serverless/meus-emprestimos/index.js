@@ -13,7 +13,7 @@ module.exports = async function (context, req) {
     const returnData = {
         caixinhas: caixinhas.map(c => ({
             currentBalance: c.currentBalance.value,
-            myLoans: c.loans.filter(l => l.memberName === name).map(item => ({
+            myLoans: c.loans.filter(l => l.name === name).map(item => ({
                 requiredNumberOfApprovals: item.requiredNumberOfApprovals,
                 description: item.description,
                 approvals: item.approvals,
@@ -21,12 +21,12 @@ module.exports = async function (context, req) {
                 fees: item.fees.value,
                 valueRequested: item.valueRequested.value,
                 date: item.date,
-                totalValue: item.totalValue.value,
+                totalValue: item.totalValue?.value,
                 approved: item.approved,
                 uid: item.uid,
                 memberName: item.memberName
             })),
-            loansForApprove: c.loans.filter(l => l.memberName != name).map(item => ({
+            loansForApprove: c.loans.filter(l => l.name != name).map(item => ({
                 requiredNumberOfApprovals: item.requiredNumberOfApprovals,
                 description: item.description,
                 approvals: item.approvals,
@@ -34,7 +34,7 @@ module.exports = async function (context, req) {
                 fees: item.fees.value,
                 valueRequested: item.valueRequested.value,
                 date: item.date,
-                totalValue: item.totalValue.value,
+                totalValue: item.totalValue?.value,
                 approved: item.approved,
                 uid: item.uid,
                 memberName: item.memberName

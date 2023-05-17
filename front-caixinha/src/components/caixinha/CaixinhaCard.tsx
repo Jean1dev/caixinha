@@ -46,7 +46,7 @@ export const CaixinhaCard = ({ caixinha }: { caixinha: Caixinha }) => {
                     align="center"
                     variant="body1"
                 >
-                    Caixinha dos amigos do discord
+                    {caixinha.name}
                 </Typography>
             </CardContent>
             <Box sx={{ flexGrow: 1 }} />

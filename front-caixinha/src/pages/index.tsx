@@ -34,45 +34,9 @@ export default function Home({ data }: any) {
                 <Typography variant="h4">
                   Caixinhas
                 </Typography>
-                <Stack
-                  alignItems="center"
-                  direction="row"
-                  spacing={1}
-                >
-                  {/* <Button
-                    color="inherit"
-                    startIcon={(
-                      <SvgIcon fontSize="small">
-                        <ArrowUpwardIcon />
-                      </SvgIcon>
-                    )}
-                  >
-                    Import
-                  </Button>
-                  <Button
-                    color="inherit"
-                    startIcon={(
-                      <SvgIcon fontSize="small">
-                        <ArrowDownwardIcon />
-                      </SvgIcon>
-                    )}
-                  >
-                    Export
-                  </Button> */}
-                </Stack>
+           
               </Stack>
-              {/* <div>
-                <Button
-                  startIcon={(
-                    <SvgIcon fontSize="small">
-                      <AddIcon />
-                    </SvgIcon>
-                  )}
-                  variant="contained"
-                >
-                  Add
-                </Button>
-              </div> */}
+
             </Stack>
             <CaixinhaSearch />
             <Grid
