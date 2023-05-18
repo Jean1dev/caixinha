@@ -1,10 +1,13 @@
-//import NotificationsActiveIcon from '@mui/icons-material/NotificationsActive';
+import NotificationsNoneIcon from '@mui/icons-material/NotificationsNone';
 import MenuIcon from '@mui/icons-material/Menu';
 import {
     Avatar,
+    Badge,
     Box,
     IconButton,
     Stack,
+    SvgIcon,
+    Tooltip,
     Typography,
 } from '@mui/material';
 import { alpha } from '@mui/material/styles';
@@ -14,6 +17,7 @@ import { useState } from 'react';
 import { signIn, useSession } from 'next-auth/react';
 import MiniDrawer from './Drawer';
 import ApplicationSelectCaixinha from './application-select.caixinha';
+import { NotificationAddSharp } from '@mui/icons-material';
 
 const SIDE_NAV_WIDTH = 280;
 const TOP_NAV_HEIGHT = 64;
@@ -85,20 +89,20 @@ export const TopNav = () => {
                             direction="row"
                             spacing={2}
                         >
-                            {/* <Tooltip title="Notifications">
+                            <ApplicationSelectCaixinha />
+                            <Tooltip title="Notifications">
                                 <IconButton>
                                     <Badge
-                                        badgeContent={4}
+                                        badgeContent={0}
                                         color="success"
                                         variant="dot"
                                     >
                                         <SvgIcon fontSize="small">
-                                            <NotificationsActiveIcon />
+                                            <NotificationsNoneIcon />
                                         </SvgIcon>
                                     </Badge>
                                 </IconButton>
-                            </Tooltip> */}
-                            <ApplicationSelectCaixinha />
+                            </Tooltip>
                             <Avatar
                                 onClick={accountPopover.handleOpen}
                                 ref={accountPopover.anchorRef}
@@ -107,7 +111,7 @@ export const TopNav = () => {
                                     height: 40,
                                     width: 40
                                 }}
-                                src="/assets/avatars/avatar-anika-visser.png"
+                                src="https://avatars.githubusercontent.com/u/11442261?v=4"
                             />
                         </Stack>
                     </Stack>

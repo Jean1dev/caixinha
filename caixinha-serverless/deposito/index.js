@@ -1,6 +1,15 @@
 const { Box, Deposit, Member } = require('caixinha-core/dist/src')
 const { connect, getByIdOrThrow, replaceDocumentById } = require('../v2/mongo-operations')
 
+function resolveCircularStructureBSON(box) {
+    box['loans'] = box['loans'].map(l => ({
+        ...l,
+        box: undefined
+    }))
+
+    return box
+}
+
 module.exports = async function (context, req) {
     const { caixinhaId, valor, name, email, comprovante } = req.body
     const collection = 'caixinhas'
@@ -19,7 +28,7 @@ module.exports = async function (context, req) {
         }
         
         box.deposit(deposit)
-        await replaceDocumentById(caixinhaId, collection, box)
+        await replaceDocumentById(caixinhaId, collection, resolveCircularStructureBSON(box))
 
     } catch (error) {
         context.log(error.message)

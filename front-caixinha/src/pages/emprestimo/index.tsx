@@ -22,7 +22,7 @@ export default function Emprestimo() {
     const [isLoading, setLoading] = useState(false)
     const [solicitacao, setSolicitacao] = useState({
         valor: 0,
-        juros: 0,
+        juros: 2,
         parcela: 0,
         motivo: "",
         name: "",
