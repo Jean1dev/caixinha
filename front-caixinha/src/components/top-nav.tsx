@@ -17,7 +17,6 @@ import { useState } from 'react';
 import { signIn, useSession } from 'next-auth/react';
 import MiniDrawer from './Drawer';
 import ApplicationSelectCaixinha from './application-select.caixinha';
-import { NotificationAddSharp } from '@mui/icons-material';
 
 const SIDE_NAV_WIDTH = 280;
 const TOP_NAV_HEIGHT = 64;
@@ -89,7 +88,7 @@ export const TopNav = () => {
                             direction="row"
                             spacing={2}
                         >
-                            <ApplicationSelectCaixinha />
+                            
                             <Tooltip title="Notifications">
                                 <IconButton>
                                     <Badge
