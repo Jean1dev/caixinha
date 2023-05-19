@@ -27,11 +27,13 @@ http.interceptors.response.use((response) => {
     throw error
 })
 
-http.get(`${URL_STORAGE_SERVER}/v1/s3/buckets`).then(({ data }) => {
-    console.log(data)
-}).catch(() => {
-    console.log('do nothing')
-})
+function getBuckets() {
+    http.get(`${URL_STORAGE_SERVER}/v1/s3/buckets`).then(({ data }) => {
+        console.log(data)
+    }).catch(() => {
+        console.log('do nothing')
+    })
+}
 
 export async function uploadResource(resourceFile: string | Blob) {
     const form = new FormData();
