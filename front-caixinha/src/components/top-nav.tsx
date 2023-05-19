@@ -88,7 +88,7 @@ export const TopNav = () => {
                             direction="row"
                             spacing={2}
                         >
-                            
+                            <ApplicationSelectCaixinha />
                             <Tooltip title="Notifications">
                                 <IconButton>
                                     <Badge

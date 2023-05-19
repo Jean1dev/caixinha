@@ -12,7 +12,7 @@ console.log(BASE_URL)
 
 const http = axios.create({
     baseURL: BASE_URL,
-    timeout: 10000
+    timeout: 20000
 })
 
 http.interceptors.response.use((response) => {
@@ -59,7 +59,7 @@ function retornaComAtraso(value: any): Promise<any> {
     return new Promise((resolve) => {
         setTimeout(() => {
             resolve(value)
-        }, 2000)
+        }, 1000)
     })
 }
 
@@ -149,7 +149,16 @@ export async function getCaixinhas(): Promise<Caixinha[]> {
                 "currentBalance": {
                     "value": 85
                 },
-                "id": "644ab7f5f10d4800c629a1d2"
+                "id": "644ab7f5f10d4800c629a1d2",
+                "name": "caixinha da ana"
+            },
+            {
+                "members": [],
+                "currentBalance": {
+                    "value": 885
+                },
+                "id": "644ab7f5f10d4800c629a1d3",
+                "name": "caixinha do jorge"
             }
         ])
     }

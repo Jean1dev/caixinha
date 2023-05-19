@@ -4,16 +4,22 @@ import {
   Container,
   Grid,
   Pagination,
-  Stack} from '@mui/material'
-import React from 'react'
+  Stack
+} from '@mui/material'
+import React, { useEffect, useState } from 'react'
 import { getCaixinhas } from './api/api.service'
 import Layout from '@/components/Layout'
 import { Caixinha } from '@/types/types'
 import { CaixinhaSearch } from '@/components/caixinha/CaixinhaSearch'
 import { CaixinhaCard } from '@/components/caixinha/CaixinhaCard'
 
-export default function Home({ data }: any) {
-  
+export default function Home() {
+  const [data, setData] = useState<Caixinha[]>([])
+
+  useEffect(() => {
+    getCaixinhas().then(r => setData(r))
+  }, [])
+
   return (
     <Layout>
       <Box
@@ -34,7 +40,7 @@ export default function Home({ data }: any) {
                 <Typography variant="h4">
                   Caixinhas
                 </Typography>
-           
+
               </Stack>
 
             </Stack>
@@ -44,14 +50,7 @@ export default function Home({ data }: any) {
               spacing={3}
             >
               {data.map((caixinha: Caixinha) => (
-                <Grid
-                  xs={12}
-                  md={6}
-                  lg={4}
-                  key={caixinha.id}
-                >
-                  <CaixinhaCard caixinha={caixinha} />
-                </Grid>
+                <CaixinhaCard key={caixinha.id} caixinha={caixinha} />
               ))}
             </Grid>
             <Box
@@ -72,7 +71,7 @@ export default function Home({ data }: any) {
   )
 }
 
-export async function getServerSideProps() {
-  const data = await getCaixinhas()
-  return { props: { data } }
-}
+// export async function getServerSideProps() {
+//   const data = await getCaixinhas()
+//   return { props: { data } }
+// }
