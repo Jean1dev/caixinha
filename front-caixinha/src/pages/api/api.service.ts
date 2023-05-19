@@ -6,7 +6,7 @@ const BASE_URL = 'https://emprestimo-caixinha.azurewebsites.net/api'
 const URL_STORAGE_SERVER = 'https://storage-manager-svc.herokuapp.com'
 const BUCKET_STORAGE = 'binnoroteirizacao'
 
-const dev = process.env.NODE_ENV === 'development'
+const dev = process.env.NODE_ENV !== 'development'
 console.log('NODE ENV', dev)
 console.log(BASE_URL)
 
