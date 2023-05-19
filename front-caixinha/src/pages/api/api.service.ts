@@ -1,12 +1,14 @@
 import { Caixinha, IMeusEmprestimos } from "@/types/types"
 import axios from 'axios'
 
+//const BASE_URL = 'http://localhost:7071/api' || 'https://emprestimo-caixinha.azurewebsites.net/api'
 const BASE_URL = 'https://emprestimo-caixinha.azurewebsites.net/api'
 const URL_STORAGE_SERVER = 'https://storage-manager-svc.herokuapp.com'
 const BUCKET_STORAGE = 'binnoroteirizacao'
 
 const dev = process.env.NODE_ENV === 'development'
 console.log('NODE ENV', dev)
+console.log(BASE_URL)
 
 const http = axios.create({
     baseURL: BASE_URL,
@@ -17,6 +19,10 @@ http.interceptors.response.use((response) => {
     return response
 }, (error) => {
     console.log(error.response?.data);
+    if (error.response) {
+        debugger
+        throw new Error(error.response.data.message)
+    }
 
     throw error
 })
@@ -69,8 +75,25 @@ async function asyncFetch(url: string, method: string, body?: any): Promise<any>
 
         debugger
     } catch (error) {
-        throw new Error('Http error')
+        throw error
     }
+}
+
+export async function getMinhasCaixinhas(name: string, email: string) {
+    if (dev) {
+        return retornaComAtraso([
+            {
+                "id": "6463d5093d725c4efc81a530",
+                "name": "primeira-caixinha"
+            },
+            {
+                "id": "6463e5601f8126593381a55d",
+                "name": "segunda-caixinha"
+            }
+        ])
+    }
+
+    return asyncFetch(`${BASE_URL}/minhas-caixinhas?name=${name}&email=${email}`, 'GET')
 }
 
 export async function getMeusEmprestimos({ name, email }: any): Promise<IMeusEmprestimos> {

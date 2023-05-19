@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { getCaixinhas, joinABox } from "../api/api.service";
 import { Caixinha } from "@/types/types";
 import { useSession } from "next-auth/react";
+import { toast } from "react-toastify";
 
 export default function Join() {
     const { status, data } = useSession()
@@ -56,10 +57,10 @@ export default function Join() {
 
         setLoading(true)
         joinABox(payload).then(() => {
-            alert('Agora voce é um membro dessa caixinha')
+            setTimeout(() => toast('Você é um membro dessa caixinha agora', { hideProgressBar: true, autoClose: 4000, type: 'success', position: 'bottom-right' }), 50)
             router.back()
         }).catch(err => {
-            alert('houve um problema cheque o log no console')
+            setTimeout(() => toast(err.message, { hideProgressBar: true, autoClose: 4000, type: 'error', position: 'bottom-right' }), 50)
             console.log(err)
             setLoading(false)
         })

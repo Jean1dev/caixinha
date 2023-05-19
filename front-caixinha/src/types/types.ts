@@ -4,6 +4,7 @@ export interface Caixinha {
   deposits: any[]
   loans: any[]
   id: string
+  name?: string
 }
 
 export interface IMeusEmprestimos {
@@ -17,6 +18,7 @@ export interface EmprestimoCaixinha {
 }
 
 export interface LoansForApprove {
+  open: any
   requiredNumberOfApprovals: number
   description: string
   approvals: number

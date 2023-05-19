@@ -5,15 +5,15 @@ import List from '@mui/material/List';
 import Divider from '@mui/material/Divider';
 import IconButton from '@mui/material/IconButton';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
+import CreditScoreIcon from '@mui/icons-material/CreditScore';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
-import InboxIcon from '@mui/icons-material/MoveToInbox';
-import MailIcon from '@mui/icons-material/Mail';
 import { useRouter } from 'next/router';
 import NextLink from 'next/link';
+import { AttachMoney, Home } from '@mui/icons-material';
 
 const drawerWidth = 240;
 
@@ -68,11 +68,13 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' 
 const routes = [
     {
         text: 'Meus emprestimos',
-        path: 'meus-emprestimos'
+        path: 'meus-emprestimos',
+        icon: <CreditScoreIcon/>
     },
     {
         text: 'Depositos',
-        path: 'deposito'
+        path: 'deposito',
+        icon: <AttachMoney/>
     }
 ]
 
@@ -112,7 +114,7 @@ export default function MiniDrawer({ open, handleDrawerClose }: any) {
                                     justifyContent: 'center',
                                 }}
                             >
-                                {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
+                                {it.icon}
                             </ListItemIcon>
                             <ListItemText primary={it.text} sx={{ opacity: open ? 1 : 0 }} />
                         </ListItemButton>
@@ -139,7 +141,7 @@ export default function MiniDrawer({ open, handleDrawerClose }: any) {
                                     justifyContent: 'center',
                                 }}
                             >
-                                {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
+                                <Home/>
                             </ListItemIcon>
                             <ListItemText primary={text} sx={{ opacity: open ? 1 : 0 }} />
                         </ListItemButton>

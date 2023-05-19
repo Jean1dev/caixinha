@@ -21,7 +21,7 @@ module.exports = async function (context, req) {
                 fees: item.fees.value,
                 valueRequested: item.valueRequested.value,
                 date: item.date,
-                totalValue: item.totalValue.value,
+                totalValue: item.totalValue?.value,
                 approved: item.approved,
                 uid: item.uid,
                 memberName: item.memberName
@@ -34,7 +34,7 @@ module.exports = async function (context, req) {
                 fees: item.fees.value,
                 valueRequested: item.valueRequested.value,
                 date: item.date,
-                totalValue: item.totalValue.value,
+                totalValue: item.totalValue?.value,
                 approved: item.approved,
                 uid: item.uid,
                 memberName: item.memberName
