@@ -17,6 +17,7 @@ import Layout from '@/components/Layout'
 import { useSession } from 'next-auth/react'
 import { useCaixinhaSelect } from '@/hooks/useCaixinhaSelect';
 import { toast } from 'react-toastify';
+import CenteredCircularProgress from '@/components/CenteredCircularProgress';
 
 
 export default function Deposito() {
@@ -106,7 +107,7 @@ export default function Deposito() {
         )
     }
 
-    if (isLoading) return <p>Loading...</p>
+    if (isLoading) return <CenteredCircularProgress/>
 
     return (
         <Layout>

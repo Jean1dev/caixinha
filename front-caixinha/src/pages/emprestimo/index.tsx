@@ -14,6 +14,7 @@ import Layout from '@/components/Layout'
 import { useSession } from 'next-auth/react'
 import { toast } from 'react-toastify'
 import { useCaixinhaSelect } from '@/hooks/useCaixinhaSelect'
+import CenteredCircularProgress from '@/components/CenteredCircularProgress'
 
 export default function Emprestimo() {
     const { data, status } = useSession()
@@ -58,7 +59,7 @@ export default function Emprestimo() {
         })
     }
 
-    if (isLoading) return <p>Loading...</p>
+    if (isLoading) return <CenteredCircularProgress/>
 
     return (
         <Layout>

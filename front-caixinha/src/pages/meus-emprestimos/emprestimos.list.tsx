@@ -1,12 +1,10 @@
 import List from '@mui/material/List';
-import ListItem from '@mui/material/ListItem';
 import ListItemText from '@mui/material/ListItemText';
-import CommentIcon from '@mui/icons-material/Comment';
-import IconButton from '@mui/material/IconButton';
-import { CircularProgress, Collapse, ListItemButton, ListItemIcon, Typography } from '@mui/material';
+import { Collapse, ListItemButton, ListItemIcon } from '@mui/material';
 import { LoansForApprove } from '@/types/types';
 import { ExpandLess, ExpandMore, StarBorder } from '@mui/icons-material';
 import { useEffect, useState } from 'react';
+import CenteredCircularProgress from '@/components/CenteredCircularProgress';
 
 export default function EmprestimoList({ loading, data = [] }: any) {
   const [listItems, setListItems] = useState([]);
@@ -37,7 +35,7 @@ export default function EmprestimoList({ loading, data = [] }: any) {
   }, [data])
 
   if (loading)
-    return <CircularProgress disableShrink />
+    return <CenteredCircularProgress/>
 
   return (
     <List sx={{ width: '100%', maxWidth: '100%', bgcolor: 'background.paper' }}>
