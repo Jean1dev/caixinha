@@ -1,16 +1,14 @@
 const { Box } = require('caixinha-core/dist/src')
-const { connect, getDocumentById, replaceDocumentById } = require('../v2/mongo-operations')
+const { connect, getByIdOrThrow, replaceDocumentById } = require('../v2/mongo-operations')
+const { resolveCircularStructureBSON } = require('../utils')
 
 module.exports = async function (context, req) {
-    const { email, emprestimoId } = req.body
+    const { name, emprestimoId, caixinhaid } = req.body
     const collectionName = 'caixinhas'
 
     try {
         await connect()
-        const caixinhaEntity = await getDocumentById(process.env.CAIXINHA_ID, collectionName)
-        if (!caixinhaEntity) {
-            throw new Error('caixinha not found')
-        }
+        const caixinhaEntity = await getByIdOrThrow(caixinhaid, collectionName)
 
         const domain = Box.fromJson(caixinhaEntity)
 
@@ -32,8 +30,7 @@ module.exports = async function (context, req) {
             })
         }
 
-        delete emprestimo['box']
-        await replaceDocumentById(caixinhaEntity._id, collectionName, domain)
+        await replaceDocumentById(caixinhaEntity._id, collectionName, resolveCircularStructureBSON(domain))
 
     } catch (error) {
         context.log(error.message)

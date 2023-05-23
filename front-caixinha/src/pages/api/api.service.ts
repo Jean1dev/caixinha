@@ -1,8 +1,8 @@
 import { Caixinha, IMeusEmprestimos } from "@/types/types"
 import axios from 'axios'
 
-//const BASE_URL = 'http://localhost:7071/api' || 'https://emprestimo-caixinha.azurewebsites.net/api'
-const BASE_URL = 'https://emprestimo-caixinha.azurewebsites.net/api'
+const BASE_URL = 'http://localhost:7071/api' || 'https://emprestimo-caixinha.azurewebsites.net/api'
+//const BASE_URL = 'https://emprestimo-caixinha.azurewebsites.net/api'
 const URL_STORAGE_SERVER = 'https://storage-manager-svc.herokuapp.com'
 const BUCKET_STORAGE = 'binnoroteirizacao'
 
@@ -79,6 +79,14 @@ async function asyncFetch(url: string, method: string, body?: any): Promise<any>
     } catch (error) {
         throw error
     }
+}
+
+export async function aprovarEmprestimo(payload: any): Promise<any> {
+    if (dev) {
+        return retornaComAtraso(true)
+    }
+
+    return asyncFetch(`${BASE_URL}/aprovar-emprestimo`, 'POST', payload)
 }
 
 export async function getMinhasCaixinhas(name: string, email: string) {

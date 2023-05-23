@@ -2,12 +2,14 @@ import List from '@mui/material/List';
 import ListItemText from '@mui/material/ListItemText';
 import { Collapse, ListItemButton, ListItemIcon } from '@mui/material';
 import { LoansForApprove } from '@/types/types';
-import { ExpandLess, ExpandMore, StarBorder } from '@mui/icons-material';
+import { ExpandLess, ExpandMore, DetailsOutlined, StarBorder } from '@mui/icons-material';
 import { useEffect, useState } from 'react';
 import CenteredCircularProgress from '@/components/CenteredCircularProgress';
+import { useRouter } from 'next/router';
 
 export default function EmprestimoList({ loading, data = [] }: any) {
   const [listItems, setListItems] = useState([]);
+  const router = useRouter()
 
   const handleClick = (item: any) => {
     const remap = listItems.map((it: any) => {
@@ -23,6 +25,13 @@ export default function EmprestimoList({ loading, data = [] }: any) {
     //@ts-ignore
     setListItems(remap)
   };
+
+  const goToDetalhesEmprestimo = (item: any) => {
+    router.push({
+      pathname: 'detalhes-emprestimo',
+      query: item
+    })
+  }
 
   useEffect(() => {
     if (loading)
@@ -66,6 +75,12 @@ export default function EmprestimoList({ loading, data = [] }: any) {
                   <StarBorder />
                 </ListItemIcon>
                 <ListItemText>Aprovações até o momento {value.approvals}</ListItemText>
+              </ListItemButton>
+              <ListItemButton sx={{ pl: 4 }} onClick={() => goToDetalhesEmprestimo(value)}>
+                <ListItemIcon>
+                  <DetailsOutlined />
+                </ListItemIcon>
+                <ListItemText>Clique para fazer a gestão e conferir os detalhes</ListItemText>
               </ListItemButton>
             </List>
           </Collapse>

@@ -6,6 +6,7 @@ import {
     Grid,
     InputAdornment,
     TextField,
+    Typography,
 } from "@mui/material"
 import { FormEvent, useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
@@ -19,7 +20,7 @@ import CenteredCircularProgress from '@/components/CenteredCircularProgress'
 export default function Emprestimo() {
     const { data, status } = useSession()
     const router = useRouter()
-    const [caixinha] = useCaixinhaSelect()
+    const { caixinha } = useCaixinhaSelect()
     const [isLoading, setLoading] = useState(false)
     const [solicitacao, setSolicitacao] = useState({
         valor: 0,
@@ -59,7 +60,7 @@ export default function Emprestimo() {
         })
     }
 
-    if (isLoading) return <CenteredCircularProgress/>
+    if (isLoading) return <CenteredCircularProgress />
 
     return (
         <Layout>
@@ -71,6 +72,7 @@ export default function Emprestimo() {
             </Head>
             <main>
                 <Box p={2}>
+                    <Typography> Emprestimo em {caixinha?.name}</Typography>
                     <form onSubmit={request}>
                         <Grid container spacing={3}>
                             <Grid item xs={12}>

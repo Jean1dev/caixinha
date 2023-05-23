@@ -44,24 +44,34 @@ export default function MeusEmprestimos() {
     const router = useRouter()
     const [loading, setLoading] = useState(true)
     const [data, setData] = useState<IMeusEmprestimos | null>(null)
+    const [myLoans, setmyLoans] = useState([])
+    const [loansForApprove, setloansForApprove] = useState([])
     const { data: session } = useSession()
     const [value, setValue] = useState(0)
 
-    useEffect(() => {
+    const mapData = () => {
+        const allMyLoans = [];
+        const allLoansForApprove = [];
+
+        data?.caixinhas.forEach((caixinha: any) => {
+            allMyLoans.push(...caixinha.myLoans);
+            allLoansForApprove.push(...caixinha.loansForApprove);
+        });
+
+        setmyLoans(allMyLoans)
+        setloansForApprove(allLoansForApprove)
+    }
+
+    const fetchAPi = () => {
         getMeusEmprestimos({ name: session?.user?.name, email: session?.user?.email }).then((data: IMeusEmprestimos) => {
-            if (!data.caixinhas.length) {
-                setData({
-                    caixinhas: [{
-                        currentBalance: 54,
-                        loansForApprove: [],
-                        myLoans: []
-                    }]
-                })
-            } else {
-                setData(data)
-            }
+            setData(data)
             setLoading(false)
+            mapData()
         })
+    }
+
+    useEffect(() => {
+        fetchAPi()
     }, [session])
 
 
@@ -74,6 +84,14 @@ export default function MeusEmprestimos() {
             <Box maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
                 <Box display="flex" justifyContent="flex-end">
                     <Button
+                        variant="outlined"
+                        color="info"
+                        style={{ marginBottom: "1rem" }}
+                        onClick={fetchAPi}
+                    >
+                        Atualizar lista
+                    </Button>
+                    <Button
                         variant="contained"
                         color="secondary"
                         style={{ marginBottom: "1rem" }}
@@ -82,6 +100,7 @@ export default function MeusEmprestimos() {
                         Solicitar novo emprestimo
                     </Button>
                 </Box>
+
                 <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
                     <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
                         <Tab label="Meus emprestimos" {...a11yProps(0)} />
@@ -89,10 +108,10 @@ export default function MeusEmprestimos() {
                     </Tabs>
                 </Box>
                 <TabPanel value={value} index={0}>
-                    <EmprestimoList loading={loading} data={data?.caixinhas[0].myLoans} />
+                    <EmprestimoList loading={loading} data={myLoans} />
                 </TabPanel>
                 <TabPanel value={value} index={1}>
-                    <EmprestimoList loading={loading} data={data?.caixinhas[0].loansForApprove} />
+                    <EmprestimoList loading={loading} data={loansForApprove} />
                 </TabPanel>
             </Box>
         </Layout>

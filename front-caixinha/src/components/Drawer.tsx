@@ -11,6 +11,7 @@ import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
+import WalletIcon from '@mui/icons-material/Wallet';
 import { useRouter } from 'next/router';
 import NextLink from 'next/link';
 import { AttachMoney, Home } from '@mui/icons-material';
@@ -66,6 +67,11 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' 
 );
 
 const routes = [
+    {
+        text: 'Novo emprestimo',
+        path: 'emprestimo',
+        icon: <WalletIcon />
+    },
     {
         text: 'Meus emprestimos',
         path: 'meus-emprestimos',

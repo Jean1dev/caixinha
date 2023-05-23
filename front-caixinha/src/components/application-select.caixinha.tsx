@@ -13,7 +13,7 @@ import { useSession } from 'next-auth/react';
 export default function ApplicationSelectCaixinha() {
     const { data } = useSession()
     const [nameCaixinhaSelected, setNameCaixinhaSelected] = React.useState('');
-    const [caixinha, setCaixinha] = useCaixinhaSelect()
+    const { caixinha, toggleCaixinha: setCaixinha } = useCaixinhaSelect()
     const [caixinhas, setCaixinhas] = React.useState<Caixinha[]>([])
     const [loading, setLoading] = React.useState(true)
 

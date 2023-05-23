@@ -7,10 +7,11 @@ import {
     Grid,
     InputAdornment,
     TextField,
+    Typography,
 } from "@mui/material"
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import CheckIcon from '@mui/icons-material/Check';
-import { FormEvent, Key, useEffect, useState } from 'react'
+import { FormEvent, Key, useCallback, useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
 import { doDeposito, uploadResource } from '../api/api.service'
 import Layout from '@/components/Layout'
@@ -22,7 +23,7 @@ import CenteredCircularProgress from '@/components/CenteredCircularProgress';
 
 export default function Deposito() {
     const { data, status } = useSession()
-    const [caixinha] = useCaixinhaSelect()
+    const { caixinha } = useCaixinhaSelect()
     const router = useRouter()
     const [isLoading, setLoading] = useState(false)
     const [arquivos, setArquivo] = useState<any>([])
@@ -49,8 +50,8 @@ export default function Deposito() {
         const { name, value } = e.target;
         setSolicitacao({ ...solicitacao, [name]: value });
     }
-    
-    const request = (event: FormEvent<HTMLFormElement>) => {
+
+    const request = useCallback((event: FormEvent<HTMLFormElement>) => {
         event.preventDefault()
         setLoading(true)
         doDeposito({
@@ -65,7 +66,7 @@ export default function Deposito() {
             setLoading(false)
             setTimeout(() => toast(err.message, { hideProgressBar: true, autoClose: 4000, type: 'error', position: 'bottom-right' }), 50)
         })
-    }
+    }, [caixinha, solicitacao])
 
     const addComprovante = () => {
         let input = document.createElement('input');
@@ -107,7 +108,7 @@ export default function Deposito() {
         )
     }
 
-    if (isLoading) return <CenteredCircularProgress/>
+    if (isLoading) return <CenteredCircularProgress />
 
     return (
         <Layout>
@@ -119,6 +120,7 @@ export default function Deposito() {
             </Head>
             <main>
                 <Box p={2}>
+                    <Typography> Depositando em {caixinha?.name}</Typography>
                     <form onSubmit={request}>
                         <Grid container spacing={3}>
                             <Grid item xs={12}>
