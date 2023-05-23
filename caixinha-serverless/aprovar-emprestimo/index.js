@@ -1,9 +1,9 @@
-const { Box } = require('caixinha-core/dist/src')
+const { Box, Member } = require('caixinha-core/dist/src')
 const { connect, getByIdOrThrow, replaceDocumentById } = require('../v2/mongo-operations')
 const { resolveCircularStructureBSON } = require('../utils')
 
 module.exports = async function (context, req) {
-    const { name, emprestimoId, caixinhaid } = req.body
+    const { memberName, emprestimoId, caixinhaid } = req.body
     const collectionName = 'caixinhas'
 
     try {
@@ -17,7 +17,7 @@ module.exports = async function (context, req) {
             throw new Error('emprestimo not found')
         }
 
-        emprestimo.addApprove()
+        emprestimo.addApprove(new Member(memberName))
         if (emprestimo.isApproved) {
             const uuidAdicionados = []
             domain['loans'] = domain['loans'].filter(iterator => {

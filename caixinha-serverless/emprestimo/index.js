@@ -19,6 +19,7 @@ module.exports = async function (context, req) {
             description: motivo
         })
         
+        emprestimo.addApprove(member)
         emprestimo['box'] = null
         box['loans'].push(emprestimo)
         await replaceDocumentById(boxEntity._id, 'caixinhas', box)

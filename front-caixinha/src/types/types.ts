@@ -26,8 +26,9 @@ export interface LoansForApprove {
   fees: number
   valueRequested: number
   date: string
-  totalValue: number
+  totalValue?: number
   approved: boolean
   uid: string
   memberName: string
+  remainingAmount?: number
 }

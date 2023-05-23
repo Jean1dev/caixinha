@@ -50,8 +50,8 @@ export default function MeusEmprestimos() {
     const [value, setValue] = useState(0)
 
     const mapData = () => {
-        const allMyLoans = [];
-        const allLoansForApprove = [];
+        const allMyLoans: any = [];
+        const allLoansForApprove: any = [];
 
         data?.caixinhas.forEach((caixinha: any) => {
             allMyLoans.push(...caixinha.myLoans);

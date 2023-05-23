@@ -44,7 +44,7 @@ export default function EmprestimoList({ loading, data = [] }: any) {
   }, [data])
 
   if (loading)
-    return <CenteredCircularProgress/>
+    return <CenteredCircularProgress />
 
   return (
     <List sx={{ width: '100%', maxWidth: '100%', bgcolor: 'background.paper' }}>
@@ -76,6 +76,16 @@ export default function EmprestimoList({ loading, data = [] }: any) {
                 </ListItemIcon>
                 <ListItemText>Aprovações até o momento {value.approvals}</ListItemText>
               </ListItemButton>
+              {
+                value.totalValue && (
+                  <ListItemButton sx={{ pl: 4 }}>
+                    <ListItemIcon>
+                      <StarBorder />
+                    </ListItemIcon>
+                    <ListItemText>Valor que falta pagar R${value.remainingAmount}</ListItemText>
+                  </ListItemButton>
+                )
+              }
               <ListItemButton sx={{ pl: 4 }} onClick={() => goToDetalhesEmprestimo(value)}>
                 <ListItemIcon>
                   <DetailsOutlined />

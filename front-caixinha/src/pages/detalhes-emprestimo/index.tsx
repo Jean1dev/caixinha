@@ -5,6 +5,7 @@ import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { DetalhesUser } from "./detalhes-user";
 import { GestaoEmprestimo } from "./gestao-emprestimo";
+import { PagamentoEmprestimo } from "./pagamento-emprestimo";
 
 export default function DetalhesEmprestimo() {
     const [isMeuEmprestimo, setMeuEmprestimo] = useState(false)
@@ -59,9 +60,34 @@ export default function DetalhesEmprestimo() {
                                         //@ts-ignore
                                         emprestimo,
                                         meuEmprestimo: isMeuEmprestimo
-                                    }}/>
+                                    }} />
                                 </Grid>
                             </Grid>
+
+                            {isMeuEmprestimo && (
+                                <Grid
+                                    container
+                                    spacing={3}
+                                >
+                                    <Grid
+                                        xs={12}
+                                        md={6}
+                                        lg={4}
+                                    >
+                                    </Grid>
+                                    <Grid
+                                        xs={12}
+                                        md={6}
+                                        lg={8}
+                                    >
+                                        <PagamentoEmprestimo data={{
+                                            //@ts-ignore
+                                            emprestimo
+                                        }} />
+                                    </Grid>
+                                </Grid>
+                            )}
+
                         </div>
                     </Stack>
                 </Container>

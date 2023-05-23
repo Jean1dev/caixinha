@@ -4,7 +4,7 @@ import { TopNav } from "./top-nav";
 import 'react-toastify/dist/ReactToastify.css';
 import { ToastContainer } from "react-toastify";
 import { useEffect } from 'react';
-import { hotjar }from 'react-hotjar'
+import { hotjar } from 'react-hotjar'
 
 const SIDE_NAV_WIDTH = 100;
 

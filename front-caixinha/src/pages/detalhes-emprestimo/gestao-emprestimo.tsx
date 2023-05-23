@@ -15,6 +15,7 @@ import { useCaixinhaSelect } from '@/hooks/useCaixinhaSelect';
 import { aprovarEmprestimo } from '../api/api.service';
 import CenteredCircularProgress from '@/components/CenteredCircularProgress';
 import { toast } from 'react-toastify';
+import { useSession } from 'next-auth/react';
 
 interface IGestaoInput {
     emprestimo: LoansForApprove,
@@ -25,19 +26,23 @@ export const GestaoEmprestimo = ({ data }: { data: IGestaoInput }) => {
     const { caixinha } = useCaixinhaSelect()
     const [loading, setLoading] = useState(false)
     const [blockButtons, setBlockButtons] = useState(false)
+    const { data: user } = useSession()
 
     const aprovar = useCallback(() => {
         setLoading(true)
         aprovarEmprestimo({
-            name: data.emprestimo.memberName,
+            memberName: user?.user?.name,
             caixinhaid: caixinha?.id,
             emprestimoId: data.emprestimo.uid
         }).then(() => {
             setLoading(false)
             setBlockButtons(true)
             setTimeout(() => toast('Aprovação enviada', { hideProgressBar: true, autoClose: 4000, type: 'success', position: 'bottom-right' }), 50)
+        }).catch(e => {
+            setLoading(false)
+            setTimeout(() => toast(e.message, { hideProgressBar: true, autoClose: 4000, type: 'error', position: 'bottom-right' }), 50)
         })
-    }, [caixinha, data])
+    }, [caixinha, data, user])
 
     if (loading) {
         return <CenteredCircularProgress />
@@ -89,7 +94,7 @@ export const GestaoEmprestimo = ({ data }: { data: IGestaoInput }) => {
                 }
                 {
                     data.meuEmprestimo && (
-                        <Button variant="contained" color='info' onClick={() => alert('WIP')}>
+                        <Button disabled={blockButtons} variant="contained" color='info' onClick={() => alert('WIP')}>
                             Remover o emprestimo
                         </Button>
                     )
