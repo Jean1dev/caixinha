@@ -12,10 +12,7 @@ module.exports = async function (context, req) {
 
         const domain = Box.fromJson(caixinhaEntity)
 
-        const emprestimo = domain.loans.find(loan => loan.uid === emprestimoId)
-        if (!emprestimo) {
-            throw new Error('emprestimo not found')
-        }
+        const emprestimo = domain.getLoanByUUID(emprestimoId)
 
         emprestimo.addApprove(new Member(memberName))
         if (emprestimo.isApproved) {

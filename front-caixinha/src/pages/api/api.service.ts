@@ -1,8 +1,8 @@
 import { Caixinha, IMeusEmprestimos } from "@/types/types"
 import axios from 'axios'
 
-const BASE_URL = 'http://localhost:7071/api'
-//const BASE_URL = 'https://emprestimo-caixinha.azurewebsites.net/api'
+//const BASE_URL = 'http://localhost:7071/api'
+const BASE_URL = 'https://emprestimo-caixinha.azurewebsites.net/api'
 const URL_STORAGE_SERVER = 'https://storage-manager-svc.herokuapp.com'
 const BUCKET_STORAGE = 'binnoroteirizacao'
 
@@ -27,7 +27,7 @@ http.interceptors.response.use((response) => {
     throw error
 })
 
-function getBuckets() {
+export function getBuckets() {
     http.get(`${URL_STORAGE_SERVER}/v1/s3/buckets`).then(({ data }) => {
         console.log(data)
     }).catch(() => {

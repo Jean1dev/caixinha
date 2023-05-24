@@ -1,12 +1,8 @@
 const { connect, find } = require('../v2/mongo-operations')
 
 function somenteOsQueAindaFaltamPagar(emprestimo) {
-    if (emprestimo.remainingAmount) {
-        if (emprestimo.remainingAmount.value > 0) {
-            return true
-        } else {
-            return false
-        }
+    if (emprestimo.isPaidOff) {
+        return false
     }
 
     return true
@@ -41,7 +37,8 @@ module.exports = async function (context, req) {
                     uid: item.uid,
                     memberName: item.memberName,
                     totalValue: item?.totalValue?.value,
-                    remainingAmount: item?.remainingAmount?.value
+                    remainingAmount: item?.remainingAmount?.value,
+                    isPaidOff: item.isPaidOff
                 })),
             loansForApprove: c.loans.filter(l => l.memberName != name).map(item => ({
                 requiredNumberOfApprovals: item.requiredNumberOfApprovals,
@@ -56,7 +53,8 @@ module.exports = async function (context, req) {
                 uid: item.uid,
                 memberName: item.memberName,
                 totalValue: item?.totalValue?.value,
-                remainingAmount: item?.remainingAmount?.value
+                remainingAmount: item?.remainingAmount?.value,
+                isPaidOff: item.isPaidOff
             })),
         }))
     }

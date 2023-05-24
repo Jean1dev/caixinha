@@ -5,6 +5,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import { ToastContainer } from "react-toastify";
 import { useEffect } from 'react';
 import { hotjar } from 'react-hotjar'
+import { AlertNav } from "./alert-nav";
 
 const SIDE_NAV_WIDTH = 100;
 
@@ -43,6 +44,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         <ThemeProvider theme={currentTheme}>
             <TopNav />
             <Divider />
+            <AlertNav />
             {/* <SideNav
                 onClose={() => setOpenNav(false)}
                 open={openNav}

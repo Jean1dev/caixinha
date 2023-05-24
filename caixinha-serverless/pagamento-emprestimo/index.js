@@ -11,10 +11,7 @@ module.exports = async function (context, req) {
         const boxEntity = await getByIdOrThrow(caixinhaId, collectionName)
         const domain = Box.fromJson(boxEntity)
 
-        const emprestimo = domain.loans.find(loan => loan.uid === emprestimoUid)
-        if (!emprestimo) {
-            throw new Error('emprestimo not found')
-        }
+        const emprestimo = domain.getLoanByUUID(emprestimoUid)
 
         const member = Member.build({ name, email })
         const payment = new Payment(member, valor, 'Pago via Caixinha web')

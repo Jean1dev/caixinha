@@ -31,4 +31,5 @@ export interface LoansForApprove {
   uid: string
   memberName: string
   remainingAmount?: number
+  isPaidOff?: boolean
 }

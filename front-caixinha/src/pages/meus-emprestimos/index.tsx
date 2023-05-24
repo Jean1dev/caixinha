@@ -3,9 +3,10 @@ import { useEffect, useState } from "react";
 import { getMeusEmprestimos } from "../api/api.service";
 import { IMeusEmprestimos } from "@/types/types";
 import EmprestimoList from "./emprestimos.list";
-import { Box, Button, Divider, Tab, Tabs, Typography } from "@mui/material";
+import { Box, Button, Tab, Tabs, Typography } from "@mui/material";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
+import CenteredCircularProgress from "@/components/CenteredCircularProgress";
 
 interface TabPanelProps {
     children?: React.ReactNode;
@@ -43,13 +44,12 @@ function a11yProps(index: number) {
 export default function MeusEmprestimos() {
     const router = useRouter()
     const [loading, setLoading] = useState(true)
-    const [data, setData] = useState<IMeusEmprestimos | null>(null)
     const [myLoans, setmyLoans] = useState([])
     const [loansForApprove, setloansForApprove] = useState([])
     const { data: session } = useSession()
     const [value, setValue] = useState(0)
 
-    const mapData = () => {
+    const mapData = (data: IMeusEmprestimos) => {
         const allMyLoans: any = [];
         const allLoansForApprove: any = [];
 
@@ -63,17 +63,19 @@ export default function MeusEmprestimos() {
     }
 
     const fetchAPi = () => {
+        if (!loading) {
+            setLoading(true)
+        }
+
         getMeusEmprestimos({ name: session?.user?.name, email: session?.user?.email }).then((data: IMeusEmprestimos) => {
-            setData(data)
+            mapData(data)
             setLoading(false)
-            mapData()
         })
     }
 
     useEffect(() => {
         fetchAPi()
     }, [session])
-
 
     const handleChange = (_event: React.SyntheticEvent, newValue: number) => {
         setValue(newValue);
@@ -107,12 +109,21 @@ export default function MeusEmprestimos() {
                         <Tab label="Emprestimos para aprovar" {...a11yProps(1)} />
                     </Tabs>
                 </Box>
-                <TabPanel value={value} index={0}>
-                    <EmprestimoList loading={loading} data={myLoans} />
-                </TabPanel>
-                <TabPanel value={value} index={1}>
-                    <EmprestimoList loading={loading} data={loansForApprove} />
-                </TabPanel>
+                {
+                    loading && (<CenteredCircularProgress />)
+                }
+                {
+                    !loading && (
+                        <>
+                            <TabPanel value={value} index={0}>
+                                <EmprestimoList data={myLoans} />
+                            </TabPanel>
+                            <TabPanel value={value} index={1}>
+                                <EmprestimoList data={loansForApprove} />
+                            </TabPanel>
+                        </>
+                    )
+                }
             </Box>
         </Layout>
     )

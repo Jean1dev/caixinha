@@ -55,7 +55,7 @@ export const PagamentoEmprestimo = ({ data }: { data: IProps }) => {
             email: user?.user?.email,
             caixinhaId: caixinha?.id,
             emprestimoUid: data.emprestimo.uid,
-            valor
+            valor: Number(valor)
         }).then(() => {
             setLoading(false)
             setBlockButtons(true)

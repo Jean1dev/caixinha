@@ -4,10 +4,9 @@ import { Collapse, ListItemButton, ListItemIcon } from '@mui/material';
 import { LoansForApprove } from '@/types/types';
 import { ExpandLess, ExpandMore, DetailsOutlined, StarBorder } from '@mui/icons-material';
 import { useEffect, useState } from 'react';
-import CenteredCircularProgress from '@/components/CenteredCircularProgress';
 import { useRouter } from 'next/router';
 
-export default function EmprestimoList({ loading, data = [] }: any) {
+export default function EmprestimoList({ data = [] }: any) {
   const [listItems, setListItems] = useState([]);
   const router = useRouter()
 
@@ -34,17 +33,11 @@ export default function EmprestimoList({ loading, data = [] }: any) {
   }
 
   useEffect(() => {
-    if (loading)
-      return
-
     setListItems(data.map((it: any) => ({
       ...it,
       open: false
     })))
   }, [data])
-
-  if (loading)
-    return <CenteredCircularProgress />
 
   return (
     <List sx={{ width: '100%', maxWidth: '100%', bgcolor: 'background.paper' }}>
@@ -77,12 +70,22 @@ export default function EmprestimoList({ loading, data = [] }: any) {
                 <ListItemText>Aprovações até o momento {value.approvals}</ListItemText>
               </ListItemButton>
               {
-                value.totalValue && (
+                value.remainingAmount && (
                   <ListItemButton sx={{ pl: 4 }}>
                     <ListItemIcon>
                       <StarBorder />
                     </ListItemIcon>
                     <ListItemText>Valor que falta pagar R${value.remainingAmount}</ListItemText>
+                  </ListItemButton>
+                )
+              }
+              {
+                value.isPaidOff && (
+                  <ListItemButton sx={{ pl: 4 }}>
+                    <ListItemIcon>
+                      <StarBorder />
+                    </ListItemIcon>
+                    <ListItemText>Emprestimo liquidado 100%</ListItemText>
                   </ListItemButton>
                 )
               }
