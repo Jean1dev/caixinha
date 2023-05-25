@@ -1,5 +1,5 @@
 const { Member, Box } = require('caixinha-core/dist/src')
-const { connect, getDocumentById, replaceDocumentById } = require('../v2/mongo-operations')
+const { connect, replaceDocumentById, getByIdOrThrow } = require('../v2/mongo-operations')
 
 module.exports = async function (context, req) {
     try {
@@ -9,10 +9,7 @@ module.exports = async function (context, req) {
         await connect()
 
         const caixinhaCollection = 'caixinhas'
-        const boxEntity = await getDocumentById(boxId, caixinhaCollection)
-
-        if (!boxEntity)
-            throw new Error('Box not found')
+        const boxEntity = await getByIdOrThrow(boxId, caixinhaCollection)
 
         const box = Box.from(boxEntity)
         box.joinMember(member)

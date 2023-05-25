@@ -14,7 +14,7 @@ module.exports = async function (context, req) {
         const emprestimo = domain.getLoanByUUID(emprestimoUid)
 
         const member = Member.build({ name, email })
-        const payment = new Payment(member, valor, 'Pago via Caixinha web')
+        const payment = new Payment({ member, value: valor, description: 'Pago via caixinha web' })
         emprestimo.addPayment(payment)
 
         await replaceDocumentById(caixinhaId, collectionName, resolveCircularStructureBSON(domain))
