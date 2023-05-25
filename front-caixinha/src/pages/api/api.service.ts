@@ -1,7 +1,7 @@
 import { Caixinha, IMeusEmprestimos } from "@/types/types"
 import axios from 'axios'
 
-//const BASE_URL = 'http://localhost:7071/api' || 'https://emprestimo-caixinha.azurewebsites.net/api'
+//const BASE_URL = 'http://localhost:7071/api'
 const BASE_URL = 'https://emprestimo-caixinha.azurewebsites.net/api'
 const URL_STORAGE_SERVER = 'https://storage-manager-svc.herokuapp.com'
 const BUCKET_STORAGE = 'binnoroteirizacao'
@@ -27,7 +27,7 @@ http.interceptors.response.use((response) => {
     throw error
 })
 
-function getBuckets() {
+export function getBuckets() {
     http.get(`${URL_STORAGE_SERVER}/v1/s3/buckets`).then(({ data }) => {
         console.log(data)
     }).catch(() => {
@@ -36,6 +36,10 @@ function getBuckets() {
 }
 
 export async function uploadResource(resourceFile: string | Blob) {
+    if (dev) {
+        return retornaComAtraso('url mock')
+    }
+    
     const form = new FormData();
     form.append("file", resourceFile);
 
@@ -81,6 +85,14 @@ async function asyncFetch(url: string, method: string, body?: any): Promise<any>
     }
 }
 
+export async function aprovarEmprestimo(payload: any): Promise<any> {
+    if (dev) {
+        return retornaComAtraso(true)
+    }
+
+    return asyncFetch(`${BASE_URL}/aprovar-emprestimo`, 'POST', payload)
+}
+
 export async function getMinhasCaixinhas(name: string, email: string) {
     if (dev) {
         return retornaComAtraso([
@@ -104,7 +116,21 @@ export async function getMeusEmprestimos({ name, email }: any): Promise<IMeusEmp
             "caixinhas": [
                 {
                     "currentBalance": 84,
-                    "myLoans": [],
+                    "myLoans": [
+                        {
+                            "requiredNumberOfApprovals": 2,
+                            "description": "meu emprestimo?",
+                            "approvals": 2,
+                            "interest": 3,
+                            "fees": 0,
+                            "valueRequested": 1,
+                            "date": "2023-05-09T14:09:57.110Z",
+                            "totalValue": 1.03,
+                            "approved": true,
+                            "uid": "013b1172-f830-41bf-9f36-92127c66b36c",
+                            "memberName": "jeanluca jeanlucajea"
+                        },
+                    ],
                     "loansForApprove": [
                         {
                             "requiredNumberOfApprovals": 2,
@@ -116,7 +142,7 @@ export async function getMeusEmprestimos({ name, email }: any): Promise<IMeusEmp
                             "date": "2023-05-09T14:09:57.110Z",
                             "totalValue": 1.03,
                             "approved": true,
-                            "uid": "013b1172-f830-41bf-9f36-92177c66bf6c",
+                            "uid": "013b1172-f830-41bf-9f36-92177c66b36c",
                             "memberName": "augusto"
                         },
                         {
@@ -194,4 +220,14 @@ export async function joinABox(params: any) {
     return asyncFetch(`${BASE_URL}/user-join-caixinha`,
         'POST',
         JSON.stringify(params))
+}
+
+export async function pagarEmprestimo(params: any) {
+    if (dev) {
+        return retornaComAtraso(true)
+    }
+
+    return asyncFetch(`${BASE_URL}/pagamento-emprestimo`,
+        'POST',
+        params)
 }

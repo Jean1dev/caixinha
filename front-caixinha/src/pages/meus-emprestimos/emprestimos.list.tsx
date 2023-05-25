@@ -1,15 +1,14 @@
 import List from '@mui/material/List';
-import ListItem from '@mui/material/ListItem';
 import ListItemText from '@mui/material/ListItemText';
-import CommentIcon from '@mui/icons-material/Comment';
-import IconButton from '@mui/material/IconButton';
-import { CircularProgress, Collapse, ListItemButton, ListItemIcon, Typography } from '@mui/material';
+import { Collapse, ListItemButton, ListItemIcon } from '@mui/material';
 import { LoansForApprove } from '@/types/types';
-import { ExpandLess, ExpandMore, StarBorder } from '@mui/icons-material';
+import { ExpandLess, ExpandMore, DetailsOutlined, StarBorder } from '@mui/icons-material';
 import { useEffect, useState } from 'react';
+import { useRouter } from 'next/router';
 
-export default function EmprestimoList({ loading, data = [] }: any) {
+export default function EmprestimoList({ data = [] }: any) {
   const [listItems, setListItems] = useState([]);
+  const router = useRouter()
 
   const handleClick = (item: any) => {
     const remap = listItems.map((it: any) => {
@@ -26,18 +25,19 @@ export default function EmprestimoList({ loading, data = [] }: any) {
     setListItems(remap)
   };
 
-  useEffect(() => {
-    if (loading)
-      return
+  const goToDetalhesEmprestimo = (item: any) => {
+    router.push({
+      pathname: 'detalhes-emprestimo',
+      query: item
+    })
+  }
 
+  useEffect(() => {
     setListItems(data.map((it: any) => ({
       ...it,
       open: false
     })))
   }, [data])
-
-  if (loading)
-    return <CircularProgress disableShrink />
 
   return (
     <List sx={{ width: '100%', maxWidth: '100%', bgcolor: 'background.paper' }}>
@@ -68,6 +68,32 @@ export default function EmprestimoList({ loading, data = [] }: any) {
                   <StarBorder />
                 </ListItemIcon>
                 <ListItemText>Aprovações até o momento {value.approvals}</ListItemText>
+              </ListItemButton>
+              {
+                value.remainingAmount && (
+                  <ListItemButton sx={{ pl: 4 }}>
+                    <ListItemIcon>
+                      <StarBorder />
+                    </ListItemIcon>
+                    <ListItemText>Valor que falta pagar R${value.remainingAmount}</ListItemText>
+                  </ListItemButton>
+                )
+              }
+              {
+                value.isPaidOff && (
+                  <ListItemButton sx={{ pl: 4 }}>
+                    <ListItemIcon>
+                      <StarBorder />
+                    </ListItemIcon>
+                    <ListItemText>Emprestimo liquidado 100%</ListItemText>
+                  </ListItemButton>
+                )
+              }
+              <ListItemButton sx={{ pl: 4 }} onClick={() => goToDetalhesEmprestimo(value)}>
+                <ListItemIcon>
+                  <DetailsOutlined />
+                </ListItemIcon>
+                <ListItemText>Clique para fazer a gestão e conferir os detalhes</ListItemText>
               </ListItemButton>
             </List>
           </Collapse>

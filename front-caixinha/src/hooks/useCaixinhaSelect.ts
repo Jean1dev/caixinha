@@ -9,9 +9,10 @@ export function useCaixinhaSelect() {
     const toggleCaixinha = (caixinha: Caixinha | undefined) => {
         if (!caixinha)
             return
-        
+
         setCaixinha(caixinha);
         setStoredCaixinha(caixinha);
+        window.location.reload();
     };
 
     useEffect(() => {
@@ -20,5 +21,5 @@ export function useCaixinhaSelect() {
         }
     }, [storedCaixinha]);
 
-    return [caixinha, toggleCaixinha] as const;
+    return { caixinha, toggleCaixinha };
 }

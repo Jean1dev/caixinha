@@ -3,6 +3,9 @@ import { useAppTheme } from "@/hooks/useAppTheme";
 import { TopNav } from "./top-nav";
 import 'react-toastify/dist/ReactToastify.css';
 import { ToastContainer } from "react-toastify";
+import { useEffect } from 'react';
+import { hotjar } from 'react-hotjar'
+import { AlertNav } from "./alert-nav";
 
 const SIDE_NAV_WIDTH = 100;
 
@@ -23,13 +26,25 @@ const LayoutContainer = styled('div')({
     width: '100%'
 });
 
+const HJID = process.env.HOTJAR_ID
+const HJSV = 6
+
 export default function Layout({ children }: { children: React.ReactNode }) {
     const [currentTheme] = useAppTheme()
+
+    useEffect(() => {
+        if (HJID) {
+            //@ts-ignore
+            hotjar.initialize(HJID, HJSV)
+            console.log('HOTJAR IS OK')
+        }
+    }, [])
 
     return (
         <ThemeProvider theme={currentTheme}>
             <TopNav />
-            <Divider/>
+            <Divider />
+            <AlertNav />
             {/* <SideNav
                 onClose={() => setOpenNav(false)}
                 open={openNav}

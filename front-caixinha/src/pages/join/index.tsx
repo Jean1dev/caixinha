@@ -6,6 +6,7 @@ import { getCaixinhas, joinABox } from "../api/api.service";
 import { Caixinha } from "@/types/types";
 import { useSession } from "next-auth/react";
 import { toast } from "react-toastify";
+import CenteredCircularProgress from "@/components/CenteredCircularProgress";
 
 export default function Join() {
     const { status, data } = useSession()
@@ -46,7 +47,7 @@ export default function Join() {
     }, [status])
 
     if (loading)
-        return <h1>Carregando</h1>
+        return <CenteredCircularProgress/>
 
     const handleSubmit = () => {
         const payload = {

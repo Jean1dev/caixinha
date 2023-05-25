@@ -4,21 +4,29 @@ import {
   Container,
   Grid,
   Pagination,
-  Stack
-} from '@mui/material'
+  Stack} from '@mui/material'
 import React, { useEffect, useState } from 'react'
 import { getCaixinhas } from './api/api.service'
 import Layout from '@/components/Layout'
 import { Caixinha } from '@/types/types'
 import { CaixinhaSearch } from '@/components/caixinha/CaixinhaSearch'
 import { CaixinhaCard } from '@/components/caixinha/CaixinhaCard'
+import CenteredCircularProgress from '@/components/CenteredCircularProgress'
 
 export default function Home() {
   const [data, setData] = useState<Caixinha[]>([])
+  const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    getCaixinhas().then(r => setData(r))
+    getCaixinhas().then(r => {
+      setData(r)
+      setLoading(false)
+    })
   }, [])
+
+  if (loading) {
+    return <CenteredCircularProgress />
+  }
 
   return (
     <Layout>

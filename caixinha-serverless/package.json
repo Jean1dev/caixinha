@@ -3,11 +3,16 @@
   "version": "1.0.0",
   "description": "",
   "scripts": {
-    "start": "func start"
+    "start": "func start",
+    "test": "jest",
+    "coverage": "jest --coverage"
   },
   "dependencies": {
-    "caixinha-core": "0.0.8",
+    "caixinha-core": "0.0.9",
     "mongodb": "^5.4.0",
     "parse-multipart": "^1.0.4"
+  },
+  "devDependencies": {
+    "jest": "^29.5.0"
   }
 }
