@@ -12,7 +12,7 @@ import {
 } from '@mui/material';
 import { LoansForApprove } from '@/types/types';
 import { useCaixinhaSelect } from '@/hooks/useCaixinhaSelect';
-import { aprovarEmprestimo } from '../api/api.service';
+import { aprovarEmprestimo } from '../../pages/api/api.service';
 import CenteredCircularProgress from '@/components/CenteredCircularProgress';
 import { toast } from 'react-toastify';
 import { useSession } from 'next-auth/react';

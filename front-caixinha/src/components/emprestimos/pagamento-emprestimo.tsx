@@ -16,7 +16,7 @@ import { LoansForApprove } from '@/types/types';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import CheckIcon from '@mui/icons-material/Check';
 import { useCaixinhaSelect } from '@/hooks/useCaixinhaSelect';
-import { pagarEmprestimo } from '../api/api.service';
+import { pagarEmprestimo } from '../../pages/api/api.service';
 import CenteredCircularProgress from '@/components/CenteredCircularProgress';
 import { toast } from 'react-toastify';
 import { useSession } from 'next-auth/react';

@@ -3,9 +3,9 @@ import { Box, Container, Stack, Typography, Grid } from "@mui/material";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
-import { DetalhesUser } from "./detalhes-user";
-import { GestaoEmprestimo } from "./gestao-emprestimo";
-import { PagamentoEmprestimo } from "./pagamento-emprestimo";
+import { DetalhesUser } from "../../components/emprestimos/detalhes-user";
+import { GestaoEmprestimo } from "../../components/emprestimos/gestao-emprestimo";
+import { PagamentoEmprestimo } from "../../components/emprestimos/pagamento-emprestimo";
 
 export default function DetalhesEmprestimo() {
     const [isMeuEmprestimo, setMeuEmprestimo] = useState(false)
