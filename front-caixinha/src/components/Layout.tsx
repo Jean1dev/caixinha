@@ -34,9 +34,8 @@ export default function Layout({ children }: { children: React.ReactNode }) {
 
     useEffect(() => {
         if (siteId) {
-            //@ts-ignore
-            Hotjar.init(siteId, hotjarVersion);
-            console.log('HOTJAR IS OK')
+            const res = Hotjar.init(3503957, hotjarVersion);
+            console.log('HOTJAR IS OK?', res)
         }
     }, [])
 
