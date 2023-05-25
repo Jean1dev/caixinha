@@ -36,6 +36,9 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         if (siteId) {
             const res = Hotjar.init(3503957, hotjarVersion);
             console.log('HOTJAR IS OK?', res)
+            if (res) {
+                Hotjar.event('Novo Acesso')
+            }
         }
     }, [])
 
