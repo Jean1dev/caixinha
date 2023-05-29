@@ -39,7 +39,7 @@ export async function uploadResource(resourceFile: string | Blob) {
     if (dev) {
         return retornaComAtraso('url mock')
     }
-    
+
     const form = new FormData();
     form.append("file", resourceFile);
 
@@ -57,7 +57,6 @@ export async function uploadResource(resourceFile: string | Blob) {
     const response = await http.request(options)
     return response.data
 }
-
 
 function retornaComAtraso(value: any): Promise<any> {
     return new Promise((resolve) => {
@@ -230,4 +229,55 @@ export async function pagarEmprestimo(params: any) {
     return asyncFetch(`${BASE_URL}/pagamento-emprestimo`,
         'POST',
         params)
+}
+
+export async function getValorParcelas(params: any) {
+    if (dev) {
+        return retornaComAtraso([
+            {
+                "value": 2.58
+            },
+            {
+                "value": 2.58
+            }
+        ])
+    }
+
+    return asyncFetch(`${BASE_URL}/calcular-parcelas`,
+        'POST',
+        params
+    )
+}
+
+export async function getDadosAnaliseCaixinha(idCaixinha: string) {
+    if (dev) {
+        return retornaComAtraso({
+            saldoTotal: 102,
+            totalDepositos: 1600,
+            movimentacoes: [{
+                id: 'f69f88012978187a6c12897f',
+                tipo: 'DEPOSITO',
+                valor: 30.5,
+                nick: 'Arnando',
+                date: '25/05/2022',
+                status: 'pending'
+            }],
+            percentuais: {
+                series: [25.9, 23.9, 23.8, 15.6, 6.9, 3.8],
+                labels: ['jean', 'augusto', 'gava', 'arnaldo', 'arthur', 'gean']
+            },
+            evolucaoPatrimonial: [
+                {
+                    name: 'Saldo da carteira',
+                    data: [1500, 1505, 1545, 1590, 1650, 1750, 1800, 2100, 2250, 2300, 2450, 2800]
+                },
+                {
+                    name: 'Saldo disponivel no mês',
+                    data: [1500, 463, 505, 505, 909, 1545, 2000, 505, 498, 1997, 1800, 0]
+                }
+            ]
+        })
+    }
+
+    return asyncFetch(`${BASE_URL}/dados-analise?caixinhaId=${idCaixinha}`, 'GET')
 }

@@ -78,8 +78,3 @@ export default function Home() {
     </Layout>
   )
 }
-
-// export async function getServerSideProps() {
-//   const data = await getCaixinhas()
-//   return { props: { data } }
-// }

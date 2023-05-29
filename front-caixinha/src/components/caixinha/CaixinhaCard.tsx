@@ -1,7 +1,8 @@
 import { Caixinha } from '@/types/types';
+import { InfoOutlined } from '@mui/icons-material';
 import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward'
-import QueryBuilderIcon from '@mui/icons-material/QueryBuilder';
-import { Avatar, Box, Button, Card, CardContent, Divider, Stack, SvgIcon, Typography } from '@mui/material';
+
+import { Avatar, Box, Button, Card, CardContent, Divider, IconButton, Stack, SvgIcon, Typography } from '@mui/material';
 import { useRouter } from 'next/router';
 
 export const CaixinhaCard = ({ caixinha }: { caixinha: Caixinha }) => {
@@ -11,6 +12,13 @@ export const CaixinhaCard = ({ caixinha }: { caixinha: Caixinha }) => {
         router.push({
             pathname: '/join',
             query: { id: caixinha.id },
+        })
+    }
+
+    const detalhes = () => {
+        router.push({
+            pathname: '/analise-caixinha',
+            query: { unique: caixinha.id },
         })
     }
 
@@ -63,19 +71,21 @@ export const CaixinhaCard = ({ caixinha }: { caixinha: Caixinha }) => {
                     direction="row"
                     spacing={1}
                 >
-                    <SvgIcon
-                        color="action"
-                        fontSize="small"
-                    >
-                        <QueryBuilderIcon />
-                    </SvgIcon>
-                    <Typography
-                        color="text.secondary"
-                        display="inline"
-                        variant="body2"
-                    >
-                        Ultima movimentação 2hr atrás
-                    </Typography>
+                    <IconButton onClick={detalhes}>
+                        <SvgIcon
+                            color="action"
+                            fontSize="small"
+                        >
+                            <InfoOutlined />
+                        </SvgIcon>
+                        <Typography
+                            color="text.secondary"
+                            display="inline"
+                            variant="body2"
+                        >
+                            clique para ver os detalhes
+                        </Typography>
+                    </IconButton>
                 </Stack>
                 <Stack
                     alignItems="center"

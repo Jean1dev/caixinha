@@ -8,7 +8,7 @@ module.exports = async function (context, _req) {
 
         const body = results
             .map(boxEntity => {
-                const item = Box.from(boxEntity)
+                const item = Box.fromJson(boxEntity)
                 item['id'] = boxEntity._id
                 delete item['loans']
                 delete item['deposits']

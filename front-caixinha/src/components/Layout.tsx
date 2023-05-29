@@ -37,8 +37,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
             let res = Hotjar.init(3503957, hotjarVersion);
             console.log('HOTJAR IS OK?', res)
             if (res) {
-                res = Hotjar.event('Novo Acesso') 
-                console.log('evento enviado ', res)
+                res = Hotjar.event('Novo Acesso')
             }
         }
     }, [])
@@ -48,10 +47,6 @@ export default function Layout({ children }: { children: React.ReactNode }) {
             <TopNav />
             <Divider />
             <AlertNav />
-            {/* <SideNav
-                onClose={() => setOpenNav(false)}
-                open={openNav}
-            /> */}
             <LayoutRoot>
                 <>
                     <LayoutContainer>

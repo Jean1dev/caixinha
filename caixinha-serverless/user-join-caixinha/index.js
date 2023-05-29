@@ -11,7 +11,7 @@ module.exports = async function (context, req) {
         const caixinhaCollection = 'caixinhas'
         const boxEntity = await getByIdOrThrow(boxId, caixinhaCollection)
 
-        const box = Box.from(boxEntity)
+        const box = Box.fromJson(boxEntity)
         box.joinMember(member)
 
         await replaceDocumentById(boxEntity._id, caixinhaCollection, box)
