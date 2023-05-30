@@ -44,7 +44,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
 
     return (
         <ThemeProvider theme={currentTheme}>
-            <TopNav />
+            <TopNav/>
             <Divider />
             <AlertNav />
             <LayoutRoot>

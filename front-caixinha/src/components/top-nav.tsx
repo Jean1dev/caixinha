@@ -1,4 +1,6 @@
 import NotificationsNoneIcon from '@mui/icons-material/NotificationsNone';
+import Brightness4Icon from "@mui/icons-material/Brightness4";
+import Brightness7Icon from "@mui/icons-material/Brightness7";
 import MenuIcon from '@mui/icons-material/Menu';
 import {
     Avatar,
@@ -17,6 +19,7 @@ import { useState } from 'react';
 import { signIn, useSession } from 'next-auth/react';
 import MiniDrawer from './Drawer';
 import ApplicationSelectCaixinha from './application-select.caixinha';
+import { useAppTheme } from '@/hooks/useAppTheme';
 
 const SIDE_NAV_WIDTH = 280;
 const TOP_NAV_HEIGHT = 64;
@@ -25,6 +28,7 @@ export const TopNav = () => {
     const accountPopover = usePopover();
     const [open, setOpen] = useState(false);
     const { status } = useSession()
+    const [theme, toggleTheme] = useAppTheme()
     const handleSignIn = async () => await signIn('keycloak')
 
     const handleDrawerOpen = () => {
@@ -100,6 +104,13 @@ export const TopNav = () => {
                                             <NotificationsNoneIcon />
                                         </SvgIcon>
                                     </Badge>
+                                </IconButton>
+                            </Tooltip>
+                            <Tooltip title="Tema">
+                                <IconButton onClick={toggleTheme}>
+                                    <SvgIcon fontSize="small">
+                                        {theme.palette.mode === "dark" ? <Brightness7Icon /> : <Brightness4Icon />}
+                                    </SvgIcon>
                                 </IconButton>
                             </Tooltip>
                             <Avatar
