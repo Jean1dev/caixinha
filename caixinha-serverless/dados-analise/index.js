@@ -29,6 +29,17 @@ module.exports = async function (context, req) {
     await connect()
     const boxEntity = await getByIdOrThrow(caixinhaId, 'caixinhas')
     const depositos = await find('depositos', { idCaixinha: new ObjectId(caixinhaId) })
+    const patrimonio = await find('evolucaoPatrimonial', { idCaixinha: new ObjectId(caixinhaId) })
+    const evolucaoPatrimonial = [
+        {
+            name: 'Saldo da carteira',
+            data: patrimonio.length > 0 ? patrimonio[0].portfolioBalance.data : []
+        },
+        {
+            name: 'Saldo disponivel no mês',
+            data: patrimonio.length > 0 ? patrimonio[0].availableBalance.data : []
+        }
+    ]
     const movimentacoes = []
 
     depositos.forEach(it => {
@@ -63,6 +74,7 @@ module.exports = async function (context, req) {
         totalDepositos,
         movimentacoes,
         percentuais,
+        evolucaoPatrimonial
     }
 
     context.res = {

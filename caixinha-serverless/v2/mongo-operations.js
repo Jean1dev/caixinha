@@ -41,11 +41,16 @@ async function find(collection, projection) {
     return collectionName.find(projection).toArray()
 }
 
+async function deleteAll(collection) {
+    return client.db(database).collection(collection).deleteMany()
+}
+
 module.exports = {
     connect,
     getDocumentById,
     replaceDocumentById,
     insertDocument,
     find,
-    getByIdOrThrow
+    getByIdOrThrow,
+    deleteAll
 }
