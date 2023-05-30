@@ -46,7 +46,7 @@ export const TopNav = () => {
                     component="header"
                     sx={{
                         backdropFilter: 'blur(6px)',
-                        backgroundColor: (theme) => alpha(theme.palette.background.default, 0.2),
+                        backgroundColor: (theme) => theme.palette.background.default,//alpha(theme.palette.background.default, 0.2),
                         position: 'sticky',
                         left: {
                             lg: `${SIDE_NAV_WIDTH}px`
@@ -169,6 +169,13 @@ export const TopNav = () => {
                         direction="row"
                         spacing={2}
                     >
+                        <Tooltip title="Tema">
+                            <IconButton onClick={toggleTheme}>
+                                <SvgIcon fontSize="small">
+                                    {theme.palette.mode === "dark" ? <Brightness7Icon /> : <Brightness4Icon />}
+                                </SvgIcon>
+                            </IconButton>
+                        </Tooltip>
                         <IconButton
                             onClick={handleSignIn}
                             edge="start"

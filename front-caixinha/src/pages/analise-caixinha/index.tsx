@@ -1,3 +1,4 @@
+//@ts-nocheck
 import { Box, Button, Card, CardContent, Container, Unstable_Grid2 as Grid, Typography } from '@mui/material';
 import { SaldoTotal } from '../../components/analise-caixinha/saldo-total';
 import { TotalDepositos } from '../../components/analise-caixinha/total-depositos';

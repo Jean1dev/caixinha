@@ -6,13 +6,13 @@ export function useAppTheme() {
   const [theme, setTheme] = useState(darkTheme);
   const [storedThemeMode, setStoredThemeMode] = useLocalStorage<
     "dark" | "light"
-  >("themeMode", "dark");
+  >("themeMode", "light");
 
   const toggleTheme = () => {
     const currentTheme = theme.palette.mode === "dark" ? lightTheme : darkTheme;
-    console.log(theme.palette.mode)
     setTheme(currentTheme);
     setStoredThemeMode(currentTheme.palette.mode);
+    window.location.reload()
   };
 
   useEffect(() => {

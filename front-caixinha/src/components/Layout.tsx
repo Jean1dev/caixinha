@@ -16,14 +16,15 @@ const LayoutRoot = styled('div')(({ theme }) => ({
     [theme.breakpoints.up('lg')]: {
         paddingLeft: SIDE_NAV_WIDTH,
         paddingRight: SIDE_NAV_WIDTH
-    }
+    },
+    backgroundColor: theme.palette.background.default
 }));
 
 const LayoutContainer = styled('div')({
     display: 'flex',
     flex: '1 1 auto',
     flexDirection: 'column',
-    width: '100%'
+    width: '100%',
 });
 
 const siteId = process.env.NEXT_PUBLIC_HOTJAR_ID

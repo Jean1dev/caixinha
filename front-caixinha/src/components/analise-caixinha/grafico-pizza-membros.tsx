@@ -57,7 +57,7 @@ const useChartOptions = (labels: any) => {
   };
 };
 
-export const GraficoPizzaMembros = (props) => {
+export const GraficoPizzaMembros = (props: any) => {
   const { chartSeries, labels, sx } = props;
   const chartOptions = useChartOptions(labels);
 
@@ -79,7 +79,7 @@ export const GraficoPizzaMembros = (props) => {
           spacing={2}
           sx={{ mt: 2 }}
         >
-          {chartSeries.map((item, index) => {
+          {chartSeries.map((item: any, index: any) => {
             const label = labels[index];
 
             return (
