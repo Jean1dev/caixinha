@@ -281,3 +281,18 @@ export async function getDadosAnaliseCaixinha(idCaixinha: string) {
 
     return asyncFetch(`${BASE_URL}/dados-analise?caixinhaId=${idCaixinha}`, 'GET')
 }
+
+export async function getChavesPix(caixinhaID: string) {
+    if (dev) {
+        return retornaComAtraso({
+            "keysPix": [
+                "fe52da16-71c9-47f6-9daa-2e89034f97b0"
+            ],
+            "urlsQrCodePix": [
+                "https://cvws.icloud-content.com/B/ARhxmpJ2w7BmrNOVeYZVHQRBgPhCAU-JQb6LqqWjYGX73-pD8mnxHt9c/Captura+de+Tela+2023-05-31+a%CC%80%28s%29+14.44.30.png?o=Ar519Drlg4Gh0A5ohG6PrE9KAwfUmcz55_7mJ7rv8iyx&v=1&x=3&a=CAogvl8SBV9_Ajgaoslhrhtx9LK_6-_amcZoLAKQpBQNk7oSbxCxjq-XhzEYseuKmYcxIgEAUgRBgPhCWgTxHt9caidOXL1-O84Qr5LLA_VwvngENj56s-SjeUcxsfyVwJgMYIopd2emXoRyJ5K0bb-KXGGLRKhuVkqEsXkBoUXg6JK7cVQKzkKtdCFYpK9yrPBrcA&e=1685558834&fl=&r=8985d717-8299-48df-8ead-201f3605aa08-1&k=L-qDoY-jaoxPgueEijo7og&ckc=com.apple.clouddocs&ckz=com.apple.CloudDocs&p=107&s=zM1b0XuCEb7SlCyobqvv02Z4ook&cd=i"
+            ]
+        })
+    }
+
+    return asyncFetch(`${BASE_URL}/get-chaves-pix?caixinhaId=${caixinhaID}`, 'GET')
+}

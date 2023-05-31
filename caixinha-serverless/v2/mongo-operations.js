@@ -11,12 +11,12 @@ async function connect() {
     await client.connect()
 }
 
-async function getDocumentById(id, collection) {
+async function getDocumentById(id, collection = 'caixinhas') {
     const collectionName = client.db(database).collection(collection)
     return collectionName.findOne({ _id: new ObjectId(id) })
 }
 
-async function getByIdOrThrow(id, collection) {
+async function getByIdOrThrow(id, collection = 'caixinhas') {
     const collectionName = client.db(database).collection(collection)
     const entity = await collectionName.findOne({ _id: new ObjectId(id) })
     if (!entity) {
