@@ -25,19 +25,19 @@ const SIDE_NAV_WIDTH = 280;
 const TOP_NAV_HEIGHT = 64;
 
 export const TopNav = () => {
-    const accountPopover = usePopover();
-    const [open, setOpen] = useState(false);
+    const accountPopover = usePopover()
+    const [open, setOpen] = useState(false)
     const { status } = useSession()
     const [theme, toggleTheme] = useAppTheme()
-    const handleSignIn = async () => await signIn('keycloak')
+    const handleSignIn = async () => await signIn()
 
     const handleDrawerOpen = () => {
-        setOpen(true);
-    };
+        setOpen(true)
+    }
 
     const handleDrawerClose = () => {
-        setOpen(false);
-    };
+        setOpen(false)
+    }
 
     if (status === 'authenticated') {
         return (
