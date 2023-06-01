@@ -16,14 +16,15 @@ const LayoutRoot = styled('div')(({ theme }) => ({
     [theme.breakpoints.up('lg')]: {
         paddingLeft: SIDE_NAV_WIDTH,
         paddingRight: SIDE_NAV_WIDTH
-    }
+    },
+    backgroundColor: theme.palette.background.default
 }));
 
 const LayoutContainer = styled('div')({
     display: 'flex',
     flex: '1 1 auto',
     flexDirection: 'column',
-    width: '100%'
+    width: '100%',
 });
 
 const siteId = process.env.NEXT_PUBLIC_HOTJAR_ID
@@ -37,21 +38,16 @@ export default function Layout({ children }: { children: React.ReactNode }) {
             let res = Hotjar.init(3503957, hotjarVersion);
             console.log('HOTJAR IS OK?', res)
             if (res) {
-                res = Hotjar.event('Novo Acesso') 
-                console.log('evento enviado ', res)
+                res = Hotjar.event('Novo Acesso')
             }
         }
     }, [])
 
     return (
         <ThemeProvider theme={currentTheme}>
-            <TopNav />
+            <TopNav/>
             <Divider />
             <AlertNav />
-            {/* <SideNav
-                onClose={() => setOpenNav(false)}
-                open={openNav}
-            /> */}
             <LayoutRoot>
                 <>
                     <LayoutContainer>

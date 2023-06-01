@@ -8,7 +8,8 @@
     "coverage": "jest --coverage"
   },
   "dependencies": {
-    "caixinha-core": "0.0.9",
+    "caixinha-core": "1.0.0",
+    "moment": "^2.29.4",
     "mongodb": "^5.4.0",
     "parse-multipart": "^1.0.4"
   },

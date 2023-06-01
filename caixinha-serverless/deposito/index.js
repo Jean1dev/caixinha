@@ -1,5 +1,5 @@
 const { Box, Deposit, Member } = require('caixinha-core/dist/src')
-const { connect, getByIdOrThrow, replaceDocumentById } = require('../v2/mongo-operations')
+const { connect, getByIdOrThrow, replaceDocumentById, insertDocument } = require('../v2/mongo-operations')
 const { resolveCircularStructureBSON } = require('../utils')
 
 module.exports = async function (context, req) {
@@ -21,6 +21,7 @@ module.exports = async function (context, req) {
 
         box.deposit(deposit)
         await replaceDocumentById(caixinhaId, collection, resolveCircularStructureBSON(box))
+        await insertDocument('depositos', { idCaixinha: boxEntity._id, ...deposit })
 
     } catch (error) {
         context.log(error.message)

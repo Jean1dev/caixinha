@@ -5,12 +5,14 @@ import {
     FormControl,
     Grid,
     InputAdornment,
+    List,
+    ListItem,
     TextField,
     Typography,
 } from "@mui/material"
 import { FormEvent, useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
-import { doEmprestimo } from '../api/api.service'
+import { doEmprestimo, getValorParcelas } from '../api/api.service'
 import Layout from '@/components/Layout'
 import { useSession } from 'next-auth/react'
 import { toast } from 'react-toastify'
@@ -30,6 +32,10 @@ export default function Emprestimo() {
         name: "",
         email: '',
     })
+    const [stateParcelas, setStateParcelas] = useState({
+        data: [],
+        loading: false
+    })
 
     useEffect(() => {
         if (status === 'authenticated') {
@@ -42,6 +48,30 @@ export default function Emprestimo() {
             })
         }
     }, [data, status])
+
+    useEffect(() => {
+        if (!solicitacao.parcela) {
+            return
+        }
+        setStateParcelas({
+            data: [],
+            loading: true
+        })
+
+        getValorParcelas({ parcelas: solicitacao.parcela, total: solicitacao.valor })
+            .then(response => {
+                setStateParcelas({
+                    data: response,
+                    loading: false
+                })
+            }).catch(() => {
+                setStateParcelas({
+                    data: [],
+                    loading: false
+                })
+            })
+
+    }, [solicitacao])
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
@@ -171,7 +201,34 @@ export default function Emprestimo() {
                                     >
                                         Enviar
                                     </Button>
+
                                 </Box>
+
+                                {
+                                    solicitacao.parcela >= 1 && (
+                                        <>
+                                            {
+                                                stateParcelas.loading && <Typography>Calculando parcelamento</Typography>
+                                            }
+                                            {
+                                                !stateParcelas.loading && (
+                                                    <>
+                                                        <Typography> Simulação do valor das parcelas (sem taxas e juros) </Typography>
+                                                        <List>
+                                                            {
+                                                                stateParcelas.data.map((item: any, index) => (
+                                                                    <ListItem key={index}>
+                                                                        <Typography>R${item.value}</Typography>
+                                                                    </ListItem>
+                                                                ))
+                                                            }
+                                                        </List>
+                                                    </>
+                                                )
+                                            }
+                                        </>
+                                    )
+                                }
                             </Grid>
                         </Grid>
                     </form>

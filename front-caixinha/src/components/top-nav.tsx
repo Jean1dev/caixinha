@@ -1,4 +1,6 @@
 import NotificationsNoneIcon from '@mui/icons-material/NotificationsNone';
+import Brightness4Icon from "@mui/icons-material/Brightness4";
+import Brightness7Icon from "@mui/icons-material/Brightness7";
 import MenuIcon from '@mui/icons-material/Menu';
 import {
     Avatar,
@@ -17,23 +19,25 @@ import { useState } from 'react';
 import { signIn, useSession } from 'next-auth/react';
 import MiniDrawer from './Drawer';
 import ApplicationSelectCaixinha from './application-select.caixinha';
+import { useAppTheme } from '@/hooks/useAppTheme';
 
 const SIDE_NAV_WIDTH = 280;
 const TOP_NAV_HEIGHT = 64;
 
 export const TopNav = () => {
-    const accountPopover = usePopover();
-    const [open, setOpen] = useState(false);
+    const accountPopover = usePopover()
+    const [open, setOpen] = useState(false)
     const { status } = useSession()
-    const handleSignIn = async () => await signIn('keycloak')
+    const [theme, toggleTheme] = useAppTheme()
+    const handleSignIn = async () => await signIn()
 
     const handleDrawerOpen = () => {
-        setOpen(true);
-    };
+        setOpen(true)
+    }
 
     const handleDrawerClose = () => {
-        setOpen(false);
-    };
+        setOpen(false)
+    }
 
     if (status === 'authenticated') {
         return (
@@ -42,7 +46,7 @@ export const TopNav = () => {
                     component="header"
                     sx={{
                         backdropFilter: 'blur(6px)',
-                        backgroundColor: (theme) => alpha(theme.palette.background.default, 0.2),
+                        backgroundColor: (theme) => theme.palette.background.default,//alpha(theme.palette.background.default, 0.2),
                         position: 'sticky',
                         left: {
                             lg: `${SIDE_NAV_WIDTH}px`
@@ -102,6 +106,13 @@ export const TopNav = () => {
                                     </Badge>
                                 </IconButton>
                             </Tooltip>
+                            <Tooltip title="Tema">
+                                <IconButton onClick={toggleTheme}>
+                                    <SvgIcon fontSize="small">
+                                        {theme.palette.mode === "dark" ? <Brightness7Icon /> : <Brightness4Icon />}
+                                    </SvgIcon>
+                                </IconButton>
+                            </Tooltip>
                             <Avatar
                                 onClick={accountPopover.handleOpen}
                                 ref={accountPopover.anchorRef}
@@ -158,6 +169,13 @@ export const TopNav = () => {
                         direction="row"
                         spacing={2}
                     >
+                        <Tooltip title="Tema">
+                            <IconButton onClick={toggleTheme}>
+                                <SvgIcon fontSize="small">
+                                    {theme.palette.mode === "dark" ? <Brightness7Icon /> : <Brightness4Icon />}
+                                </SvgIcon>
+                            </IconButton>
+                        </Tooltip>
                         <IconButton
                             onClick={handleSignIn}
                             edge="start"

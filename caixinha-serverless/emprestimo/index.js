@@ -9,14 +9,15 @@ module.exports = async function (context, req) {
         const member = Member.build({ name, email })
         const boxEntity = await getByIdOrThrow(caixinhaID || process.env.CAIXINHA_ID, 'caixinhas')
 
-        const box = Box.from(boxEntity)
+        const box = Box.fromJson(boxEntity)
         const emprestimo = new Loan({
             box,
             member,
             valueRequested: Number(valor),
             interest: Number(juros),
             fees: 0,
-            description: motivo
+            description: motivo,
+            installments: parcela
         })
         
         emprestimo.addApprove(member)

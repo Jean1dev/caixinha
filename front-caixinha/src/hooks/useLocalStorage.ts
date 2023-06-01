@@ -8,7 +8,6 @@ export const useLocalStorage = <T>(key: string, initialValue: T) => {
 
     try {
       const item = window.localStorage.getItem(key);
-      console.log('retrieve item from storage ', key)
       return item ? JSON.parse(item) : initialValue;
     } catch (error) {
       console.log(error);
@@ -22,7 +21,6 @@ export const useLocalStorage = <T>(key: string, initialValue: T) => {
         value instanceof Function ? value(storedValue) : value;
       setStoredValue(valueToStore);
       window.localStorage.setItem(key, JSON.stringify(valueToStore));
-      console.log('save item on storage ', key)
     } catch (error) {
       console.log(error);
     }

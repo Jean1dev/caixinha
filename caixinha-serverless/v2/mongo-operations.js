@@ -11,12 +11,12 @@ async function connect() {
     await client.connect()
 }
 
-async function getDocumentById(id, collection) {
+async function getDocumentById(id, collection = 'caixinhas') {
     const collectionName = client.db(database).collection(collection)
     return collectionName.findOne({ _id: new ObjectId(id) })
 }
 
-async function getByIdOrThrow(id, collection) {
+async function getByIdOrThrow(id, collection = 'caixinhas') {
     const collectionName = client.db(database).collection(collection)
     const entity = await collectionName.findOne({ _id: new ObjectId(id) })
     if (!entity) {
@@ -41,11 +41,16 @@ async function find(collection, projection) {
     return collectionName.find(projection).toArray()
 }
 
+async function deleteAll(collection) {
+    return client.db(database).collection(collection).deleteMany()
+}
+
 module.exports = {
     connect,
     getDocumentById,
     replaceDocumentById,
     insertDocument,
     find,
-    getByIdOrThrow
+    getByIdOrThrow,
+    deleteAll
 }

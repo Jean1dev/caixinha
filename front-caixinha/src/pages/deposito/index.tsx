@@ -1,11 +1,17 @@
 import Head from 'next/head'
 import {
+    Avatar,
     Box,
     Button,
+    Card,
+    CardContent,
     Chip,
+    Container,
+    Divider,
     FormControl,
     Grid,
     InputAdornment,
+    Stack,
     TextField,
     Typography,
 } from "@mui/material"
@@ -13,13 +19,12 @@ import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import CheckIcon from '@mui/icons-material/Check';
 import { FormEvent, Key, useCallback, useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
-import { doDeposito, uploadResource } from '../api/api.service'
+import { doDeposito, getChavesPix, uploadResource } from '../api/api.service'
 import Layout from '@/components/Layout'
 import { useSession } from 'next-auth/react'
 import { useCaixinhaSelect } from '@/hooks/useCaixinhaSelect';
 import { toast } from 'react-toastify';
 import CenteredCircularProgress from '@/components/CenteredCircularProgress';
-
 
 export default function Deposito() {
     const { data, status } = useSession()
@@ -27,6 +32,7 @@ export default function Deposito() {
     const router = useRouter()
     const [isLoading, setLoading] = useState(false)
     const [arquivos, setArquivo] = useState<any>([])
+    const [pix, setPix] = useState<any>(null)
     const [solicitacao, setSolicitacao] = useState({
         valor: 0,
         fileUrl: '',
@@ -45,6 +51,20 @@ export default function Deposito() {
             })
         }
     }, [data, status])
+
+    useEffect(() => {
+        if (!caixinha)
+            return
+
+        getChavesPix(caixinha.id).then(res => {
+            if (res) {
+                setPix({
+                    chave: res.keysPix[0],
+                    url: res.urlsQrCodePix[0]
+                })
+            }
+        })
+    }, [caixinha])
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
@@ -119,92 +139,145 @@ export default function Deposito() {
                 <link rel="icon" href="/favicon.ico" />
             </Head>
             <main>
-                <Box p={2}>
-                    <Typography> Depositando em {caixinha?.name}</Typography>
-                    <form onSubmit={request}>
-                        <Grid container spacing={3}>
-                            <Grid item xs={12}>
-                                <FormControl fullWidth>
-                                    <TextField
-                                        required
-                                        name="memberName"
-                                        label="nome"
-                                        disabled={true}
-                                        value={solicitacao.memberName}
-                                        defaultValue={solicitacao.memberName}
-                                        onChange={handleChange}
-                                        inputProps={{ "data-testid": "name" }}
-                                    />
-                                </FormControl>
-                            </Grid>
+                <Container maxWidth="lg">
+                    <Stack spacing={3}>
+                        <div>
+                            <Typography variant="h6">
+                                Depositando em {caixinha?.name}
+                            </Typography>
+                        </div>
+                        <Grid
+                            container
+                            spacing={3}
+                        >
+                            <Grid
+                                xs={12}
+                                md={6}
+                                lg={4}
+                            >
+                                <Box p={2}>
 
-                            <Grid item xs={12}>
-                                <FormControl fullWidth>
-                                    <TextField
-                                        required
-                                        name="email"
-                                        label="email"
-                                        type='email'
-                                        value={solicitacao.email}
-                                        defaultValue={solicitacao.email}
-                                        onChange={handleChange}
-                                        inputProps={{ "data-testid": "name" }}
-                                    />
-                                </FormControl>
-                            </Grid>
+                                    <form onSubmit={request}>
+                                        <Grid container spacing={3}>
+                                            <Grid item xs={12}>
+                                                <FormControl fullWidth>
+                                                    <TextField
+                                                        required
+                                                        name="memberName"
+                                                        label="nome"
+                                                        disabled={true}
+                                                        value={solicitacao.memberName}
+                                                        defaultValue={solicitacao.memberName}
+                                                        onChange={handleChange}
+                                                        inputProps={{ "data-testid": "name" }}
+                                                    />
+                                                </FormControl>
+                                            </Grid>
 
-                            <Box p={2}>
+                                            <Grid item xs={12}>
+                                                <FormControl fullWidth>
+                                                    <TextField
+                                                        required
+                                                        name="email"
+                                                        label="email"
+                                                        type='email'
+                                                        value={solicitacao.email}
+                                                        defaultValue={solicitacao.email}
+                                                        onChange={handleChange}
+                                                        inputProps={{ "data-testid": "name" }}
+                                                    />
+                                                </FormControl>
+                                            </Grid>
 
-                                <TextField
-                                    label="Valor depositado"
-                                    id="outlined-start-adornment"
-                                    defaultValue={solicitacao.valor}
-                                    value={solicitacao.valor}
-                                    onChange={handleChange}
-                                    name='valor'
-                                    type='number'
-                                    sx={{ m: 1, width: '25ch' }}
-                                    InputProps={{
-                                        startAdornment: <InputAdornment position="start">R$</InputAdornment>,
-                                    }}
-                                />
+                                            <Box p={2}>
 
-                            </Box>
+                                                <TextField
+                                                    label="Valor depositado"
+                                                    id="outlined-start-adornment"
+                                                    defaultValue={solicitacao.valor}
+                                                    value={solicitacao.valor}
+                                                    onChange={handleChange}
+                                                    name='valor'
+                                                    type='number'
+                                                    sx={{ m: 1, width: '25ch' }}
+                                                    InputProps={{
+                                                        startAdornment: <InputAdornment position="start">R$</InputAdornment>,
+                                                    }}
+                                                />
 
-                            <Grid item xs={12}>
-                                <Box display="flex" gap={2}>
-                                    {arquivos.map((item: { name: string, index: Key }) =>
-                                        getChipByItem(item)
-                                    )}
+                                            </Box>
 
+                                            <Grid item xs={12}>
+                                                <Box display="row" gap={2}>
+                                                    {arquivos.map((item: { name: string, index: Key }) =>
+                                                        getChipByItem(item)
+                                                    )}
+
+                                                </Box>
+                                                <Box display="flex" gap={2}>
+
+                                                    <Button
+                                                        onClick={addComprovante}
+                                                        variant="contained"
+                                                        color="secondary"
+                                                    >
+                                                        Adicionar Comprovante
+                                                    </Button>
+                                                </Box>
+                                            </Grid>
+
+                                            <Grid item xs={12}>
+                                                <Box display="flex" gap={2}>
+
+                                                    <Button
+                                                        type="submit"
+                                                        variant="contained"
+                                                        color="primary"
+                                                    >
+                                                        Enviar
+                                                    </Button>
+                                                </Box>
+                                            </Grid>
+                                        </Grid>
+                                    </form>
                                 </Box>
-                                <Box display="flex" gap={2}>
-
-                                    <Button
-                                        onClick={addComprovante}
-                                        variant="contained"
-                                        color="secondary"
-                                    >
-                                        Adicionar Comprovante
-                                    </Button>
-                                </Box>
                             </Grid>
-
-                            <Grid item xs={12}>
-                                <Box display="flex" gap={2}>
-
-                                    <Button
-                                        type="submit"
-                                        variant="contained"
-                                        color="primary"
-                                    >
-                                        Enviar
-                                    </Button>
-                                </Box>
+                            <Grid
+                                xs={12}
+                                md={6}
+                                lg={8}
+                            >
+                                <Card>
+                                    <CardContent>
+                                        <Box
+                                            sx={{
+                                                alignItems: 'center',
+                                                display: 'flex',
+                                                flexDirection: 'column'
+                                            }}
+                                        >
+                                            <Avatar
+                                                src={pix?.url}
+                                                sx={{
+                                                    height: 400,
+                                                    mb: 2,
+                                                    width: 400
+                                                }}
+                                            />
+                                            <Typography
+                                                color="text.secondary"
+                                                variant="body2"
+                                            >
+                                                Chave pix {pix?.chave}
+                                            </Typography>
+                                        </Box>
+                                    </CardContent>
+                                    <Divider />
+                                </Card>
                             </Grid>
                         </Grid>
-                    </form>
-                </Box>
+                    </Stack>
+                </Container>
             </main>
         </Layout>
     )
