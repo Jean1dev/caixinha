@@ -207,6 +207,7 @@ describe('Teste end to end', () => {
                     "fees": {
                         "value": 0
                     },
+                    "installments": 0,
                     "interest": {
                         "value": 2
                     },
@@ -287,6 +288,7 @@ describe('Teste end to end', () => {
                     "fees": {
                         "value": 0
                     },
+                    "installments": 0,
                     "interest": {
                         "value": 2
                     },
@@ -374,6 +376,7 @@ describe('Teste end to end', () => {
                     "fees": {
                         "value": 0
                     },
+                    "installments": 0,
                     "interest": {
                         "value": 2
                     },
