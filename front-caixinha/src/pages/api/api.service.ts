@@ -7,8 +7,6 @@ const URL_STORAGE_SERVER = 'https://storage-manager-svc.herokuapp.com'
 const BUCKET_STORAGE = 'binnoroteirizacao'
 
 const dev = process.env.NODE_ENV === 'development'
-console.log('NODE ENV', dev)
-console.log(BASE_URL)
 
 const http = axios.create({
     baseURL: BASE_URL,
@@ -64,6 +62,24 @@ function retornaComAtraso(value: any): Promise<any> {
             resolve(value)
         }, 1000)
     })
+}
+
+async function asyncGetWithParamethers(url: string, params: any) {
+    try {
+        const response = await http({
+            url,
+            method: 'GET',
+            params
+        })
+
+        if (response.status == 200) {
+            return response.data
+        }
+
+        debugger
+    } catch (error) {
+        throw error
+    }
 }
 
 async function asyncFetch(url: string, method: string, body?: any): Promise<any> {
@@ -295,4 +311,29 @@ export async function getChavesPix(caixinhaID: string) {
     }
 
     return asyncFetch(`${BASE_URL}/get-chaves-pix?caixinhaId=${caixinhaID}`, 'GET')
+}
+
+export async function getExtrato(params: any) {
+    if (dev) {
+        return retornaComAtraso([
+            {
+                "id": "64765f0bf72fe795ddd61c34",
+                "tipo": "DEPOSITO",
+                "valor": 25,
+                "nick": "jean",
+                "status": "completed",
+                "date": "30/05/2023"
+            },
+            {
+                "id": "64766bc201dd4e6d382db357",
+                "tipo": "DEPOSITO",
+                "valor": 25.89,
+                "nick": "jean",
+                "status": "completed",
+                "date": "30/05/2023"
+            }
+        ])
+    }
+
+    return asyncGetWithParamethers(`${BASE_URL}/get-extrato`, params)
 }
