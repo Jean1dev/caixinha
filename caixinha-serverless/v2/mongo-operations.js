@@ -50,6 +50,13 @@ async function deleteAll(collection) {
     return client.db(database).collection(collection).deleteMany()
 }
 
+async function upsert(collection, document, filter) {
+    const collectionName = client.db(database).collection(collection)
+    const options = { upsert: true }
+    const result = await collectionName.updateOne(filter, { $set: document }, options);
+    return result
+}
+
 module.exports = {
     connect,
     getDocumentById,
@@ -58,5 +65,6 @@ module.exports = {
     find,
     getByIdOrThrow,
     deleteAll,
-    findWithLimit
+    findWithLimit,
+    upsert
 }
