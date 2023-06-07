@@ -337,3 +337,11 @@ export async function getExtrato(params: any) {
 
     return asyncGetWithParamethers(`${BASE_URL}/get-extrato`, params)
 }
+
+export async function updatePerfil(body: any) {
+    if (dev) {
+        return retornaComAtraso(true)
+    }
+
+    return asyncFetch(`${BASE_URL}/update-profile-member`, 'POST', body)
+}

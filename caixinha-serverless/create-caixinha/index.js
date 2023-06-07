@@ -1,7 +1,8 @@
+const middleware = require('../utils/middleware')
 const { Box } = require('caixinha-core/dist/src')
 const { connect, insertDocument } = require('../v2/mongo-operations')
 
-module.exports = async function (context, req) {
+async function createCaixinha(context, req) {
     const { name } = req.body
     await connect()
     const box = new Box()
@@ -11,3 +12,5 @@ module.exports = async function (context, req) {
         body: result
     }
 }
+
+module.exports = async (context, req) => await middleware(context, req, createCaixinha)

@@ -1,32 +1,24 @@
+const middleware = require('../utils/middleware')
 const { resolveCircularStructureBSON } = require('../utils/')
 const { Box, Member, Payment } = require('caixinha-core/dist/src')
 const { connect, getByIdOrThrow, replaceDocumentById } = require('../v2/mongo-operations')
 
-module.exports = async function (context, req) {
+async function pagamentoEmprestimo(context, req) {
     const collectionName = 'caixinhas'
-    try {
-        const { caixinhaId, emprestimoUid, valor, name, email } = req.body
-        await connect()
 
-        const boxEntity = await getByIdOrThrow(caixinhaId, collectionName)
-        const domain = Box.fromJson(boxEntity)
+    const { caixinhaId, emprestimoUid, valor, name, email } = req.body
+    await connect()
 
-        const emprestimo = domain.getLoanByUUID(emprestimoUid)
+    const boxEntity = await getByIdOrThrow(caixinhaId, collectionName)
+    const domain = Box.fromJson(boxEntity)
 
-        const member = Member.build({ name, email })
-        const payment = new Payment({ member, value: valor, description: 'Pago via caixinha web' })
-        emprestimo.addPayment(payment)
+    const emprestimo = domain.getLoanByUUID(emprestimoUid)
 
-        await replaceDocumentById(caixinhaId, collectionName, resolveCircularStructureBSON(domain))
+    const member = Member.build({ name, email })
+    const payment = new Payment({ member, value: valor, description: 'Pago via caixinha web' })
+    emprestimo.addPayment(payment)
 
-    } catch (error) {
-        context.log(error.message)
-        context.res = {
-            status: 400,
-            body: {
-                message: error.message
-            }
-        }
-    }
-
+    await replaceDocumentById(caixinhaId, collectionName, resolveCircularStructureBSON(domain))
 }
+
+module.exports = async (context, req) => await middleware(context, req, pagamentoEmprestimo)

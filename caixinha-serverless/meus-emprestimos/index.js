@@ -1,3 +1,4 @@
+const middleware = require('../utils/middleware')
 const { connect, find } = require('../v2/mongo-operations')
 
 function somenteOsQueAindaFaltamPagar(emprestimo) {
@@ -8,7 +9,7 @@ function somenteOsQueAindaFaltamPagar(emprestimo) {
     return true
 }
 
-module.exports = async function (context, req) {
+async function meusEmprestimos(context, req) {
     const { name, email } = req.query
     const collectionName = 'caixinhas'
 
@@ -63,3 +64,5 @@ module.exports = async function (context, req) {
         body: returnData
     }
 }
+
+module.exports = async (context, req) => await middleware(context, req, meusEmprestimos)
