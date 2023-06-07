@@ -1,3 +1,4 @@
+const { resolveCircularStructureBSON } = require('../utils')
 const middleware = require('../utils/middleware')
 const { Member, Box, Loan } = require('caixinha-core/dist/src')
 const { connect, replaceDocumentById, insertDocument, getByIdOrThrow } = require('../v2/mongo-operations')
@@ -25,7 +26,7 @@ async function emprestimo(context, req) {
     emprestimo.addApprove(member)
     emprestimo['box'] = null
     box['loans'].push(emprestimo)
-    await replaceDocumentById(boxEntity._id, 'caixinhas', box)
+    await replaceDocumentById(boxEntity._id, 'caixinhas', resolveCircularStructureBSON(box))
     await insertDocument('emprestimos', emprestimo)
 
     context.res = {
