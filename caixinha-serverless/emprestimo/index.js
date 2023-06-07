@@ -1,6 +1,7 @@
 const middleware = require('../utils/middleware')
 const { Member, Box, Loan } = require('caixinha-core/dist/src')
 const { connect, replaceDocumentById, insertDocument, getByIdOrThrow } = require('../v2/mongo-operations')
+const sendSMS = require('../utils/sendSMS')
 
 async function emprestimo(context, req) {
 
@@ -31,7 +32,7 @@ async function emprestimo(context, req) {
         body: emprestimo
     }
 
-
+    sendSMS(`Novo emprestimo do ${member.memberName} - valor ${valor}`)
 }
 
 module.exports = async (context, req) => await middleware(context, req, emprestimo)

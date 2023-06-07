@@ -1,12 +1,10 @@
 import Layout from "@/components/Layout";
 import { FormPerfil } from "@/components/perfil/form-perfil";
 import { PerfilDaConta } from "@/components/perfil/perfil-conta";
-import { useLocalStorage } from "@/hooks/useLocalStorage";
 import { Box, Container, Stack, Typography, Grid } from "@mui/material";
-import { useSession } from "next-auth/react";
-import { useEffect } from "react";
 import { toast } from "react-toastify";
-import { updatePerfil } from "../api/api.service";
+import { updatePerfil, uploadResource } from "../api/api.service";
+import { useUserAuth } from "@/hooks/useUserAuth";
 
 export interface IUser {
     name: string
@@ -17,17 +15,7 @@ export interface IUser {
 }
 
 export default function Perfil() {
-    const [user, setUser] = useLocalStorage<IUser | null>("caixinha-user1", null)
-    const { data } = useSession()
-
-    useEffect(() => {
-        if (!user && data) {
-            setUser({
-                name: data?.user?.name || '',
-                email: data?.user?.email || ''
-            })
-        }
-    }, [user, data])
+    const { user, updateUser } = useUserAuth()
 
     const updateProfile = (props: any) => {
         updatePerfil({
@@ -35,19 +23,42 @@ export default function Perfil() {
             email: user?.email,
             user: {
                 phone: user?.phone,
-                pix: user?.pix
+                pix: user?.pix,
+                photoUrl: user?.photoUrl
             }
         }).then(() => {
-            setUser({
+            updateUser({
                 name: props.firstName,
                 email: props.email,
                 phone: props.phone,
-                pix: props.pix
+                pix: props.pix,
+                photoUrl: user?.photoUrl
             })
             setTimeout(() => toast('Perfil atualizado', { hideProgressBar: true, autoClose: 4000, type: 'success', position: 'bottom-right' }), 50)
         }).catch(e => {
             setTimeout(() => toast(e.message, { hideProgressBar: true, autoClose: 4000, type: 'error', position: 'bottom-right' }), 50)
         })
+    }
+
+    const updatePhoto = () => {
+        let input = document.createElement('input');
+        input.type = 'file';
+
+        input.addEventListener('change', function (event: any) {
+            let arquivo = event.target.files[0];
+
+            console.log('Arquivo selecionado:', arquivo);
+            uploadResource(arquivo).then((fileUrl: string) => {
+                //@ts-ignore
+                updateUser({
+                    ...user,
+                    photoUrl: fileUrl
+                })
+                setTimeout(() => toast('upload realizado,', { hideProgressBar: true, autoClose: 4000, type: 'info', position: 'bottom-right' }), 50)
+            }).catch(e => toast(e.message, { hideProgressBar: true, autoClose: 4000, type: 'error', position: 'bottom-right' }))
+        });
+
+        input.click()
     }
 
     return (
@@ -77,7 +88,7 @@ export default function Perfil() {
                                         md={6}
                                         lg={4}
                                     >
-                                        <PerfilDaConta user={user} />
+                                        <PerfilDaConta user={user} updatePhoto={updatePhoto} />
                                     </Grid>
                                     <Grid
                                         xs={12}

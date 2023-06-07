@@ -10,7 +10,7 @@ import {
 } from '@mui/material';
 import { IUser } from '@/pages/perfil';
 
-export const PerfilDaConta = ({ user }: { user: IUser | null }) => (
+export const PerfilDaConta = ({ user, updatePhoto }: { user: IUser | null, updatePhoto: Function }) => (
     <Card>
         <CardContent>
             <Box
@@ -45,6 +45,7 @@ export const PerfilDaConta = ({ user }: { user: IUser | null }) => (
         <Divider />
         <CardActions>
             <Button
+                onClick={() => { updatePhoto() }}
                 fullWidth
                 variant="text"
             >

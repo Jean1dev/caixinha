@@ -113,7 +113,7 @@ export default function Deposito() {
             novaLista.push({ file: resource, name: resource.name, status: 'success' })
             setArquivo(novaLista)
             setSolicitacao({ ...solicitacao, fileUrl })
-        }).catch(() => alert('Ocorreu um problema ao enviar o arquivo'))
+        }).catch(e => toast(e.message, { hideProgressBar: true, autoClose: 4000, type: 'error', position: 'bottom-right' }))
     }
 
     const getChipByItem = (item: any) => {

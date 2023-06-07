@@ -34,16 +34,16 @@ export function getBuckets() {
 }
 
 export async function uploadResource(resourceFile: string | Blob) {
-    if (dev) {
-        return retornaComAtraso('url mock')
-    }
+    const url = dev
+        ? `${URL_STORAGE_SERVER}/v1/local`
+        : `${URL_STORAGE_SERVER}/v1/s3`
 
     const form = new FormData();
     form.append("file", resourceFile);
 
     const options = {
         method: 'POST',
-        url: `${URL_STORAGE_SERVER}/v1/s3`,
+        url,
         params: { bucket: BUCKET_STORAGE },
         headers: {
             'Content-Type': 'multipart/form-data',
@@ -53,6 +53,11 @@ export async function uploadResource(resourceFile: string | Blob) {
     };
 
     const response = await http.request(options)
+
+    if (dev) {
+        return response.data.storageLocaion
+    }
+
     return response.data
 }
 
