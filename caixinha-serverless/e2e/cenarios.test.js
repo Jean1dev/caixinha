@@ -211,7 +211,6 @@ describe('Teste end to end', () => {
                     "interest": {
                         "value": 2
                     },
-                    "box": null,
                     "approvals": 1,
                     "description": "test e2e",
                     "payments": [],

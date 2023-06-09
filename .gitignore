@@ -2,3 +2,4 @@
 .vscode/
 caixinha-serverless/emprestimos.json
 caixinha-serverless/caixinhas.json
+caixinha-serverless/depositos.json
