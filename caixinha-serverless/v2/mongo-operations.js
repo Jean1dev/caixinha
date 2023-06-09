@@ -41,8 +41,20 @@ async function find(collection, projection) {
     return collectionName.find(projection).toArray()
 }
 
+async function findWithLimit(collection, projection, limit = 5) {
+    const collectionName = client.db(database).collection(collection)
+    return collectionName.find(projection).limit(limit).toArray()
+}
+
 async function deleteAll(collection) {
     return client.db(database).collection(collection).deleteMany()
+}
+
+async function upsert(collection, document, filter) {
+    const collectionName = client.db(database).collection(collection)
+    const options = { upsert: true }
+    const result = await collectionName.updateOne(filter, { $set: document }, options);
+    return result
 }
 
 module.exports = {
@@ -52,5 +64,7 @@ module.exports = {
     insertDocument,
     find,
     getByIdOrThrow,
-    deleteAll
+    deleteAll,
+    findWithLimit,
+    upsert
 }

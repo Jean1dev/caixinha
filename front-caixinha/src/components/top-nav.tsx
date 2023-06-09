@@ -20,6 +20,7 @@ import { signIn, useSession } from 'next-auth/react';
 import MiniDrawer from './Drawer';
 import ApplicationSelectCaixinha from './application-select.caixinha';
 import { useAppTheme } from '@/hooks/useAppTheme';
+import { useUserAuth } from '@/hooks/useUserAuth';
 
 const SIDE_NAV_WIDTH = 280;
 const TOP_NAV_HEIGHT = 64;
@@ -28,6 +29,7 @@ export const TopNav = () => {
     const accountPopover = usePopover()
     const [open, setOpen] = useState(false)
     const { status } = useSession()
+    const { user } = useUserAuth()
     const [theme, toggleTheme] = useAppTheme()
     const handleSignIn = async () => await signIn()
 
@@ -121,7 +123,7 @@ export const TopNav = () => {
                                     height: 40,
                                     width: 40
                                 }}
-                                src="https://avatars.githubusercontent.com/u/11442261?v=4"
+                                src={user?.photoUrl || "https://avatars.githubusercontent.com/u/11442261?v=4"}
                             />
                         </Stack>
                     </Stack>

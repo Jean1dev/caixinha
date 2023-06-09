@@ -7,8 +7,6 @@ const URL_STORAGE_SERVER = 'https://storage-manager-svc.herokuapp.com'
 const BUCKET_STORAGE = 'binnoroteirizacao'
 
 const dev = process.env.NODE_ENV === 'development'
-console.log('NODE ENV', dev)
-console.log(BASE_URL)
 
 const http = axios.create({
     baseURL: BASE_URL,
@@ -36,16 +34,16 @@ export function getBuckets() {
 }
 
 export async function uploadResource(resourceFile: string | Blob) {
-    if (dev) {
-        return retornaComAtraso('url mock')
-    }
+    const url = dev
+        ? `${URL_STORAGE_SERVER}/v1/local`
+        : `${URL_STORAGE_SERVER}/v1/s3`
 
     const form = new FormData();
     form.append("file", resourceFile);
 
     const options = {
         method: 'POST',
-        url: `${URL_STORAGE_SERVER}/v1/s3`,
+        url,
         params: { bucket: BUCKET_STORAGE },
         headers: {
             'Content-Type': 'multipart/form-data',
@@ -55,6 +53,11 @@ export async function uploadResource(resourceFile: string | Blob) {
     };
 
     const response = await http.request(options)
+
+    if (dev) {
+        return response.data.storageLocaion
+    }
+
     return response.data
 }
 
@@ -64,6 +67,24 @@ function retornaComAtraso(value: any): Promise<any> {
             resolve(value)
         }, 1000)
     })
+}
+
+async function asyncGetWithParamethers(url: string, params: any) {
+    try {
+        const response = await http({
+            url,
+            method: 'GET',
+            params
+        })
+
+        if (response.status == 200) {
+            return response.data
+        }
+
+        debugger
+    } catch (error) {
+        throw error
+    }
 }
 
 async function asyncFetch(url: string, method: string, body?: any): Promise<any> {
@@ -295,4 +316,37 @@ export async function getChavesPix(caixinhaID: string) {
     }
 
     return asyncFetch(`${BASE_URL}/get-chaves-pix?caixinhaId=${caixinhaID}`, 'GET')
+}
+
+export async function getExtrato(params: any) {
+    if (dev) {
+        return retornaComAtraso([
+            {
+                "id": "64765f0bf72fe795ddd61c34",
+                "tipo": "DEPOSITO",
+                "valor": 25,
+                "nick": "jean",
+                "status": "completed",
+                "date": "30/05/2023"
+            },
+            {
+                "id": "64766bc201dd4e6d382db357",
+                "tipo": "DEPOSITO",
+                "valor": 25.89,
+                "nick": "jean",
+                "status": "completed",
+                "date": "30/05/2023"
+            }
+        ])
+    }
+
+    return asyncGetWithParamethers(`${BASE_URL}/get-extrato`, params)
+}
+
+export async function updatePerfil(body: any) {
+    if (dev) {
+        return retornaComAtraso(true)
+    }
+
+    return asyncFetch(`${BASE_URL}/update-profile-member`, 'POST', body)
 }

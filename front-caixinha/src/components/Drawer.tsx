@@ -14,7 +14,7 @@ import ListItemText from '@mui/material/ListItemText';
 import WalletIcon from '@mui/icons-material/Wallet';
 import { useRouter } from 'next/router';
 import NextLink from 'next/link';
-import { AttachMoney, Home } from '@mui/icons-material';
+import { AttachMoney, Home, ListAltSharp } from '@mui/icons-material';
 
 const drawerWidth = 240;
 
@@ -81,6 +81,11 @@ const routes = [
         text: 'Depositos',
         path: 'deposito',
         icon: <AttachMoney/>
+    },
+    {
+        text: 'Extrato',
+        path: 'extrato',
+        icon: <ListAltSharp/>
     }
 ]
 
@@ -129,7 +134,7 @@ export default function MiniDrawer({ open, handleDrawerClose }: any) {
             </List>
             <Divider />
             <List>
-                {['Home'].map((text, index) => (
+                {['Home'].map((text, _index) => (
                     <ListItem key={text} disablePadding sx={{ display: 'block' }}>
                         <ListItemButton
                             LinkComponent={NextLink}

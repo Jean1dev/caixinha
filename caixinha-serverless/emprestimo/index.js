@@ -1,42 +1,39 @@
+const { resolveCircularStructureBSON } = require('../utils')
+const middleware = require('../utils/middleware')
 const { Member, Box, Loan } = require('caixinha-core/dist/src')
 const { connect, replaceDocumentById, insertDocument, getByIdOrThrow } = require('../v2/mongo-operations')
+const sendSMS = require('../utils/sendSMS')
 
-module.exports = async function (context, req) {
-    try {
-        const { valor, juros, parcela, motivo, name, email, caixinhaID } = req.body
+async function emprestimo(context, req) {
 
-        await connect()
-        const member = Member.build({ name, email })
-        const boxEntity = await getByIdOrThrow(caixinhaID || process.env.CAIXINHA_ID, 'caixinhas')
+    const { valor, juros, parcela, motivo, name, email, caixinhaID } = req.body
 
-        const box = Box.fromJson(boxEntity)
-        const emprestimo = new Loan({
-            box,
-            member,
-            valueRequested: Number(valor),
-            interest: Number(juros),
-            fees: 0,
-            description: motivo,
-            installments: parcela
-        })
-        
-        emprestimo.addApprove(member)
-        emprestimo['box'] = null
-        box['loans'].push(emprestimo)
-        await replaceDocumentById(boxEntity._id, 'caixinhas', box)
-        await insertDocument('emprestimos', emprestimo)
+    await connect()
+    const member = Member.build({ name, email })
+    const boxEntity = await getByIdOrThrow(caixinhaID || process.env.CAIXINHA_ID, 'caixinhas')
 
-        context.res = {
-            body: emprestimo
-        }
-    } catch (error) {
-        context.log(error.message)
-        context.res = {
-            status: 400,
-            body: {
-                message: error.message
-            }
-        }
+    const box = Box.fromJson(boxEntity)
+    const emprestimo = new Loan({
+        box,
+        member,
+        valueRequested: Number(valor),
+        interest: Number(juros),
+        fees: 0,
+        description: motivo,
+        installments: parcela
+    })
+
+    emprestimo.addApprove(member)
+    emprestimo['box'] = null
+    box['loans'].push(emprestimo)
+    await replaceDocumentById(boxEntity._id, 'caixinhas', resolveCircularStructureBSON(box))
+    await insertDocument('emprestimos', emprestimo)
+
+    context.res = {
+        body: emprestimo
     }
 
+    sendSMS(`Novo emprestimo do ${member.memberName} - valor ${valor}`)
 }
+
+module.exports = async (context, req) => await middleware(context, req, emprestimo)

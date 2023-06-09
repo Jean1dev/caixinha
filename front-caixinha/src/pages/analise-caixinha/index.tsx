@@ -41,6 +41,13 @@ export default function AnaliseCaixinha() {
         })
     }
 
+    const extrato = () => {
+        router.push({
+            pathname: '/extrato',
+            query: { id: router.query.unique },
+        })
+    }
+
     if (state.loading) {
         return <CenteredCircularProgress />
     }
@@ -146,8 +153,9 @@ export default function AnaliseCaixinha() {
                             lg={8}
                         >
                             <UltimasMovimentacoes
+                                extrato={extrato}
                                 orders={state.data.movimentacoes}
-                                sx={{ height: '100%' }}
+                                sx={{ height: '100%', width: '100%' }}
                             />
                         </Grid>
                     </Grid>

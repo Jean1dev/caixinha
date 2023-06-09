@@ -1,27 +1,20 @@
+const middleware = require('../utils/middleware')
 const { Member, Box } = require('caixinha-core/dist/src')
 const { connect, replaceDocumentById, getByIdOrThrow } = require('../v2/mongo-operations')
 
-module.exports = async function (context, req) {
-    try {
-        const { nick: name, email, boxId } = req.body
-        const member = Member.build({ name: name, email })
+async function joinCaixinha(_context, req) {
+    const { nick: name, email, boxId } = req.body
+    const member = Member.build({ name: name, email })
 
-        await connect()
+    await connect()
 
-        const caixinhaCollection = 'caixinhas'
-        const boxEntity = await getByIdOrThrow(boxId, caixinhaCollection)
+    const caixinhaCollection = 'caixinhas'
+    const boxEntity = await getByIdOrThrow(boxId, caixinhaCollection)
 
-        const box = Box.fromJson(boxEntity)
-        box.joinMember(member)
+    const box = Box.fromJson(boxEntity)
+    box.joinMember(member)
 
-        await replaceDocumentById(boxEntity._id, caixinhaCollection, box)
-
-    } catch (error) {
-        context.res = {
-            status: 400,
-            body: {
-                message: error.message
-            }
-        }
-    }
+    await replaceDocumentById(boxEntity._id, caixinhaCollection, box)
 }
+
+module.exports = async (context, req) => await middleware(context, req, joinCaixinha)

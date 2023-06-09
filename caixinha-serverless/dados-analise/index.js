@@ -1,6 +1,7 @@
+const middleware = require('../utils/middleware')
 const { ObjectId } = require('mongodb')
 const moment = require('moment')
-const { connect, getByIdOrThrow, find } = require("../v2/mongo-operations");
+const { connect, getByIdOrThrow, find, findWithLimit } = require("../v2/mongo-operations");
 
 function groupElementsByMemberName(deposits) {
     const groupedElements = {};
@@ -23,12 +24,12 @@ function calcularPorcentagemDoTotal(valor, total) {
     return parseFloat(porcentagemArredondada);
 }
 
-module.exports = async function (context, req) {
+async function dadosAnalise(context, req) {
     const caixinhaId = req.query.caixinhaId
 
     await connect()
     const boxEntity = await getByIdOrThrow(caixinhaId, 'caixinhas')
-    const depositos = await find('depositos', { idCaixinha: new ObjectId(caixinhaId) })
+    const depositos = await findWithLimit('depositos', { idCaixinha: new ObjectId(caixinhaId) })
     const patrimonio = await find('evolucaoPatrimonial', { idCaixinha: new ObjectId(caixinhaId) })
     const evolucaoPatrimonial = [
         {
@@ -81,3 +82,5 @@ module.exports = async function (context, req) {
         body: result
     };
 }
+
+module.exports = async (context, req) => await middleware(context, req, dadosAnalise)

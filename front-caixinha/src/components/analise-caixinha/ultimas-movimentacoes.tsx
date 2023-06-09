@@ -39,7 +39,7 @@ export const UltimasMovimentacoes = (props: any) => {
                   membro
                 </TableCell>
                 <TableCell sortDirection="desc">
-                  Date
+                  Data
                 </TableCell>
                 <TableCell>
                   Status
@@ -76,6 +76,7 @@ export const UltimasMovimentacoes = (props: any) => {
       <CardActions sx={{ justifyContent: 'flex-end' }}>
         <Button
           color="inherit"
+          onClick={props.extrato}
           endIcon={(
             <SvgIcon fontSize="small">
               <ArrowRight />
