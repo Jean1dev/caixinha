@@ -12,15 +12,19 @@ import { Caixinha } from '@/types/types'
 import { CaixinhaSearch } from '@/components/caixinha/CaixinhaSearch'
 import { CaixinhaCard } from '@/components/caixinha/CaixinhaCard'
 import CenteredCircularProgress from '@/components/CenteredCircularProgress'
+import { useRouter } from 'next/router'
 
 export default function Home() {
   const [data, setData] = useState<Caixinha[]>([])
   const [loading, setLoading] = useState(true)
+  const router = useRouter()
 
   useEffect(() => {
     getCaixinhas().then(r => {
       setData(r)
       setLoading(false)
+    }).catch(() => {
+      router.push('error')
     })
   }, [])
 

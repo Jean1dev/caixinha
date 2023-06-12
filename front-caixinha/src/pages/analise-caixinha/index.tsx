@@ -29,7 +29,7 @@ export default function AnaliseCaixinha() {
                 data: response
             })
         }).catch(() => {
-
+            router.push('error')
         })
 
     }, [router])

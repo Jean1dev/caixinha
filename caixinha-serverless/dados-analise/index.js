@@ -1,7 +1,7 @@
 const middleware = require('../utils/middleware')
 const { ObjectId } = require('mongodb')
 const moment = require('moment')
-const { connect, getByIdOrThrow, find, findWithLimit } = require("../v2/mongo-operations");
+const { connect, getByIdOrThrow, find } = require("../v2/mongo-operations");
 
 function groupElementsByMemberName(deposits) {
     const groupedElements = {};
@@ -29,7 +29,7 @@ async function dadosAnalise(context, req) {
 
     await connect()
     const boxEntity = await getByIdOrThrow(caixinhaId, 'caixinhas')
-    const depositos = await findWithLimit('depositos', { idCaixinha: new ObjectId(caixinhaId) })
+    const depositos = await find('depositos', { idCaixinha: new ObjectId(caixinhaId) })
     const patrimonio = await find('evolucaoPatrimonial', { idCaixinha: new ObjectId(caixinhaId) })
     const evolucaoPatrimonial = [
         {
@@ -43,16 +43,16 @@ async function dadosAnalise(context, req) {
     ]
     const movimentacoes = []
 
-    depositos.forEach(it => {
+    for (let index = 0; index < 5; index++) {
         movimentacoes.push({
-            id: it._id,
+            id: depositos[index]._id,
             tipo: 'DEPOSITO',
-            valor: it.value.value,
-            nick: it.member.name,
+            valor: depositos[index].value.value,
+            nick: depositos[index].member.name,
             status: 'completed',
-            date: moment(it.date).format('DD/MM/YYYY')
+            date: moment(depositos[index].date).format('DD/MM/YYYY')
         })
-    })
+    }
 
     const totalDepositos = depositos.map(it => (it.value.value)).reduce((acumulator, value) => acumulator + value, 0)
     const percentuais = {
