@@ -8,6 +8,7 @@
     "coverage": "jest --coverage"
   },
   "dependencies": {
+    "@sentry/node": "^7.54.0",
     "caixinha-core": "1.0.0",
     "moment": "^2.29.4",
     "mongodb": "^5.4.0",
