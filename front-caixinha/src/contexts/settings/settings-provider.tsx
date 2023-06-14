@@ -64,7 +64,7 @@ export const SettingsProvider = (props: any) => {
     }));
   }, []);
 
-  const handleUpdate = useCallback((settings: any) => {
+  const handleUpdate = useCallback((settings: any ) => {
     setState((prevState) => {
       storeSettings({
         colorPreset: prevState.colorPreset,

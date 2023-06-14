@@ -22,6 +22,6 @@ export const SettingsContext = createContext({
   handleDrawerClose: () => { },
   handleDrawerOpen: () => { },
   handleReset: () => { },
-  handleUpdate: () => { },
+  handleUpdate: (settings: any) => { },
   isCustom: false
 });
