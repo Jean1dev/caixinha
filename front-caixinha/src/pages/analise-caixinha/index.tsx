@@ -64,7 +64,7 @@ export default function AnaliseCaixinha() {
                 <Container maxWidth="xl">
                     <Grid
                         container
-                        spacing={3}
+                        spacing={2}
                     >
                         <Grid
                             xs={12}
@@ -169,6 +169,13 @@ export default function AnaliseCaixinha() {
                     </Box>
 
                     <Box display="flex" sx={{ my: 2 }} gap={2}>
+                        <Button
+                            onClick={() => router.back()}
+                            color="secondary"
+                            variant="contained"
+                        >
+                            Voltar
+                        </Button>
                         <Button
                             onClick={join}
                             color="primary"
