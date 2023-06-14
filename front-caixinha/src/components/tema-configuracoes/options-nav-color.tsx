@@ -26,7 +26,7 @@ export const OptionsNavColor = (props: any) => {
         color="text.secondary"
         variant="overline"
       >
-        Nav Color
+        Cor do NAV
       </Typography>
       <Stack
         alignItems="center"

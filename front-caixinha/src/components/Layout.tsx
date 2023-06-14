@@ -1,4 +1,4 @@
-import { CssBaseline, Divider, ThemeProvider, styled } from "@mui/material";
+import { CssBaseline, Divider, ThemeProvider } from "@mui/material";
 import { TopNav } from "./top-nav";
 import 'react-toastify/dist/ReactToastify.css';
 import { ToastContainer } from "react-toastify";
@@ -7,28 +7,7 @@ import Hotjar from '@hotjar/browser';
 import { AlertNav } from "./alert-nav";
 import { SettingsConsumer, SettingsProvider } from "@/contexts/settings";
 import { createTheme } from "@/theme/theme";
-import { Head } from "next/document";
 import { SettingsDrawer } from "./tema-configuracoes";
-
-const SIDE_NAV_WIDTH = 100;
-
-const LayoutRoot = styled('div')(({ theme }) => ({
-    display: 'flex',
-    flex: '1 1 auto',
-    maxWidth: '100%',
-    [theme.breakpoints.up('lg')]: {
-        paddingLeft: SIDE_NAV_WIDTH,
-        paddingRight: SIDE_NAV_WIDTH
-    },
-    backgroundColor: theme.palette.background.default
-}));
-
-const LayoutContainer = styled('div')({
-    display: 'flex',
-    flex: '1 1 auto',
-    flexDirection: 'column',
-    width: '100%',
-});
 
 const siteId = process.env.NEXT_PUBLIC_HOTJAR_ID
 const hotjarVersion = 6
@@ -94,14 +73,10 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                             />
                             <Divider />
                             <AlertNav />
-                            <LayoutRoot>
-                                <>
-                                    <LayoutContainer>
-                                        {children}
-                                    </LayoutContainer>
-                                    <ToastContainer />
-                                </>
-                            </LayoutRoot>
+                            <>
+                                {children}
+                                <ToastContainer />
+                            </>
                         </ThemeProvider>
                     )
                 }}

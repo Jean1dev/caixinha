@@ -22,7 +22,7 @@ export const OptionsContrast = (props: any) => {
         color="text.secondary"
         variant="overline"
       >
-        Contrast
+        Constraste
       </Typography>
       <Stack
         alignItems="center"

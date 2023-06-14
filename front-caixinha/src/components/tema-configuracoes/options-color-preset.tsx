@@ -36,7 +36,7 @@ export const OptionsColorPreset = (props: any) => {
         color="text.secondary"
         variant="overline"
       >
-        Primary Color
+        Cor primaria
       </Typography>
       <Stack
         alignItems="center"

@@ -35,7 +35,7 @@ export const OptionsColorScheme = (props: any) => {
         color="text.secondary"
         variant="overline"
       >
-        Color Scheme
+        Schema de cores
       </Typography>
       <Stack
         alignItems="center"

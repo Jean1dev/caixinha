@@ -1,6 +1,10 @@
 import Layout from "@/components/Layout";
-import { Box, Card, CardContent, Container, Grid, Typography } from "@mui/material";
+import { BannerNovidades } from "@/components/bem-vindo/banner-novidades";
+import { Dicas } from "@/components/bem-vindo/dicas";
+import { useSettings } from "@/hooks/useSettings";
+import { Box, Card, CardContent, Container, Typography } from "@mui/material";
 import { useRouter } from "next/router";
+import Grid from '@mui/material/Unstable_Grid2';
 
 const corAleatoriaCombinada = () => {
   const cores = [
@@ -47,6 +51,7 @@ const card = (title: string, description: string, action: any) => {
 
 export default function Home() {
   const router = useRouter()
+  const settings = useSettings()
 
   return (
     <Layout>
@@ -55,11 +60,59 @@ export default function Home() {
           flexGrow: 1,
           py: 8
         }}>
-        <Container maxWidth="xl">
-          <Grid container>
-            {card("Caixinhas", "listar todas as caixinhas disponiveis", () => { router.push('caixinhas-disponiveis') })}
-            {card("Pagar emprestimo", "Pagar meu ultimo emprestimo pendente", () => { router.push('error') })}
-            {card("Meu Extrato", "ver todas minhas movimentações", () => { router.push('extrato') })}
+        <Container maxWidth={settings.stretch ? false : 'xl'}>
+          <Grid
+            container
+            spacing={{
+              xs: 3,
+              lg: 4
+            }}
+          >
+            <Grid
+              xs={12}
+              md={7}
+            >
+              <BannerNovidades />
+            </Grid>
+
+            <Grid
+              xs={12}
+              md={5}
+            >
+              <Dicas
+                sx={{ height: '100%' }}
+                tips={[
+                  {
+                    title: 'Comece participando de uma caixnha.',
+                    content: 'Depois só selecione ali na box ali em cima e esta tudo pronto'
+                  }
+                ]}
+              />
+
+            </Grid>
+
+            <Grid
+              xs={12}
+              md={7}
+            >
+              {card("Caixinhas", "listar todas as caixinhas disponiveis", () => { router.push('caixinhas-disponiveis') })}
+            </Grid>
+
+            <Grid
+              xs={12}
+              md={7}
+            >
+
+              {card("Pagar emprestimo", "Pagar meu ultimo emprestimo pendente", () => { router.push('error') })}
+
+            </Grid>
+
+            <Grid
+              xs={12}
+              md={7}
+            >
+              {card("Meu Extrato", "ver todas minhas movimentações", () => { router.push('extrato') })}
+            </Grid>
 
           </Grid>
         </Container>

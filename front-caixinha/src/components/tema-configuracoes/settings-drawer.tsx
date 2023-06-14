@@ -69,7 +69,7 @@ export const SettingsDrawer = (props: any) => {
           }}
         >
           <Typography variant="h6">
-            App Settings
+            Configurações do app
           </Typography>
           <Stack
             alignItems="center"
@@ -124,7 +124,7 @@ export const SettingsDrawer = (props: any) => {
             onChange={(value: any) => handleFieldUpdate('paletteMode', value)}
             value={values.paletteMode}
           />
-          <OptionsNavColor
+          {/* <OptionsNavColor
             onChange={(value: any) => handleFieldUpdate('navColor', value)}
             value={values.navColor}
           />
@@ -143,7 +143,7 @@ export const SettingsDrawer = (props: any) => {
           <OptionsDirection
             onChange={(value: any) => handleFieldUpdate('direction', value)}
             value={values.direction}
-          />
+          /> */}
         </Stack>
       </Scrollbar>
     </Drawer>
