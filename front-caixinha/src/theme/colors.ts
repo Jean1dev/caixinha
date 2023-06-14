@@ -1,4 +1,4 @@
-import { alpha } from '@mui/material/styles';
+import { alpha } from '@mui/system/colorManipulator';
 
 const withAlphas = (color: any) => {
   return {
@@ -24,18 +24,23 @@ export const neutral = {
   900: '#111927'
 };
 
-export const neutralDark = {
-  50: '#1F2937',
-  100: '#293445',
-  200: '#364152',
-  300: '#455160',
-  400: '#576375',
-  500: '#69778A',
-  600: '#7D8AA0',
-  700: '#919FB7',
-  800: '#A5B3CE',
-  900: '#B9C7E4'
-};
+export const blue = withAlphas({
+  lightest: '#F5F8FF',
+  light: '#EBEFFF',
+  main: '#2970FF',
+  dark: '#004EEB',
+  darkest: '#00359E',
+  contrastText: '#FFFFFF'
+});
+
+export const green = withAlphas({
+  lightest: '#F6FEF9',
+  light: '#EDFCF2',
+  main: '#16B364',
+  dark: '#087443',
+  darkest: '#084C2E',
+  contrastText: '#FFFFFF'
+});
 
 export const indigo = withAlphas({
   lightest: '#F5F7FF',
@@ -46,12 +51,12 @@ export const indigo = withAlphas({
   contrastText: '#FFFFFF'
 });
 
-export const indigoDark = withAlphas({
-  lightest: '#2E3440',
-  light: '#3B4252',
-  main: '#5E81AC',
-  dark: '#81A1C1',
-  darkest: '#D8DEE9',
+export const purple = withAlphas({
+  lightest: '#F9F5FF',
+  light: '#F4EBFF',
+  main: '#9E77ED',
+  dark: '#6941C6',
+  darkest: '#42307D',
   contrastText: '#FFFFFF'
 });
 
