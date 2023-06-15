@@ -283,6 +283,16 @@ export async function getDadosAnaliseCaixinha(idCaixinha: string) {
                 date: '25/05/2022',
                 status: 'pending'
             }],
+            membros: [
+                {
+                    "name": "jeanluca jeanlucajea",
+                    "email": "jeanlucafp@gmail.com"
+                },
+                {
+                    "name": "Augusto Savi",
+                    "email": "guto_savi@outlook.com"
+                },
+            ],
             percentuais: {
                 series: [25.9, 23.9, 23.8, 15.6, 6.9, 3.8],
                 labels: ['jean', 'augusto', 'gava', 'arnaldo', 'arthur', 'gean']

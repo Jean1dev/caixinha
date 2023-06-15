@@ -11,6 +11,23 @@ function ordenarPorData(lista) {
     });
 }
 
+function parseQuery(query) {
+    let meuExtrato, emprestimos, depositos
+    if (typeof query.meuExtrato === 'string') {
+        meuExtrato = query.meuExtrato === 'true' ? true : false
+    }
+
+    if (typeof query.depositos === 'string') {
+        depositos = query.depositos === 'true' ? true : false
+    }
+
+    if (typeof query.emprestimos === 'string') {
+        emprestimos = query.emprestimos === 'true' ? true : false
+    }
+
+    return { meuExtrato, emprestimos, depositos }
+}
+
 async function extrato(context, req) {
 
     await connect()
@@ -44,22 +61,24 @@ async function extrato(context, req) {
         })
     }
 
-    if (req.query.meuExtrato) {
-        if (req.query.depositos) {
+    const { meuExtrato, emprestimos, depositos } = parseQuery(req.query)
+
+    if (meuExtrato) {
+        if (depositos) {
             await findDepositosAndPutOnResult({ memberName: req.query.memberName })
         }
 
-        if (req.query.emprestimos) {
+        if (emprestimos) {
             await findEmprestimosAndPutOnResult({ memberName: req.query.memberName })
         }
 
     } else {
         const { caixinhaId } = req.query
-        if (req.query.depositos) {
+        if (depositos) {
             await findDepositosAndPutOnResult({ idCaixinha: new ObjectId(caixinhaId) })
         }
 
-        if (req.query.emprestimos) {
+        if (emprestimos) {
             await findEmprestimosAndPutOnResult({ idCaixinha: new ObjectId(caixinhaId) })
         }
 

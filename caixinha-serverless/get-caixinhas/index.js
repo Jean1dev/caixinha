@@ -13,6 +13,8 @@ async function getCaixinhas(context, _req) {
             item['id'] = boxEntity._id
             delete item['loans']
             delete item['deposits']
+            delete item['performance']
+            delete item['bankAccount']
             item['members'] = boxEntity.members.map(m => ({
                 memberName: m.name,
                 email: m.email

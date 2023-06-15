@@ -1,6 +1,5 @@
 import NotificationsNoneIcon from '@mui/icons-material/NotificationsNone';
-import Brightness4Icon from "@mui/icons-material/Brightness4";
-import Brightness7Icon from "@mui/icons-material/Brightness7";
+import SettingsBrightnessIcon from '@mui/icons-material/SettingsBrightness';
 import MenuIcon from '@mui/icons-material/Menu';
 import {
     Avatar,
@@ -15,22 +14,22 @@ import {
 import { alpha } from '@mui/material/styles';
 import { AccountPopover } from './account-popover';
 import { usePopover } from '@/hooks/usePopover';
-import { useState } from 'react';
+import React, { EventHandler, MouseEventHandler, useState } from 'react';
 import { signIn, useSession } from 'next-auth/react';
 import MiniDrawer from './Drawer';
 import ApplicationSelectCaixinha from './application-select.caixinha';
-import { useAppTheme } from '@/hooks/useAppTheme';
+//import { useAppTheme } from '@/hooks/useAppTheme';
 import { useUserAuth } from '@/hooks/useUserAuth';
 
 const SIDE_NAV_WIDTH = 280;
 const TOP_NAV_HEIGHT = 64;
 
-export const TopNav = () => {
+export const TopNav = ({ changeTheme }: { changeTheme: MouseEventHandler }) => {
     const accountPopover = usePopover()
     const [open, setOpen] = useState(false)
     const { status } = useSession()
     const { user } = useUserAuth()
-    const [theme, toggleTheme] = useAppTheme()
+    // const [theme, toggleTheme] = useAppTheme()
     const handleSignIn = async () => await signIn()
 
     const handleDrawerOpen = () => {
@@ -109,9 +108,9 @@ export const TopNav = () => {
                                 </IconButton>
                             </Tooltip>
                             <Tooltip title="Tema">
-                                <IconButton onClick={toggleTheme}>
+                                <IconButton onClick={changeTheme}>
                                     <SvgIcon fontSize="small">
-                                        {theme.palette.mode === "dark" ? <Brightness7Icon /> : <Brightness4Icon />}
+                                        <SettingsBrightnessIcon />
                                     </SvgIcon>
                                 </IconButton>
                             </Tooltip>
@@ -172,9 +171,9 @@ export const TopNav = () => {
                         spacing={2}
                     >
                         <Tooltip title="Tema">
-                            <IconButton onClick={toggleTheme}>
+                            <IconButton onClick={changeTheme}>
                                 <SvgIcon fontSize="small">
-                                    {theme.palette.mode === "dark" ? <Brightness7Icon /> : <Brightness4Icon />}
+                                    <SettingsBrightnessIcon />
                                 </SvgIcon>
                             </IconButton>
                         </Tooltip>

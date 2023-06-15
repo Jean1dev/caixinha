@@ -41,7 +41,7 @@ export default function Extrato() {
                 setLoading(false)
                 setData(res)
             })
-            .catch(() => setLoading(false))
+            .catch(() => router.push('error'))
     }, [router, emprestimosFiltro, depositosFiltro, somenteMeuFiltro])
 
     return (

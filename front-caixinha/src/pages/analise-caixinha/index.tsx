@@ -10,6 +10,7 @@ import { useEffect, useState } from 'react';
 import CenteredCircularProgress from '@/components/CenteredCircularProgress';
 import { getDadosAnaliseCaixinha } from '../api/api.service';
 import { EvolucaoPatrimonial } from '@/components/analise-caixinha/evolucao-patrimonial';
+import { Participantes } from '@/components/analise-caixinha/participantes';
 
 export default function AnaliseCaixinha() {
     const router = useRouter()
@@ -29,7 +30,7 @@ export default function AnaliseCaixinha() {
                 data: response
             })
         }).catch(() => {
-
+            router.push('error')
         })
 
     }, [router])
@@ -64,7 +65,7 @@ export default function AnaliseCaixinha() {
                 <Container maxWidth="xl">
                     <Grid
                         container
-                        spacing={3}
+                        spacing={2}
                     >
                         <Grid
                             xs={12}
@@ -135,17 +136,10 @@ export default function AnaliseCaixinha() {
                             md={6}
                             lg={4}
                         >
-                            {/* <OverviewLatestProducts
-                                products={[
-                                    {
-                                        id: '5ece2c077e39da27658aa8a9',
-                                        image: '/assets/products/product-1.png',
-                                        name: 'Healthcare Erbology',
-                                        updatedAt: subHours(now, 6).getTime()
-                                    },
-                                ]}
+                            <Participantes
+                                participantes={state.data.membros}
                                 sx={{ height: '100%' }}
-                            /> */}
+                            />
                         </Grid>
                         <Grid
                             xs={12}
@@ -169,6 +163,13 @@ export default function AnaliseCaixinha() {
                     </Box>
 
                     <Box display="flex" sx={{ my: 2 }} gap={2}>
+                        <Button
+                            onClick={() => router.back()}
+                            color="secondary"
+                            variant="contained"
+                        >
+                            Voltar
+                        </Button>
                         <Button
                             onClick={join}
                             color="primary"
