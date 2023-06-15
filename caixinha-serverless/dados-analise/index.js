@@ -43,7 +43,7 @@ async function dadosAnalise(context, req) {
     ]
     const movimentacoes = []
 
-    for (let index = 0; index < 5; index++) {
+    for (let index = 0; index < 5 && depositos[index] != null; index++) {
         movimentacoes.push({
             id: depositos[index]._id,
             tipo: 'DEPOSITO',
