@@ -10,6 +10,7 @@ import { useEffect, useState } from 'react';
 import CenteredCircularProgress from '@/components/CenteredCircularProgress';
 import { getDadosAnaliseCaixinha } from '../api/api.service';
 import { EvolucaoPatrimonial } from '@/components/analise-caixinha/evolucao-patrimonial';
+import { Participantes } from '@/components/analise-caixinha/participantes';
 
 export default function AnaliseCaixinha() {
     const router = useRouter()
@@ -135,17 +136,10 @@ export default function AnaliseCaixinha() {
                             md={6}
                             lg={4}
                         >
-                            {/* <OverviewLatestProducts
-                                products={[
-                                    {
-                                        id: '5ece2c077e39da27658aa8a9',
-                                        image: '/assets/products/product-1.png',
-                                        name: 'Healthcare Erbology',
-                                        updatedAt: subHours(now, 6).getTime()
-                                    },
-                                ]}
+                            <Participantes
+                                participantes={state.data.membros}
                                 sx={{ height: '100%' }}
-                            /> */}
+                            />
                         </Grid>
                         <Grid
                             xs={12}

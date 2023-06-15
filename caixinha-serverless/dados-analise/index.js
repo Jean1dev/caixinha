@@ -70,12 +70,23 @@ async function dadosAnalise(context, req) {
         })
     }
 
+    const membros = []
+    for (const iterator of boxEntity['members']) {
+        const membro = await find('membros', { email: iterator.email, name: iterator.name })
+        if (membro.length) {
+            membros.push(membro[0])
+        } else {
+            membros.push(iterator)
+        }
+    }
+
     const result = {
         saldoTotal: boxEntity.currentBalance.value,
         totalDepositos,
         movimentacoes,
         percentuais,
-        evolucaoPatrimonial
+        evolucaoPatrimonial,
+        membros
     }
 
     context.res = {
