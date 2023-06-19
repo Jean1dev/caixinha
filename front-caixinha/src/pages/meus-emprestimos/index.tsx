@@ -1,130 +1,154 @@
-import Layout from "@/components/Layout";
-import { useEffect, useState } from "react";
-import { getMeusEmprestimos } from "../api/api.service";
-import { IMeusEmprestimos } from "@/types/types";
-import EmprestimoList from "./emprestimos.list";
-import { Box, Button, Tab, Tabs, Typography } from "@mui/material";
-import { useSession } from "next-auth/react";
-import { useRouter } from "next/router";
-import CenteredCircularProgress from "@/components/CenteredCircularProgress";
-
-interface TabPanelProps {
-    children?: React.ReactNode;
-    index: number;
-    value: number;
-}
-
-function TabPanel(props: TabPanelProps) {
-    const { children, value, index, ...other } = props;
-
-    return (
-        <div
-            role="tabpanel"
-            hidden={value !== index}
-            id={`simple-tabpanel-${index}`}
-            aria-labelledby={`simple-tab-${index}`}
-            {...other}
-        >
-            {value === index && (
-                <Box sx={{ p: 3 }}>
-                    <Typography>{children}</Typography>
-                </Box>
-            )}
-        </div>
-    );
-}
-
-function a11yProps(index: number) {
-    return {
-        id: `simple-tab-${index}`,
-        'aria-controls': `simple-tabpanel-${index}`,
-    };
-}
+import React, { useCallback, useEffect, useRef, useState } from 'react';
+import Button from '@mui/material/Button';
+import Divider from '@mui/material/Divider';
+import Stack from '@mui/material/Stack';
+import SvgIcon from '@mui/material/SvgIcon';
+import Typography from '@mui/material/Typography';
+import { Box } from '@mui/material';
+import { Filter, PlusOneOutlined } from '@mui/icons-material';
+import Layout from '@/components/Layout';
+import { EmprestimosFiltros } from '@/components/meus-emprestimos/filtros';
+import { MeusEmprestmosListContainer } from '@/components/meus-emprestimos/meu-emprestimos-list-container';
+import { MeusEmprestimosListSummary } from '@/components/meus-emprestimos/meus-emprestimos-list-summary';
+import { MeuEmprestimosListTable } from '@/components/meus-emprestimos/meus-emprestimos-table';
+import { useRouter } from 'next/router';
+import { useSession } from 'next-auth/react';
+import { getMeusEmprestimos } from '../api/api.service';
+import { IMeusEmprestimos } from '@/types/types';
+import CenteredCircularProgress from '@/components/CenteredCircularProgress';
 
 export default function MeusEmprestimos() {
     const router = useRouter()
+    const rootRef = useRef(null);
+
+    const [items, setItems] = useState<any>()
     const [loading, setLoading] = useState(true)
-    const [myLoans, setmyLoans] = useState([])
-    const [loansForApprove, setloansForApprove] = useState([])
     const { data: session } = useSession()
-    const [value, setValue] = useState(0)
 
-    const mapData = (data: IMeusEmprestimos) => {
-        const allMyLoans: any = [];
-        const allLoansForApprove: any = [];
+    const [group, setGroup] = useState(true);
 
-        data?.caixinhas.forEach((caixinha: any) => {
-            allMyLoans.push(...caixinha.myLoans);
-            allLoansForApprove.push(...caixinha.loansForApprove);
-        });
+    const lgUp = false
+    const [openSidebar, setOpenSidebar] = useState(lgUp);
 
-        setmyLoans(allMyLoans)
-        setloansForApprove(allLoansForApprove)
-    }
+    const handleGroupChange = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
+        setGroup(event.target.checked);
+    }, []);
 
-    const fetchAPi = () => {
+    const handleFiltersToggle = useCallback(() => {
+        setOpenSidebar((prevState) => !prevState);
+    }, []);
+
+    const handleFiltersClose = useCallback(() => {
+        setOpenSidebar(false);
+    }, []);
+
+    useEffect(() => {
         if (!loading) {
             setLoading(true)
         }
 
         getMeusEmprestimos({ name: session?.user?.name, email: session?.user?.email }).then((data: IMeusEmprestimos) => {
-            mapData(data)
+            //mapData(data)
+            setItems(data)
             setLoading(false)
         })
+    }, [])
+
+    if (loading) {
+        return <CenteredCircularProgress/>
     }
-
-    useEffect(() => {
-        fetchAPi()
-    }, [session])
-
-    const handleChange = (_event: React.SyntheticEvent, newValue: number) => {
-        setValue(newValue);
-    };
 
     return (
         <Layout>
-            <Box maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
-                <Box display="flex" justifyContent="flex-end">
-                    <Button
-                        variant="outlined"
-                        color="info"
-                        style={{ marginBottom: "1rem" }}
-                        onClick={fetchAPi}
-                    >
-                        Atualizar lista
-                    </Button>
-                    <Button
-                        variant="contained"
-                        color="secondary"
-                        style={{ marginBottom: "1rem" }}
-                        onClick={() => router.push('emprestimo')}
-                    >
-                        Solicitar novo emprestimo
-                    </Button>
-                </Box>
+            <Divider />
+            <Box
+                component="main"
+                sx={{
+                    display: 'flex',
+                    flex: '1 1 auto',
+                    overflow: 'hidden',
+                    position: 'relative'
+                }}
+            >
+                <Box
+                    ref={rootRef}
+                    sx={{
+                        bottom: 0,
+                        display: 'flex',
+                        left: 0,
+                        position: 'absolute',
+                        right: 0,
+                        top: 0
+                    }}
+                >
 
-                <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-                    <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
-                        <Tab label="Meus emprestimos" {...a11yProps(0)} />
-                        <Tab label="Emprestimos para aprovar" {...a11yProps(1)} />
-                    </Tabs>
+                    <EmprestimosFiltros
+                        container={rootRef.current}
+                        filters={{}}
+                        group={group}
+                        onFiltersChange={() => {}}
+                        onClose={handleFiltersClose}
+                        onGroupChange={handleGroupChange}
+                        open={openSidebar}
+                    />
+                    <MeusEmprestmosListContainer open={openSidebar} theme={undefined}>
+                        <Stack spacing={4}>
+                            <Stack
+                                alignItems="flex-start"
+                                direction="row"
+                                justifyContent="space-between"
+                                spacing={3}
+                            >
+                                <div>
+                                    <Typography variant="h4">
+                                        Meus Emprestimos
+                                    </Typography>
+                                </div>
+                                <Stack
+                                    alignItems="center"
+                                    direction="row"
+                                    spacing={1}
+                                >
+                                    <Button
+                                        color="inherit"
+                                        startIcon={(
+                                            <SvgIcon>
+                                                <Filter />
+                                            </SvgIcon>
+                                        )}
+                                        onClick={handleFiltersToggle}
+                                    >
+                                        Filtros
+                                    </Button>
+                                    <Button
+                                        onClick={() => router.push('emprestimo')}
+                                        startIcon={(
+                                            <SvgIcon>
+                                                <PlusOneOutlined />
+                                            </SvgIcon>
+                                        )}
+                                        variant="contained"
+                                    >
+                                        Novo Emprestimo
+                                    </Button>
+                                </Stack>
+                            </Stack>
+                            <MeusEmprestimosListSummary data={items}/>
+                            <MeuEmprestimosListTable
+                                count={0}
+                                group={group}
+                                items={items}
+                                onPageChange={() => {}}
+                                onRowsPerPageChange={() => {}}
+                                page={1}
+                                rowsPerPage={10}
+                            />
+                        </Stack>
+                    </MeusEmprestmosListContainer>
+
                 </Box>
-                {
-                    loading && (<CenteredCircularProgress />)
-                }
-                {
-                    !loading && (
-                        <>
-                            <TabPanel value={value} index={0}>
-                                <EmprestimoList data={myLoans} />
-                            </TabPanel>
-                            <TabPanel value={value} index={1}>
-                                <EmprestimoList data={loansForApprove} />
-                            </TabPanel>
-                        </>
-                    )
-                }
             </Box>
+
         </Layout>
-    )
-}
+    );
+};

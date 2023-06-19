@@ -133,6 +133,9 @@ export async function getMinhasCaixinhas(name: string, email: string) {
 export async function getMeusEmprestimos({ name, email }: any): Promise<IMeusEmprestimos> {
     if (dev) {
         return retornaComAtraso({
+            "totalPendente": 1350,
+            "totalPago": 450.6,
+            "totalGeral": 899.45,
             "caixinhas": [
                 {
                     "currentBalance": 84,

@@ -24,28 +24,26 @@ const corAleatoriaCombinada = () => {
 const card = (title: string, description: string, action: any) => {
   const cor = corAleatoriaCombinada().split('-')
   return (
-    <>
-      <Card
-        onClick={action}
-        variant="elevation"
-        sx={{
-          backgroundColor: cor[0],
-          shadowOpacity: 50,
-          "& :hover": {
-            backgroundColor: cor[1],
-            opacity: 1
-          }
-        }}>
-        <CardContent>
-          <Typography variant="h5" component="div">
-            {title}
-          </Typography>
-          <Typography variant="body2">
-            {description}
-          </Typography>
-        </CardContent>
-      </Card>
-    </>
+    <Card
+      onClick={action}
+      variant="elevation"
+      sx={{
+        backgroundColor: cor[0],
+        shadowOpacity: 50,
+        "& :hover": {
+          backgroundColor: cor[1],
+          opacity: 1
+        }
+      }}>
+      <CardContent>
+        <Typography variant="h5" component="div">
+          {title}
+        </Typography>
+        <Typography variant="body2">
+          {description}
+        </Typography>
+      </CardContent>
+    </Card>
   )
 }
 
