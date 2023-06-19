@@ -11,6 +11,7 @@ import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
+import FormatListNumberedIcon from '@mui/icons-material/FormatListNumbered';
 import WalletIcon from '@mui/icons-material/Wallet';
 import { useRouter } from 'next/router';
 import NextLink from 'next/link';
@@ -67,6 +68,11 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' 
 );
 
 const routes = [
+    {
+        text: 'Caixinhas',
+        path: 'caixinhas-disponiveis',
+        icon: <FormatListNumberedIcon />
+    },
     {
         text: 'Novo emprestimo',
         path: 'emprestimo',
