@@ -18,8 +18,8 @@ import CheckIcon from '@mui/icons-material/Check';
 import { useCaixinhaSelect } from '@/hooks/useCaixinhaSelect';
 import { pagarEmprestimo } from '../../pages/api/api.service';
 import CenteredCircularProgress from '@/components/CenteredCircularProgress';
-import { toast } from 'react-toastify';
 import { useSession } from 'next-auth/react';
+import { toast } from 'react-hot-toast';
 
 interface IProps {
     emprestimo: LoansForApprove,
@@ -59,10 +59,10 @@ export const PagamentoEmprestimo = ({ data }: { data: IProps }) => {
         }).then(() => {
             setLoading(false)
             setBlockButtons(true)
-            setTimeout(() => toast('Pagamento efetuado', { hideProgressBar: true, autoClose: 4000, type: 'success', position: 'bottom-right' }), 50)
+            toast.success('Pagamento efetuado')
         }).catch(e => {
             setLoading(false)
-            setTimeout(() => toast(e.message, { hideProgressBar: true, autoClose: 4000, type: 'error', position: 'bottom-right' }), 50)
+            toast.error(e.message)
         })
     }, [caixinha, data, valor, user])
 

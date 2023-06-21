@@ -15,9 +15,9 @@ import { useRouter } from 'next/router'
 import { doEmprestimo, getValorParcelas } from '../api/api.service'
 import Layout from '@/components/Layout'
 import { useSession } from 'next-auth/react'
-import { toast } from 'react-toastify'
 import { useCaixinhaSelect } from '@/hooks/useCaixinhaSelect'
 import CenteredCircularProgress from '@/components/CenteredCircularProgress'
+import toast from 'react-hot-toast'
 
 export default function Emprestimo() {
     const { data, status } = useSession()
@@ -86,7 +86,7 @@ export default function Emprestimo() {
         }).catch(err => {
             console.log(err)
             setLoading(false)
-            setTimeout(() => toast(err.message, { hideProgressBar: true, autoClose: 4000, type: 'error', position: 'bottom-right' }), 50)
+            toast.error(err.message)
         })
     }
 

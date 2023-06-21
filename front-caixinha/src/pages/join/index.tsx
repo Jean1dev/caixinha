@@ -5,8 +5,8 @@ import { useEffect, useState } from "react";
 import { getCaixinhas, joinABox } from "../api/api.service";
 import { Caixinha } from "@/types/types";
 import { useSession } from "next-auth/react";
-import { toast } from "react-toastify";
 import CenteredCircularProgress from "@/components/CenteredCircularProgress";
+import { toast } from "react-hot-toast";
 
 export default function Join() {
     const { status, data } = useSession()
@@ -58,10 +58,10 @@ export default function Join() {
 
         setLoading(true)
         joinABox(payload).then(() => {
-            setTimeout(() => toast('Você é um membro dessa caixinha agora', { hideProgressBar: true, autoClose: 4000, type: 'success', position: 'bottom-right' }), 50)
+            toast.success('Você é um membro dessa caixinha agora')
             router.back()
         }).catch(err => {
-            setTimeout(() => toast(err.message, { hideProgressBar: true, autoClose: 4000, type: 'error', position: 'bottom-right' }), 50)
+            toast.error(err.message)
             console.log(err)
             setLoading(false)
         })

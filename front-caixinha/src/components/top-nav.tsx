@@ -1,9 +1,7 @@
-import NotificationsNoneIcon from '@mui/icons-material/NotificationsNone';
 import SettingsBrightnessIcon from '@mui/icons-material/SettingsBrightness';
 import MenuIcon from '@mui/icons-material/Menu';
 import {
     Avatar,
-    Badge,
     Box,
     IconButton,
     Stack,
@@ -14,12 +12,12 @@ import {
 import { alpha } from '@mui/material/styles';
 import { AccountPopover } from './account-popover';
 import { usePopover } from '@/hooks/usePopover';
-import React, { EventHandler, MouseEventHandler, useState } from 'react';
+import React, { MouseEventHandler, useState } from 'react';
 import { signIn, useSession } from 'next-auth/react';
 import MiniDrawer from './Drawer';
 import ApplicationSelectCaixinha from './application-select.caixinha';
-//import { useAppTheme } from '@/hooks/useAppTheme';
 import { useUserAuth } from '@/hooks/useUserAuth';
+import { NotificationsButton } from './notificacoes/notificacaoes-button';
 
 const SIDE_NAV_WIDTH = 280;
 const TOP_NAV_HEIGHT = 64;
@@ -94,19 +92,7 @@ export const TopNav = ({ changeTheme }: { changeTheme: MouseEventHandler }) => {
                             spacing={2}
                         >
                             <ApplicationSelectCaixinha />
-                            <Tooltip title="Notifications">
-                                <IconButton>
-                                    <Badge
-                                        badgeContent={0}
-                                        color="success"
-                                        variant="dot"
-                                    >
-                                        <SvgIcon fontSize="small">
-                                            <NotificationsNoneIcon />
-                                        </SvgIcon>
-                                    </Badge>
-                                </IconButton>
-                            </Tooltip>
+                            <NotificationsButton />
                             <Tooltip title="Tema">
                                 <IconButton onClick={changeTheme}>
                                     <SvgIcon fontSize="small">

@@ -14,8 +14,8 @@ import { LoansForApprove } from '@/types/types';
 import { useCaixinhaSelect } from '@/hooks/useCaixinhaSelect';
 import { aprovarEmprestimo } from '../../pages/api/api.service';
 import CenteredCircularProgress from '@/components/CenteredCircularProgress';
-import { toast } from 'react-toastify';
 import { useSession } from 'next-auth/react';
+import { toast } from 'react-hot-toast';
 
 interface IGestaoInput {
     emprestimo: LoansForApprove,
@@ -37,10 +37,10 @@ export const GestaoEmprestimo = ({ data }: { data: IGestaoInput }) => {
         }).then(() => {
             setLoading(false)
             setBlockButtons(true)
-            setTimeout(() => toast('Aprovação enviada', { hideProgressBar: true, autoClose: 4000, type: 'success', position: 'bottom-right' }), 50)
+            toast.success('Aprovação enviada')
         }).catch(e => {
             setLoading(false)
-            setTimeout(() => toast(e.message, { hideProgressBar: true, autoClose: 4000, type: 'error', position: 'bottom-right' }), 50)
+            toast.error(e.message)
         })
     }, [caixinha, data, user])
 
