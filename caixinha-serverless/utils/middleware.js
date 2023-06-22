@@ -13,16 +13,17 @@ async function middleware(context, req, nextFunction) {
         await nextFunction(context, req)
     } catch (error) {
         context.log(error.message)
+
+        if (useSentry) {
+            Sentry.captureException(e);
+            await Sentry.flush(2000);
+        }
+
         context.res = {
             status: 400,
             body: {
                 message: error.message
             }
-        }
-
-        if (useSentry) {
-            Sentry.captureException(e);
-            await Sentry.flush(2000);
         }
     }
 }

@@ -113,6 +113,9 @@ export default function Extrato() {
                                                             <TableCell>
                                                                 membro
                                                             </TableCell>
+                                                            <TableCell>
+                                                                Valor
+                                                            </TableCell>
                                                             <TableCell sortDirection="desc">
                                                                 Data
                                                             </TableCell>
@@ -133,6 +136,9 @@ export default function Extrato() {
                                                                     </TableCell>
                                                                     <TableCell>
                                                                         {order.nick}
+                                                                    </TableCell>
+                                                                    <TableCell>
+                                                                        R${order.valor}
                                                                     </TableCell>
                                                                     <TableCell>
                                                                         {order.date}

@@ -1,11 +1,12 @@
 import Layout from "@/components/Layout";
-import { Box, Container, Stack, Typography, Grid } from "@mui/material";
+import { Box, Container, Stack, Typography } from "@mui/material";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { DetalhesUser } from "../../components/emprestimos/detalhes-user";
 import { GestaoEmprestimo } from "../../components/emprestimos/gestao-emprestimo";
 import { PagamentoEmprestimo } from "../../components/emprestimos/pagamento-emprestimo";
+import Grid from '@mui/material/Unstable_Grid2';
 
 export default function DetalhesEmprestimo() {
     const [isMeuEmprestimo, setMeuEmprestimo] = useState(false)

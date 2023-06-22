@@ -2,9 +2,9 @@ import Layout from "@/components/Layout";
 import { FormPerfil } from "@/components/perfil/form-perfil";
 import { PerfilDaConta } from "@/components/perfil/perfil-conta";
 import { Box, Container, Stack, Typography, Grid } from "@mui/material";
-import { toast } from "react-toastify";
 import { updatePerfil, uploadResource } from "../api/api.service";
 import { useUserAuth } from "@/hooks/useUserAuth";
+import { toast } from "react-hot-toast";
 
 export interface IUser {
     name: string
@@ -34,9 +34,9 @@ export default function Perfil() {
                 pix: props.pix,
                 photoUrl: user?.photoUrl
             })
-            setTimeout(() => toast('Perfil atualizado', { hideProgressBar: true, autoClose: 4000, type: 'success', position: 'bottom-right' }), 50)
+            toast.success('Perfil atualizado')
         }).catch(e => {
-            setTimeout(() => toast(e.message, { hideProgressBar: true, autoClose: 4000, type: 'error', position: 'bottom-right' }), 50)
+            toast.error(e.message)
         })
     }
 
@@ -54,8 +54,8 @@ export default function Perfil() {
                     ...user,
                     photoUrl: fileUrl
                 })
-                setTimeout(() => toast('upload realizado,', { hideProgressBar: true, autoClose: 4000, type: 'info', position: 'bottom-right' }), 50)
-            }).catch(e => toast(e.message, { hideProgressBar: true, autoClose: 4000, type: 'error', position: 'bottom-right' }))
+                toast.success('Upload realizado')
+            }).catch(e => toast.error(e.message))
         });
 
         input.click()

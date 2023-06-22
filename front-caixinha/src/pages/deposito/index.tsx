@@ -23,8 +23,8 @@ import { doDeposito, getChavesPix, uploadResource } from '../api/api.service'
 import Layout from '@/components/Layout'
 import { useSession } from 'next-auth/react'
 import { useCaixinhaSelect } from '@/hooks/useCaixinhaSelect';
-import { toast } from 'react-toastify';
 import CenteredCircularProgress from '@/components/CenteredCircularProgress';
+import toast from 'react-hot-toast';
 
 export default function Deposito() {
     const { data, status } = useSession()
@@ -84,7 +84,7 @@ export default function Deposito() {
         }).catch(err => {
             console.log(err)
             setLoading(false)
-            setTimeout(() => toast(err.message, { hideProgressBar: true, autoClose: 4000, type: 'error', position: 'bottom-right' }), 50)
+            toast.error(err.message)
         })
     }, [caixinha, solicitacao])
 
@@ -107,13 +107,13 @@ export default function Deposito() {
         console.log(resource.name)
 
         uploadResource(resource.file).then((fileUrl: string) => {
-            setTimeout(() => toast('upload realizado,', { hideProgressBar: true, autoClose: 4000, type: 'info', position: 'bottom-right' }), 50)
+            toast.success('Upload realizado')
             //@ts-ignore
             const novaLista = arquivos.filter(it => it.name !== resource.name)
             novaLista.push({ file: resource, name: resource.name, status: 'success' })
             setArquivo(novaLista)
             setSolicitacao({ ...solicitacao, fileUrl })
-        }).catch(e => toast(e.message, { hideProgressBar: true, autoClose: 4000, type: 'error', position: 'bottom-right' }))
+        }).catch(e => toast.error(e.message))
     }
 
     const getChipByItem = (item: any) => {

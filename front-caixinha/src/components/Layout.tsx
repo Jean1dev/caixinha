@@ -1,13 +1,12 @@
 import { CssBaseline, Divider, ThemeProvider } from "@mui/material";
 import { TopNav } from "./top-nav";
-import 'react-toastify/dist/ReactToastify.css';
-import { ToastContainer } from "react-toastify";
 import { useEffect } from 'react';
 import Hotjar from '@hotjar/browser';
 import { AlertNav } from "./alert-nav";
 import { SettingsConsumer, SettingsProvider } from "@/contexts/settings";
 import { createTheme } from "@/theme/theme";
 import { SettingsDrawer } from "./tema-configuracoes";
+import { Toaster } from "./Toaster";
 
 const siteId = process.env.NEXT_PUBLIC_HOTJAR_ID
 const hotjarVersion = 6
@@ -75,7 +74,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                             <AlertNav />
                             <>
                                 {children}
-                                <ToastContainer />
+                                <Toaster />
                             </>
                         </ThemeProvider>
                     )

@@ -133,6 +133,9 @@ export async function getMinhasCaixinhas(name: string, email: string) {
 export async function getMeusEmprestimos({ name, email }: any): Promise<IMeusEmprestimos> {
     if (dev) {
         return retornaComAtraso({
+            "totalPendente": 1350,
+            "totalPago": 450.6,
+            "totalGeral": 899.45,
             "caixinhas": [
                 {
                     "currentBalance": 84,
@@ -359,4 +362,18 @@ export async function updatePerfil(body: any) {
     }
 
     return asyncFetch(`${BASE_URL}/update-profile-member`, 'POST', body)
+}
+
+export async function getDadosPerfil(email: string, name: string) {
+    if (dev) {
+        return retornaComAtraso({
+            "_id": "648a2846b29e9b382ceb970b",
+            "email": "jean@jean",
+            "name": "jean",
+            "phoneNumber": "5548998457797",
+            "photoUrl": "https://eletrovibez.com/wp-content/uploads/2022/11/Boris-Brejcha-talento-i%CC%81mpar-que-converge-em-sonoridade-u%CC%81nica.jpg"
+        })
+    }
+
+    return asyncGetWithParamethers(`${BASE_URL}/get-user-data`, { email, memberName: name })
 }

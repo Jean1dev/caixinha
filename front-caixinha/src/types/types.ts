@@ -9,6 +9,9 @@ export interface Caixinha {
 
 export interface IMeusEmprestimos {
   caixinhas: EmprestimoCaixinha[]
+  totalPendente: number,
+  totalPago: number,
+  totalGeral: number
 }
 
 export interface EmprestimoCaixinha {
@@ -32,4 +35,5 @@ export interface LoansForApprove {
   memberName: string
   remainingAmount?: number
   isPaidOff?: boolean
+  caixinha?: string
 }
