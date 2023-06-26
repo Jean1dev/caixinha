@@ -48,10 +48,9 @@ export default function MeusEmprestimos() {
         }
 
         getMeusEmprestimos({ name: session?.user?.name, email: session?.user?.email }).then((data: IMeusEmprestimos) => {
-            //mapData(data)
             setItems(data)
             setLoading(false)
-        })
+        }).catch(() => router.push('error'))
     }, [])
 
     if (loading) {
