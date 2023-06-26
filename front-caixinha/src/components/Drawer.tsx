@@ -9,7 +9,6 @@ import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import FormatListNumberedIcon from '@mui/icons-material/FormatListNumbered';
-import { useRouter } from 'next/router';
 import NextLink from 'next/link';
 import { AttachMoney, ListAltSharp, Home, ShowChartOutlined, CreditScore, Wallet, ChevronRight, ChevronLeft } from '@mui/icons-material';
 
@@ -101,7 +100,7 @@ const carteiraRoutes = [
 
 export default function MiniDrawer({ open, handleDrawerClose }: any) {
     const theme = useTheme()
-    const router = useRouter()
+
     if (!open) {
         return <></>
     }
@@ -118,7 +117,8 @@ export default function MiniDrawer({ open, handleDrawerClose }: any) {
                 {routes.map((it, index) => (
                     <ListItem key={it.text} disablePadding sx={{ display: 'block' }}>
                         <ListItemButton
-                            onClick={() => router.push(it.path)}
+                            LinkComponent={NextLink}
+                            href={it.path}
                             sx={{
                                 minHeight: 48,
                                 justifyContent: open ? 'initial' : 'center',
@@ -126,7 +126,6 @@ export default function MiniDrawer({ open, handleDrawerClose }: any) {
                             }}
                         >
                             <ListItemIcon
-                                onClick={() => router.push(it.path)}
                                 sx={{
                                     minWidth: 0,
                                     mr: open ? 3 : 'auto',
@@ -145,7 +144,8 @@ export default function MiniDrawer({ open, handleDrawerClose }: any) {
                 {carteiraRoutes.map((it, index) => (
                     <ListItem key={it.text} disablePadding sx={{ display: 'block' }}>
                         <ListItemButton
-                            onClick={() => router.push(it.path)}
+                            LinkComponent={NextLink}
+                            href={it.path}
                             sx={{
                                 minHeight: 48,
                                 justifyContent: open ? 'initial' : 'center',
@@ -153,7 +153,6 @@ export default function MiniDrawer({ open, handleDrawerClose }: any) {
                             }}
                         >
                             <ListItemIcon
-                                onClick={() => router.push(it.path)}
                                 sx={{
                                     minWidth: 0,
                                     mr: open ? 3 : 'auto',

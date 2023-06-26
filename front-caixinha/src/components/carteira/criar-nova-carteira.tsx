@@ -35,7 +35,7 @@ export const CriarCarteiraNova = (props: any) => (
                 Utilize o diagrama para receber as recomendações de aporte.
             </Typography>
             <Button LinkComponent={NextLink}
-                href="/nova-carteira"
+                href="/carteira/nova-carteira"
                 variant="contained">
                 Criar agora
             </Button>

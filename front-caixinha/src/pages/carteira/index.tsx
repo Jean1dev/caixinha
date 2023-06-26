@@ -51,7 +51,7 @@ export default function Carteira() {
                                 >
                                     <Button
                                         LinkComponent={NextLink}
-                                        href="/nova-carteira"
+                                        href="/carteira/nova-carteira"
                                         startIcon={(
                                             <SvgIcon>
                                                 <PlusOne />
