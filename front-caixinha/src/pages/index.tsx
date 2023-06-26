@@ -5,6 +5,7 @@ import { useSettings } from "@/hooks/useSettings";
 import { Box, Card, CardContent, Container, Typography } from "@mui/material";
 import { useRouter } from "next/router";
 import Grid from '@mui/material/Unstable_Grid2';
+import { Seo } from "@/components/Seo";
 
 const corAleatoriaCombinada = () => {
   const cores = [
@@ -53,6 +54,7 @@ export default function Home() {
 
   return (
     <Layout>
+      <Seo title="Caixinha informações"/>
       <Box component="main"
         sx={{
           flexGrow: 1,

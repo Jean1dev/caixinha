@@ -52,7 +52,7 @@ export async function uploadResource(resourceFile: string | Blob) {
         data: form
     };
 
-    const response = await http.request(options)
+    const response = await axios.request(options)
 
     if (dev) {
         return response.data.storageLocaion
