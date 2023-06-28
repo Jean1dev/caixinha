@@ -1,28 +1,38 @@
-import { Grid, FormControl, TextField, Divider, Box, Button } from "@mui/material";
+import { TextField, Box, Button } from "@mui/material";
+import Grid from '@mui/material/Unstable_Grid2';
 
 export default function CarteiraStep1(props: any) {
     const { carteira, setCarteira, criarCarteira } = props
 
     return (
-        <form onSubmit={() => { }}>
-            <Grid container spacing={3}>
-                <Grid item xs={12}>
-                    <FormControl fullWidth>
+        <Box sx={{ p: 3 }}>
+            <form onSubmit={(event) => {
+                event.preventDefault()
+                criarCarteira()
+            }}>
+                <Grid
+                    container
+                    spacing={3}
+                >
+                    <Grid xs={12} md={6}>
                         <TextField
+                            fullWidth
                             required
                             name="ativo"
                             label="Ativo"
                             value={carteira?.ativo}
                             defaultValue={''}
                             onChange={(e) => { setCarteira({ ...carteira, ativo: e.target.value }) }}
-                            inputProps={{ "data-testid": "name" }}
                         />
-
-                    </FormControl>
-                </Grid>
-                <Grid item xs={12}>
-                    <FormControl>
+                    </Grid>
+                    <Grid xs={12} md={6}/>
+                    
+                    <Grid
+                        xs={12}
+                        md={6}
+                    >
                         <TextField
+                            fullWidth
                             required
                             name="quantidade"
                             label="quantidade"
@@ -30,11 +40,14 @@ export default function CarteiraStep1(props: any) {
                             defaultValue={1}
                             type="number"
                             onChange={(e) => { setCarteira({ ...carteira, quantidade: e.target.value }) }}
-                            inputProps={{ "data-testid": "name" }}
                         />
-                    </FormControl>
-                    <FormControl>
+                    </Grid>
+                    <Grid
+                        xs={12}
+                        md={6}
+                    >
                         <TextField
+                            fullWidth
                             required
                             name="nota"
                             label="nota"
@@ -42,23 +55,20 @@ export default function CarteiraStep1(props: any) {
                             defaultValue={0}
                             type="number"
                             onChange={(e) => { setCarteira({ ...carteira, nota: e.target.value }) }}
-                            inputProps={{ "data-testid": "name" }}
                         />
-                    </FormControl>
-                </Grid>
-                <Grid item xs={12}>
-                    <Box display="flex" gap={2}>
+                    </Grid>
 
-                        <Button
-                            onClick={criarCarteira}
-                            variant="contained"
-                            color="primary"
-                        >
-                            Criar carteira
-                        </Button>
-                    </Box>
+
                 </Grid>
-            </Grid>
-        </form>
+                <Box sx={{ mt: 2 }}>
+                    <Button
+                        type="submit"
+                        variant="contained"
+                    >
+                        Criar carteira
+                    </Button>
+                </Box>
+            </form>
+        </Box>
     )
 }

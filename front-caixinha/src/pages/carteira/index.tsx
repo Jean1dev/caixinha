@@ -9,10 +9,21 @@ import { CotacaoCard } from "@/components/carteira/cotacao-card";
 import { CarteiraBalanco } from "@/components/carteira/carteira-balanco";
 import { CriarCarteiraNova } from "@/components/carteira/criar-nova-carteira";
 import NextLink from 'next/link';
+import { useEffect, useState } from "react";
+import { getMinhasCarteiras } from "../api/api.carteira";
+import { useSession } from "next-auth/react";
+import { MinhasCarteirasList } from "@/components/carteira/minhas-carteiras-list";
 
 export default function Carteira() {
     const settings = useSettings();
     const theme = useTheme();
+    const [carteiras, setCarteiras] = useState(null)
+    const data = useSession()
+
+    useEffect(() => {
+        getMinhasCarteiras(data.data?.user?.name || '', data.data?.user?.email || '')
+            .then(res => setCarteiras(res))
+    }, [data])
 
     return (
         <Layout>
@@ -129,7 +140,7 @@ export default function Carteira() {
                             xs={12}
                             md={5}
                         >
-                            <CriarCarteiraNova />
+                            {!carteiras && <CriarCarteiraNova />}
                             {/* <CryptoCards
                                 cards={[
                                     {
@@ -163,28 +174,7 @@ export default function Carteira() {
                                     chartSeries={[16213.20, 9626.80, 10076.81]}
                                     labels={['Bitcoin', 'Ethereum', 'US Dollars']}
                                 />
-                                {/* <CryptoTransactions
-                                    transactions={[
-                                        {
-                                            id: '3cc450e88286fdd4e220c719',
-                                            amount: 0.1337,
-                                            balance: 4805,
-                                            coin: 'BTC',
-                                            createdAt: subDays(subHours(subMinutes(now, 43), 5), 3).getTime(),
-                                            operation: 'add',
-                                            title: 'Buy BTC'
-                                        },
-                                        {
-                                            id: '6442793e96a90d4e584a19f7',
-                                            amount: 0.2105,
-                                            balance: 2344,
-                                            coin: 'BTC',
-                                            createdAt: subDays(subHours(subMinutes(now, 32), 54), 6).getTime(),
-                                            operation: 'sub',
-                                            title: 'Sell BTC'
-                                        }
-                                    ]}
-                                /> */}
+                                <MinhasCarteirasList carteiras={carteiras || []} />
                             </Stack>
                         </Grid>
                         <Grid

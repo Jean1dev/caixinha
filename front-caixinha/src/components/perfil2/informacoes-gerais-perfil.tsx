@@ -226,7 +226,7 @@ export const InformacoesGeraisPerfil = () => {
                                     />
                                 </Stack>
 
-                                <Stack
+                                {/* <Stack
                                     alignItems="center"
                                     direction="row"
                                     spacing={2}
@@ -240,7 +240,7 @@ export const InformacoesGeraisPerfil = () => {
                                         value={values.lastName}
                                         sx={{ flexGrow: 1 }}
                                     />
-                                </Stack>
+                                </Stack> */}
 
                                 <Stack
                                     alignItems="center"

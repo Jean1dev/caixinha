@@ -61,7 +61,7 @@ export async function uploadResource(resourceFile: string | Blob) {
     return response.data
 }
 
-function retornaComAtraso(value: any): Promise<any> {
+export function retornaComAtraso(value: any): Promise<any> {
     return new Promise((resolve) => {
         setTimeout(() => {
             resolve(value)
@@ -368,8 +368,8 @@ export async function getDadosPerfil(email: string, name: string) {
     if (dev) {
         return retornaComAtraso({
             "_id": "648a2846b29e9b382ceb970b",
-            "email": "jean@jean",
-            "name": "jean",
+            "email": "jeanlucafp@gmail.com",
+            "name": "jeanluca jeanlucajea",
             "phoneNumber": "5548998457797",
             "photoUrl": "https://eletrovibez.com/wp-content/uploads/2022/11/Boris-Brejcha-talento-i%CC%81mpar-que-converge-em-sonoridade-u%CC%81nica.jpg"
         })

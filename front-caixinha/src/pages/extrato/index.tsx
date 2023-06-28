@@ -8,6 +8,7 @@ import { useSession } from "next-auth/react";
 import FilterAltIcon from '@mui/icons-material/FilterAlt';
 import FilterAltOffIcon from '@mui/icons-material/FilterAltOff';
 import CenteredCircularProgress from "@/components/CenteredCircularProgress";
+import DisplayValorMonetario from "@/components/display-valor-monetario";
 
 export default function Extrato() {
     const [data, setData] = useState([])
@@ -76,21 +77,21 @@ export default function Extrato() {
                                 color={somenteMeuFiltro ? 'success' : 'default'}
                                 onClick={() => { setSomenteMeuFiltro(!somenteMeuFiltro) }}
                                 onDelete={() => { setEmprestimosFiltro(!emprestimosFiltro) }}
-                                deleteIcon={somenteMeuFiltro ? <FilterAltOffIcon/> : <FilterAltIcon />} />
+                                deleteIcon={somenteMeuFiltro ? <FilterAltOffIcon /> : <FilterAltIcon />} />
                             <Chip
                                 label={depositosFiltro ? 'Remover depositos' : 'Incluir depositos'}
                                 variant={depositosFiltro ? 'filled' : 'outlined'}
                                 color={depositosFiltro ? 'success' : 'default'}
                                 onClick={() => { setDepositosFiltro(!depositosFiltro) }}
                                 onDelete={() => { setDepositosFiltro(!depositosFiltro) }}
-                                deleteIcon={depositosFiltro ? <FilterAltOffIcon/> : <FilterAltIcon />} />
+                                deleteIcon={depositosFiltro ? <FilterAltOffIcon /> : <FilterAltIcon />} />
                             <Chip
                                 onClick={() => { setEmprestimosFiltro(!emprestimosFiltro) }}
                                 onDelete={() => { setEmprestimosFiltro(!emprestimosFiltro) }}
                                 label={emprestimosFiltro ? 'Remover emprestimos' : 'Incluir emprestimos'}
                                 variant={emprestimosFiltro ? 'filled' : 'outlined'}
                                 color={emprestimosFiltro ? 'success' : 'default'}
-                                deleteIcon={emprestimosFiltro ? <FilterAltOffIcon/> : <FilterAltIcon />} />
+                                deleteIcon={emprestimosFiltro ? <FilterAltOffIcon /> : <FilterAltIcon />} />
                         </Card>
                         {
                             loading && <CenteredCircularProgress />
@@ -138,7 +139,9 @@ export default function Extrato() {
                                                                         {order.nick}
                                                                     </TableCell>
                                                                     <TableCell>
-                                                                        R${order.valor}
+                                                                        <DisplayValorMonetario>
+                                                                            {order.valor}
+                                                                        </DisplayValorMonetario>
                                                                     </TableCell>
                                                                     <TableCell>
                                                                         {order.date}

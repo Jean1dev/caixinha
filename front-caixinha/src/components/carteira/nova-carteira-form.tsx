@@ -14,24 +14,40 @@ import CarteiraStep1 from './carteira-step1';
 import { useCallback, useState } from 'react';
 import CarteiraStep3 from './carteira-step3';
 import { useRouter } from 'next/router';
+import CarteiraStep2 from './carteira-step2';
+import { criarNovaCarteira } from '@/pages/api/api.carteira';
+import { toast } from 'react-hot-toast';
+import CenteredCircularProgress from '../CenteredCircularProgress';
 
 export const NOvaCarteiraForm = (props: any) => {
     const { chapter, setActiveChapter } = props;
     const [carteira, setCarteira] = useState<any>({})
+    const [loading, setLoading] = useState(false)
     const router = useRouter()
 
     const criarCarteira = useCallback(() => {
-        alert('wopa criando')
-        router.push('/sucesso')
+        setLoading(true)
+        criarNovaCarteira(carteira)
+            .then(() => router.push('/sucesso'))
+            .catch(() => toast.error('Ocorreu um erro para criar sua carteira'))
+
     }, [carteira])
+
+    const changeMeta = (data: any) => {
+        setCarteira({ ...carteira, metaDefinida: data })
+    }
 
     const getComponent = () => {
         if (chapter.step == 1) {
-            return <CarteiraStep1 carteira={carteira} setCarteira={setCarteira}/>
+            return <CarteiraStep1 carteira={carteira} setCarteira={setCarteira} />
+        }
+
+        if (chapter.step == 2) {
+            return <CarteiraStep2 changeMeta={changeMeta} />
         }
 
         if (chapter.step == 3) {
-            return <CarteiraStep3 carteira={carteira} setCarteira={setCarteira} criarCarteira={criarCarteira}/>
+            return <CarteiraStep3 carteira={carteira} setCarteira={setCarteira} criarCarteira={criarCarteira} />
         }
     }
 
@@ -50,6 +66,9 @@ export const NOvaCarteiraForm = (props: any) => {
             setActiveChapter((chapter.step - 1) - 1)
         }
     }
+
+    if (loading)
+        return <CenteredCircularProgress />
 
     return (
         <Box

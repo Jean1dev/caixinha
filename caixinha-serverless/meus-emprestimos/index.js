@@ -56,7 +56,7 @@ async function meusEmprestimos(context, req) {
                 memberName: item.memberName,
                 totalValue: item?.totalValue?.value,
                 remainingAmount: item?.remainingAmount?.value,
-                isPaidOff: item.isPaidOff.approvals,
+                isPaidOff: item.isPaidOff,
                 caixinha: c.name
             })),
         }))

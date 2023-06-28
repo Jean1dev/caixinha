@@ -15,8 +15,6 @@ const restoreSettings = () => {
     }
   } catch (err) {
     console.error(err);
-    // If stored data is not a strigified JSON this will fail,
-    // that's why we catch the error
   }
 
   return value;
@@ -99,6 +97,13 @@ export const SettingsProvider = (props: any) => {
     }));
   }, []);
 
+  const handleShowValoresMonetarios = useCallback(() => {
+    setState((prevState) => ({
+      ...prevState,
+      showValoresMonetarios: !prevState.showValoresMonetarios
+    }));
+}, []);
+
   const isCustom = useMemo(() => {
     return !isEqual(defaultSettings, {
       colorPreset: state.colorPreset,
@@ -120,7 +125,8 @@ export const SettingsProvider = (props: any) => {
         handleDrawerOpen,
         handleReset,
         handleUpdate,
-        isCustom
+        isCustom,
+        handleShowValoresMonetarios
       }}
     >
       {children}

@@ -11,6 +11,7 @@ import ListItemText from '@mui/material/ListItemText';
 import FormatListNumberedIcon from '@mui/icons-material/FormatListNumbered';
 import NextLink from 'next/link';
 import { AttachMoney, ListAltSharp, Home, ShowChartOutlined, CreditScore, Wallet, ChevronRight, ChevronLeft } from '@mui/icons-material';
+import { Chip } from '@mui/material';
 
 const drawerWidth = 240;
 
@@ -92,9 +93,10 @@ const routes = [
 
 const carteiraRoutes = [
     {
-        text: 'Carteira',
+        text: '[Beta] Carteira',
         path: 'carteira',
-        icon: <ShowChartOutlined />
+        icon: <ShowChartOutlined />,
+        newFeature: true
     }
 ]
 
@@ -162,6 +164,13 @@ export default function MiniDrawer({ open, handleDrawerClose }: any) {
                                 {it.icon}
                             </ListItemIcon>
                             <ListItemText primary={it.text} sx={{ opacity: open ? 1 : 0 }} />
+                            {it.newFeature && (
+                                <Chip
+                                    color="primary"
+                                    label="New"
+                                    size="small"
+                                />
+                            )}
                         </ListItemButton>
                     </ListItem>
                 ))}
