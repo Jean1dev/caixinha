@@ -3,6 +3,7 @@ import { useLocalStorage } from "./useLocalStorage";
 import { IUser } from "@/pages/perfil";
 import { useSession } from "next-auth/react";
 import { getDadosPerfil } from "@/pages/api/api.service";
+import { setDefaultHeaders } from "@/pages/api/api.carteira";
 
 export function useUserAuth() {
     const [user, setUser] = useState<IUser | null>({
@@ -13,10 +14,7 @@ export function useUserAuth() {
     const [storedUser, setStoredUser] = useLocalStorage<IUser | null>("caixinha-user1", null);
 
     const updateUser = (userAuth: IUser | null) => {
-
-        //setUser(user);
         setStoredUser(userAuth);
-        //window.location.reload();
     };
 
     useEffect(() => {
@@ -27,11 +25,13 @@ export function useUserAuth() {
 
         if (storedUser) {
             setUser(storedUser)
+            setDefaultHeaders(storedUser.name, storedUser.email)
             return
         }
 
         if (!storedUser && data) {
-            getDadosPerfil(data?.user?.email || '', data?.user?.name || '',)
+            setDefaultHeaders(data?.user?.name || '', data?.user?.email || '')
+            getDadosPerfil(data?.user?.email || '', data?.user?.name || '')
                 .then((r) => {
                     if (r['_id']) {
                         updateUser({

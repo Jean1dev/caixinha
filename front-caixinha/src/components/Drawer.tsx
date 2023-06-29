@@ -4,18 +4,14 @@ import MuiDrawer from '@mui/material/Drawer';
 import List from '@mui/material/List';
 import Divider from '@mui/material/Divider';
 import IconButton from '@mui/material/IconButton';
-import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
-import CreditScoreIcon from '@mui/icons-material/CreditScore';
-import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import FormatListNumberedIcon from '@mui/icons-material/FormatListNumbered';
-import WalletIcon from '@mui/icons-material/Wallet';
-import { useRouter } from 'next/router';
 import NextLink from 'next/link';
-import { AttachMoney, Home, ListAltSharp } from '@mui/icons-material';
+import { AttachMoney, ListAltSharp, Home, ShowChartOutlined, CreditScore, Wallet, ChevronRight, ChevronLeft } from '@mui/icons-material';
+import { Chip } from '@mui/material';
 
 const drawerWidth = 240;
 
@@ -76,29 +72,36 @@ const routes = [
     {
         text: 'Novo emprestimo',
         path: 'emprestimo',
-        icon: <WalletIcon />
+        icon: <Wallet />
     },
     {
         text: 'Meus emprestimos',
         path: 'meus-emprestimos',
-        icon: <CreditScoreIcon/>
+        icon: <CreditScore />
     },
     {
         text: 'Depositos',
         path: 'deposito',
-        icon: <AttachMoney/>
+        icon: <AttachMoney />
     },
     {
         text: 'Extrato',
         path: 'extrato',
-        icon: <ListAltSharp/>
+        icon: <ListAltSharp />
+    }
+]
+
+const carteiraRoutes = [
+    {
+        text: '[Beta] Carteira',
+        path: 'carteira',
+        icon: <ShowChartOutlined />,
+        newFeature: true
     }
 ]
 
 export default function MiniDrawer({ open, handleDrawerClose }: any) {
     const theme = useTheme()
-    const router = useRouter()
-    //https://mui.com/material-ui/react-drawer/
 
     if (!open) {
         return <></>
@@ -108,7 +111,7 @@ export default function MiniDrawer({ open, handleDrawerClose }: any) {
         <Drawer variant="permanent" open={open}>
             <DrawerHeader>
                 <IconButton onClick={handleDrawerClose}>
-                    {theme.direction === 'rtl' ? <ChevronRightIcon /> : <ChevronLeftIcon />}
+                    {theme.direction === 'rtl' ? <ChevronRight /> : <ChevronLeft />}
                 </IconButton>
             </DrawerHeader>
             <Divider />
@@ -116,7 +119,8 @@ export default function MiniDrawer({ open, handleDrawerClose }: any) {
                 {routes.map((it, index) => (
                     <ListItem key={it.text} disablePadding sx={{ display: 'block' }}>
                         <ListItemButton
-                            onClick={() => router.push(it.path)}
+                            LinkComponent={NextLink}
+                            href={it.path}
                             sx={{
                                 minHeight: 48,
                                 justifyContent: open ? 'initial' : 'center',
@@ -124,7 +128,6 @@ export default function MiniDrawer({ open, handleDrawerClose }: any) {
                             }}
                         >
                             <ListItemIcon
-                                onClick={() => router.push(it.path)}
                                 sx={{
                                     minWidth: 0,
                                     mr: open ? 3 : 'auto',
@@ -134,6 +137,40 @@ export default function MiniDrawer({ open, handleDrawerClose }: any) {
                                 {it.icon}
                             </ListItemIcon>
                             <ListItemText primary={it.text} sx={{ opacity: open ? 1 : 0 }} />
+                        </ListItemButton>
+                    </ListItem>
+                ))}
+            </List>
+            <Divider />
+            <List>
+                {carteiraRoutes.map((it, index) => (
+                    <ListItem key={it.text} disablePadding sx={{ display: 'block' }}>
+                        <ListItemButton
+                            LinkComponent={NextLink}
+                            href={it.path}
+                            sx={{
+                                minHeight: 48,
+                                justifyContent: open ? 'initial' : 'center',
+                                px: 2.5,
+                            }}
+                        >
+                            <ListItemIcon
+                                sx={{
+                                    minWidth: 0,
+                                    mr: open ? 3 : 'auto',
+                                    justifyContent: 'center',
+                                }}
+                            >
+                                {it.icon}
+                            </ListItemIcon>
+                            <ListItemText primary={it.text} sx={{ opacity: open ? 1 : 0 }} />
+                            {it.newFeature && (
+                                <Chip
+                                    color="primary"
+                                    label="New"
+                                    size="small"
+                                />
+                            )}
                         </ListItemButton>
                     </ListItem>
                 ))}
@@ -158,7 +195,7 @@ export default function MiniDrawer({ open, handleDrawerClose }: any) {
                                     justifyContent: 'center',
                                 }}
                             >
-                                <Home/>
+                                <Home />
                             </ListItemIcon>
                             <ListItemText primary={text} sx={{ opacity: open ? 1 : 0 }} />
                         </ListItemButton>

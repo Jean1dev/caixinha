@@ -1,9 +1,9 @@
 import { Caixinha } from '@/types/types';
 import { InfoOutlined } from '@mui/icons-material';
 import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward'
-
 import { Avatar, Box, Button, Card, CardContent, Divider, IconButton, Stack, SvgIcon, Typography } from '@mui/material';
 import { useRouter } from 'next/router';
+import DisplayValorMonetario from '../display-valor-monetario';
 
 export const CaixinhaCard = ({ caixinha }: { caixinha: Caixinha }) => {
     const router = useRouter()
@@ -43,13 +43,14 @@ export const CaixinhaCard = ({ caixinha }: { caixinha: Caixinha }) => {
                         variant="square"
                     />
                 </Box>
-                <Typography
+                <DisplayValorMonetario
+                    //@ts-ignore
                     align="center"
                     gutterBottom
                     variant="h5"
                 >
-                    R${caixinha.currentBalance.value}
-                </Typography>
+                    {caixinha.currentBalance.value}
+                </DisplayValorMonetario>
                 <Typography
                     align="center"
                     variant="body1"

@@ -18,16 +18,17 @@ import MiniDrawer from './Drawer';
 import ApplicationSelectCaixinha from './application-select.caixinha';
 import { useUserAuth } from '@/hooks/useUserAuth';
 import { NotificationsButton } from './notificacoes/notificacaoes-button';
+import { AttachMoney, MoneyOff } from '@mui/icons-material';
 
 const SIDE_NAV_WIDTH = 280;
 const TOP_NAV_HEIGHT = 64;
 
-export const TopNav = ({ changeTheme }: { changeTheme: MouseEventHandler }) => {
+export const TopNav = ({ settings }: { settings: any }) => {
+    
     const accountPopover = usePopover()
     const [open, setOpen] = useState(false)
     const { status } = useSession()
     const { user } = useUserAuth()
-    // const [theme, toggleTheme] = useAppTheme()
     const handleSignIn = async () => await signIn()
 
     const handleDrawerOpen = () => {
@@ -94,9 +95,17 @@ export const TopNav = ({ changeTheme }: { changeTheme: MouseEventHandler }) => {
                             <ApplicationSelectCaixinha />
                             <NotificationsButton />
                             <Tooltip title="Tema">
-                                <IconButton onClick={changeTheme}>
+                                <IconButton onClick={settings.handleDrawerOpen}>
                                     <SvgIcon fontSize="small">
                                         <SettingsBrightnessIcon />
+                                    </SvgIcon>
+                                </IconButton>
+                            </Tooltip>
+                            <Tooltip title="Mostrar valores" >
+                                <IconButton onClick={settings.handleShowValoresMonetarios}>
+                                    <SvgIcon fontSize="small">
+                                        { settings.showValoresMonetarios && <AttachMoney/>}
+                                        { !settings.showValoresMonetarios && <MoneyOff/>}
                                     </SvgIcon>
                                 </IconButton>
                             </Tooltip>
@@ -157,7 +166,7 @@ export const TopNav = ({ changeTheme }: { changeTheme: MouseEventHandler }) => {
                         spacing={2}
                     >
                         <Tooltip title="Tema">
-                            <IconButton onClick={changeTheme}>
+                            <IconButton onClick={settings.handleDrawerOpen}>
                                 <SvgIcon fontSize="small">
                                     <SettingsBrightnessIcon />
                                 </SvgIcon>

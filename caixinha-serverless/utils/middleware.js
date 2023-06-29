@@ -15,7 +15,7 @@ async function middleware(context, req, nextFunction) {
         context.log(error.message)
 
         if (useSentry) {
-            Sentry.captureException(e);
+            Sentry.captureException(error);
             await Sentry.flush(2000);
         }
 

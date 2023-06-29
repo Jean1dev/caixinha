@@ -1,10 +1,14 @@
-import Layout from "@/components/Layout";
-import { FormPerfil } from "@/components/perfil/form-perfil";
-import { PerfilDaConta } from "@/components/perfil/perfil-conta";
-import { Box, Container, Stack, Typography, Grid } from "@mui/material";
-import { updatePerfil, uploadResource } from "../api/api.service";
-import { useUserAuth } from "@/hooks/useUserAuth";
-import { toast } from "react-hot-toast";
+import { useCallback, useState } from 'react';
+import Box from '@mui/material/Box';
+import Container from '@mui/material/Container';
+import Divider from '@mui/material/Divider';
+import Stack from '@mui/material/Stack';
+import Tab from '@mui/material/Tab';
+import Tabs from '@mui/material/Tabs';
+import Typography from '@mui/material/Typography';
+import { Seo } from '@/components/Seo';
+import Layout from '@/components/Layout';
+import { InformacoesGeraisPerfil } from '@/components/perfil2/informacoes-gerais-perfil';
 
 export interface IUser {
     name: string
@@ -14,95 +18,72 @@ export interface IUser {
     pix?: string
 }
 
+const tabs = [
+    { label: 'Geral', value: 'geral' },
+];
+
 export default function Perfil() {
-    const { user, updateUser } = useUserAuth()
+    const [currentTab, setCurrentTab] = useState('geral');
 
-    const updateProfile = (props: any) => {
-        updatePerfil({
-            memberName: user?.name,
-            email: user?.email,
-            user: {
-                phone: user?.phone,
-                pix: user?.pix,
-                photoUrl: user?.photoUrl
-            }
-        }).then(() => {
-            updateUser({
-                name: props.firstName,
-                email: props.email,
-                phone: props.phone,
-                pix: props.pix,
-                photoUrl: user?.photoUrl
-            })
-            toast.success('Perfil atualizado')
-        }).catch(e => {
-            toast.error(e.message)
-        })
-    }
 
-    const updatePhoto = () => {
-        let input = document.createElement('input');
-        input.type = 'file';
-
-        input.addEventListener('change', function (event: any) {
-            let arquivo = event.target.files[0];
-
-            console.log('Arquivo selecionado:', arquivo);
-            uploadResource(arquivo).then((fileUrl: string) => {
-                //@ts-ignore
-                updateUser({
-                    ...user,
-                    photoUrl: fileUrl
-                })
-                toast.success('Upload realizado')
-            }).catch(e => toast.error(e.message))
-        });
-
-        input.click()
-    }
+    const handleTabsChange = useCallback((event: any, value: any) => {
+        setCurrentTab(value);
+    }, []);
 
     return (
         <Layout>
-            <>
-                <Box
-                    component="main"
-                    sx={{
-                        flexGrow: 1,
-                        py: 8
-                    }}
-                >
-                    <Container maxWidth="lg">
-                        <Stack spacing={3}>
-                            <div>
-                                <Typography variant="h4">
-                                    Sua conta
-                                </Typography>
-                            </div>
-                            <div>
-                                <Grid
-                                    container
-                                    spacing={3}
-                                >
-                                    <Grid
-                                        xs={12}
-                                        md={6}
-                                        lg={4}
-                                    >
-                                        <PerfilDaConta user={user} updatePhoto={updatePhoto} />
-                                    </Grid>
-                                    <Grid
-                                        xs={12}
-                                        md={6}
-                                        lg={8}
-                                    >
-                                        <FormPerfil updateProfile={updateProfile} user={user} />
-                                    </Grid>
-                                </Grid>
-                            </div>
-                        </Stack>
-                    </Container>
-                </Box>
-            </>
+            <Seo title="Dashboard: Account" />
+            <Box
+                component="main"
+                sx={{
+                    flexGrow: 1,
+                    py: 8
+                }}
+            >
+                <Container maxWidth="xl">
+                    <Stack
+                        spacing={3}
+                        sx={{ mb: 3 }}
+                    >
+                        <Typography variant="h4">
+                            Detalhes da conta
+                        </Typography>
+                        <div>
+                            <Tabs
+                                indicatorColor="primary"
+                                onChange={handleTabsChange}
+                                scrollButtons="auto"
+                                textColor="primary"
+                                value={currentTab}
+                                variant="scrollable"
+                            >
+                                {tabs.map((tab) => (
+                                    <Tab
+                                        key={tab.value}
+                                        label={tab.label}
+                                        value={tab.value}
+                                    />
+                                ))}
+                            </Tabs>
+                            <Divider />
+                        </div>
+                    </Stack>
+                    {currentTab === 'geral' && (
+                        <InformacoesGeraisPerfil
+                        />
+                    )}
+                    {currentTab === 'billing' && (
+                        <h1>progress</h1>
+                    )}
+                    {currentTab === 'team' && (
+                        <h1>progress</h1>
+                    )}
+                    {currentTab === 'notifications' && <h1>progress</h1>}
+                    {currentTab === 'security' && (
+                        <h1>progress</h1>
+                    )}
+                </Container>
+            </Box>
         </Layout>
-    )
-}
+    );
+};

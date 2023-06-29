@@ -52,7 +52,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                                 />
                             </Head> */}
                             <CssBaseline />
-                            <TopNav changeTheme={settings.handleDrawerOpen} />
+                            <TopNav settings={settings} />
                             <SettingsDrawer
                                 canReset={settings.isCustom}
                                 onClose={settings.handleDrawerClose}

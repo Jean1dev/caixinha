@@ -14,7 +14,8 @@ export const defaultSettings = {
 export const initialState = {
   ...defaultSettings,
   isInitialized: false,
-  openDrawer: false
+  openDrawer: false,
+  showValoresMonetarios: false
 };
 
 export const SettingsContext = createContext({
@@ -23,5 +24,6 @@ export const SettingsContext = createContext({
   handleDrawerOpen: () => { },
   handleReset: () => { },
   handleUpdate: (settings: any) => { },
-  isCustom: false
+  isCustom: false,
+  handleShowValoresMonetarios: () => { }
 });
