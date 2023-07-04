@@ -3,6 +3,7 @@ const middleware = require('../utils/middleware')
 const { Member, Box, Loan } = require('caixinha-core/dist/src')
 const { connect, replaceDocumentById, insertDocument, getByIdOrThrow } = require('../v2/mongo-operations')
 const sendSMS = require('../utils/sendSMS')
+const dispatchEvent = require('../amqp/events')
 
 async function emprestimo(context, req) {
 
@@ -10,7 +11,7 @@ async function emprestimo(context, req) {
 
     await connect()
     const member = Member.build({ name, email })
-    const boxEntity = await getByIdOrThrow(caixinhaID || process.env.CAIXINHA_ID, 'caixinhas')
+    const boxEntity = await getByIdOrThrow(caixinhaID, 'caixinhas')
 
     const box = Box.fromJson(boxEntity)
     const emprestimo = new Loan({
@@ -24,8 +25,8 @@ async function emprestimo(context, req) {
     })
 
     emprestimo.addApprove(member)
-    emprestimo['box'] = null
-    box['loans'].push(emprestimo)
+    //emprestimo['box'] = null
+    //box['loans'].push(emprestimo)
     await replaceDocumentById(boxEntity._id, 'caixinhas', resolveCircularStructureBSON(box))
     await insertDocument('emprestimos', emprestimo)
 
@@ -34,6 +35,10 @@ async function emprestimo(context, req) {
     }
 
     sendSMS(`Novo emprestimo do ${member.memberName} - valor ${valor}`)
+    dispatchEvent({
+        type: 'EMPRESTIMO',
+        data: emprestimo
+    })
 }
 
 module.exports = async (context, req) => await middleware(context, req, emprestimo)

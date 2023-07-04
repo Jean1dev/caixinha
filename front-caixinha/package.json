@@ -14,25 +14,26 @@
     "@hotjar/browser": "^1.0.7",
     "@mui/icons-material": "^5.11.16",
     "@mui/material": "^5.12.2",
-    "@types/node": "18.16.0",
-    "@types/react": "18.2.0",
-    "@types/react-dom": "18.2.0",
+    "@react-pdf/renderer": "3.1.9",
     "apexcharts": "^3.40.0",
     "axios": "^1.4.0",
-    "eslint": "8.39.0",
-    "eslint-config-next": "13.3.1",
     "lodash.isequal": "^4.5.0",
-    "next": "13.3.1",
+    "next": "13.4.2",
     "next-auth": "^4.22.1",
     "react": "18.2.0",
     "react-apexcharts": "^1.4.0",
     "react-dom": "18.2.0",
     "react-hot-toast": "^2.4.1",
     "react-hotjar": "5.5.0",
-    "simplebar-react": "^3.2.4",
-    "typescript": "5.0.4"
+    "simplebar-react": "^3.2.4"
   },
   "devDependencies": {
-    "@types/lodash.isequal": "^4.5.6"
+    "@types/lodash.isequal": "^4.5.6",
+    "eslint": "8.39.0",
+    "eslint-config-next": "13.3.1",
+    "@types/node": "18.16.0",
+    "@types/react": "18.2.0",
+    "@types/react-dom": "18.2.0",
+    "typescript": "5.0.4"
   }
 }

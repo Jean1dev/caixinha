@@ -16,8 +16,9 @@ export interface IMeusEmprestimos {
 
 export interface EmprestimoCaixinha {
   currentBalance: number
-  myLoans: LoansForApprove[]
-  loansForApprove: LoansForApprove[]
+  meusEmprestimosQuitados: LoansForApprove[]
+  meusEmprestimos: LoansForApprove[]
+  emprestimosParaAprovar: LoansForApprove[]
 }
 
 export interface LoansForApprove {

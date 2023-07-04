@@ -78,7 +78,8 @@ export default function Deposito() {
             caixinhaId: caixinha?.id,
             name: solicitacao.memberName,
             email: solicitacao.email,
-            valor: solicitacao.valor
+            valor: solicitacao.valor,
+            comprovante: solicitacao.fileUrl
         }).then(() => {
             router.push('/sucesso')
         }).catch(err => {
@@ -104,7 +105,7 @@ export default function Deposito() {
     }
 
     const uploadItem = (resource: any) => {
-        console.log(resource.name)
+        toast.loading('enviando arquivo aguarde')
 
         uploadResource(resource.file).then((fileUrl: string) => {
             toast.success('Upload realizado')

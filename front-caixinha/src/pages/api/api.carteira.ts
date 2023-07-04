@@ -4,7 +4,7 @@ import { retornaComAtraso } from './api.service'
 const dev = process.env.NODE_ENV === 'development'
 
 const http = axios.create({
-    baseURL: 'https://carteira-14bc707a7fab.herokuapp.com',
+    baseURL: 'https://carteira-production-7aeb1.up.railway.app', //'https://carteira-14bc707a7fab.herokuapp.com',
     timeout: 30000
 })
 

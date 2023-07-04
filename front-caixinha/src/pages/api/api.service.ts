@@ -139,7 +139,8 @@ export async function getMeusEmprestimos({ name, email }: any): Promise<IMeusEmp
             "caixinhas": [
                 {
                     "currentBalance": 84,
-                    "myLoans": [
+                    "meusEmprestimosQuitados": [],
+                    "meusEmprestimos": [
                         {
                             "requiredNumberOfApprovals": 2,
                             "description": "meu emprestimo?",
@@ -154,7 +155,7 @@ export async function getMeusEmprestimos({ name, email }: any): Promise<IMeusEmp
                             "memberName": "jeanluca jeanlucajea"
                         },
                     ],
-                    "loansForApprove": [
+                    "emprestimosParaAprovar": [
                         {
                             "requiredNumberOfApprovals": 2,
                             "description": "sera que foi mesmo?",
