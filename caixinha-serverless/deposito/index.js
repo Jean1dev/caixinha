@@ -3,6 +3,7 @@ const { Box, Deposit, Member } = require('caixinha-core/dist/src')
 const { connect, getByIdOrThrow, replaceDocumentById, insertDocument } = require('../v2/mongo-operations')
 const { resolveCircularStructureBSON } = require('../utils')
 const sendSMS = require('../utils/sendSMS')
+const dispatchEvent = require('../amqp/events')
 
 async function deposito(context, req) {
     const { caixinhaId, valor, name, email, comprovante } = req.body
@@ -24,6 +25,10 @@ async function deposito(context, req) {
     await replaceDocumentById(caixinhaId, collection, resolveCircularStructureBSON(box))
     await insertDocument('depositos', { idCaixinha: boxEntity._id, ...deposit })
     sendSMS(`Novo deposito do ${name}`)
+    dispatchEvent({
+        type: 'DEPOSITO',
+        data: deposit
+    })
 }
 
 module.exports = async (context, req) => await middleware(context, req, deposito)

@@ -3,8 +3,7 @@ import {
   Box,
   Container,
   Pagination,
-  Stack,
-  Grid
+  Stack
 } from '@mui/material'
 import React, { useEffect, useState } from 'react'
 import Layout from '@/components/Layout'
@@ -14,7 +13,7 @@ import { CaixinhaCard } from '@/components/caixinha/CaixinhaCard'
 import CenteredCircularProgress from '@/components/CenteredCircularProgress'
 import { useRouter } from 'next/router'
 import { getCaixinhas } from '../api/api.service'
-//import  from '@mui/material/Unstable_Grid2';
+import Grid from '@mui/material/Unstable_Grid2';
 
 export default function Home() {
   const [data, setData] = useState<Caixinha[]>([])
@@ -66,8 +65,15 @@ export default function Home() {
                 lg: 4
               }}
             >
-              {data.map((caixinha: Caixinha) => (
-                <CaixinhaCard key={caixinha.id} caixinha={caixinha} />
+              {data.map((caixinha: Caixinha, index: any) => (
+                <Grid
+                  key={index}
+                  xs={12}
+                  md={4}
+                >
+                  <CaixinhaCard key={caixinha.id} caixinha={caixinha} />
+                </Grid>
+
               ))}
             </Grid>
             <Box

@@ -10,6 +10,26 @@ function somenteOsQueAindaFaltamPagar(emprestimo) {
     return true
 }
 
+function mapItem(item, caixinha) {
+    return {
+        requiredNumberOfApprovals: item.requiredNumberOfApprovals,
+        description: item.description,
+        approvals: item.approvals,
+        interest: item.interest.value,
+        fees: item.fees.value,
+        valueRequested: item.valueRequested.value,
+        date: moment(item.date).format('DD/MM/YYY'),
+        totalValue: item.totalValue?.value,
+        approved: item.approved,
+        uid: item.uid,
+        memberName: item.memberName,
+        totalValue: item?.totalValue?.value,
+        remainingAmount: item?.remainingAmount?.value,
+        isPaidOff: item.isPaidOff,
+        caixinha: caixinha.name
+    }
+}
+
 async function meusEmprestimos(context, req) {
     const { name, email } = req.query
     const collectionName = 'caixinhas'
@@ -22,60 +42,35 @@ async function meusEmprestimos(context, req) {
     const returnData = {
         caixinhas: caixinhas.map(c => ({
             currentBalance: c.currentBalance.value,
-            myLoans: c.loans
+            meusEmprestimosQuitados: c.loans
+                .filter(l => l.memberName === name)
+                .filter(l => l.isPaidOff)
+                .map(item => (mapItem(item, c))),
+            meusEmprestimos: c.loans
                 .filter(l => l.memberName === name)
                 .filter(somenteOsQueAindaFaltamPagar)
-                .map(item => ({
-                    requiredNumberOfApprovals: item.requiredNumberOfApprovals,
-                    description: item.description,
-                    approvals: item.approvals,
-                    interest: item.interest.value,
-                    fees: item.fees.value,
-                    valueRequested: item.valueRequested.value,
-                    date: moment(item.date).format('DD/MM/YYY'),
-                    totalValue: item.totalValue?.value,
-                    approved: item.approved,
-                    uid: item.uid,
-                    memberName: item.memberName,
-                    totalValue: item?.totalValue?.value,
-                    remainingAmount: item?.remainingAmount?.value,
-                    isPaidOff: item.isPaidOff,
-                    caixinha: c.name
-                })),
-            loansForApprove: c.loans.filter(l => l.memberName != name).map(item => ({
-                requiredNumberOfApprovals: item.requiredNumberOfApprovals,
-                description: item.description,
-                approvals: item.approvals,
-                interest: item.interest.value,
-                fees: item.fees.value,
-                valueRequested: item.valueRequested.value,
-                date: moment(item.date).format('DD/MM/YYY'),
-                totalValue: item.totalValue?.value,
-                approved: item.approved,
-                uid: item.uid,
-                memberName: item.memberName,
-                totalValue: item?.totalValue?.value,
-                remainingAmount: item?.remainingAmount?.value,
-                isPaidOff: item.isPaidOff,
-                caixinha: c.name
-            })),
+                .map(item => (mapItem(item, c))),
+            emprestimosParaAprovar: c.loans
+                .filter(l => l.memberName != name)
+                .map(item => (mapItem(item, c))),
         }))
     }
 
     const totalPendente = returnData.caixinhas
-        .flatMap(item => item.myLoans.filter(it => !it.approved).map(jit => jit.totalValue))
+        .flatMap(item => item.meusEmprestimos.map(jit => jit.totalValue))
         .reduce((acumulator, value) => acumulator + value, 0)
 
     const totalPago = returnData.caixinhas
-        .flatMap(item => item.myLoans.filter(it => it.approved).map(jit => jit.totalValue))
+        .flatMap(item => item.meusEmprestimosQuitados.map(jit => jit.totalValue))
         .reduce((acumulator, value) => acumulator + value, 0)
 
     const totalGeral = returnData.caixinhas
         .flatMap(item => ({
-            total1: item.myLoans.map(it => it.totalValue).reduce((acumulator, value) => acumulator + value, 0),
-            total2: item.loansForApprove.map(it => it.totalValue).reduce((acumulator, value) => acumulator + value, 0)
+            total1: item.meusEmprestimos.map(it => it.totalValue).reduce((acumulator, value) => acumulator + value, 0),
+            total2: item.emprestimosParaAprovar.map(it => it.totalValue).reduce((acumulator, value) => acumulator + value, 0),
+            total3: item.meusEmprestimosQuitados.map(it => it.totalValue).reduce((acumulator, value) => acumulator + value, 0)
         }))
-        .map(it => it.total1 + it.total2)
+        .map(it => it.total1 + it.total2 + it.total3)
         .reduce((acumulator, value) => acumulator + value, 0)
 
     returnData['totalPendente'] = totalPendente

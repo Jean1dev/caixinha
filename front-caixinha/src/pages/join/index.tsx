@@ -7,6 +7,7 @@ import { Caixinha } from "@/types/types";
 import { useSession } from "next-auth/react";
 import CenteredCircularProgress from "@/components/CenteredCircularProgress";
 import { toast } from "react-hot-toast";
+import DisplayValorMonetario from "@/components/display-valor-monetario";
 
 export default function Join() {
     const { status, data } = useSession()
@@ -47,7 +48,7 @@ export default function Join() {
     }, [status])
 
     if (loading)
-        return <CenteredCircularProgress/>
+        return <CenteredCircularProgress />
 
     const handleSubmit = () => {
         const payload = {
@@ -93,7 +94,11 @@ export default function Join() {
                         <Grid item xs={12} md={6} sx={{ "& .MuiTextField-root": { my: 2 } }}>
                             <Box mt={2} mb={2}>
                                 <p>Total de membros dessa caixinha {box.members.length}</p>
-                                <p>Valor atual R${box.currentBalance.value}</p>
+                                <p>Valor atual
+                                    <DisplayValorMonetario>
+                                        {box.currentBalance.value}
+                                    </DisplayValorMonetario>
+                                </p>
                             </Box>
                         </Grid>
 
@@ -122,7 +127,7 @@ export default function Join() {
 
                             <Box display="flex" sx={{ my: 2 }} gap={2}>
                                 <Button variant="contained" color="secondary" onClick={back}>
-                                    Back
+                                    Voltar
                                 </Button>
 
                                 <Button
@@ -130,7 +135,7 @@ export default function Join() {
                                     color="primary"
                                     variant="contained"
                                 >
-                                    Join
+                                    Entrar
                                 </Button>
                             </Box>
                         </form>

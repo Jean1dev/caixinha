@@ -1,4 +1,5 @@
 const https = require('https');
+const { apm } = require('./apm');
 
 module.exports = message => {
     if (!process.env.SMS_API_TOKEN) {
@@ -20,7 +21,7 @@ module.exports = message => {
         messages: [
             {
                 destinations: [{ to: '5548998457797' }],
-                from: 'cAIXINHA',
+                from: 'Caixinha',
                 text: message
             }
         ]
@@ -39,7 +40,7 @@ module.exports = message => {
     });
 
     req.on('error', (error) => {
-        console.error(error);
+        apm(error)
     });
 
     req.write(data);

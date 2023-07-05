@@ -6,7 +6,7 @@ const { connect, getByIdOrThrow, replaceDocumentById } = require('../v2/mongo-op
 async function pagamentoEmprestimo(context, req) {
     const collectionName = 'caixinhas'
 
-    const { caixinhaId, emprestimoUid, valor, name, email } = req.body
+    const { caixinhaId, emprestimoUid, valor, name, email, comprovante } = req.body
     await connect()
 
     const boxEntity = await getByIdOrThrow(caixinhaId, collectionName)

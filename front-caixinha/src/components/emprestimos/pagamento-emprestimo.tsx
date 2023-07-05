@@ -16,7 +16,7 @@ import { LoansForApprove } from '@/types/types';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import CheckIcon from '@mui/icons-material/Check';
 import { useCaixinhaSelect } from '@/hooks/useCaixinhaSelect';
-import { pagarEmprestimo } from '../../pages/api/api.service';
+import { pagarEmprestimo, uploadResource } from '../../pages/api/api.service';
 import CenteredCircularProgress from '@/components/CenteredCircularProgress';
 import { useSession } from 'next-auth/react';
 import { toast } from 'react-hot-toast';
@@ -55,7 +55,8 @@ export const PagamentoEmprestimo = ({ data }: { data: IProps }) => {
             email: user?.user?.email,
             caixinhaId: caixinha?.id,
             emprestimoUid: data.emprestimo.uid,
-            valor: Number(valor)
+            valor: Number(valor),
+            comprovante: arquivos.length > 0 ? arquivos[0] : null
         }).then(() => {
             setLoading(false)
             setBlockButtons(true)
@@ -66,6 +67,18 @@ export const PagamentoEmprestimo = ({ data }: { data: IProps }) => {
         })
     }, [caixinha, data, valor, user])
 
+    const uploadItem = (resource: any) => {
+        toast.loading('enviando arquivo aguarde')
+
+        uploadResource(resource.file).then((fileUrl: string) => {
+            toast.success('Upload realizado')
+            //@ts-ignore
+            const novaLista = arquivos.filter(it => it.name !== resource.name)
+            novaLista.push({ file: resource, name: resource.name, status: 'success' })
+            setArquivo(novaLista)
+        }).catch(e => toast.error(e.message))
+    }
+
     const getChipByItem = (item: any) => {
         if (item.status === 'success') {
             return (
@@ -74,7 +87,7 @@ export const PagamentoEmprestimo = ({ data }: { data: IProps }) => {
         }
 
         return (
-            <Chip key={item.index} label={item?.name} variant="outlined" onDelete={() => { }} deleteIcon={<CloudUploadIcon />} />
+            <Chip key={item.index} label={item?.name} variant="outlined" onDelete={() => { uploadItem(item) }} deleteIcon={<CloudUploadIcon />} />
         )
     }
 

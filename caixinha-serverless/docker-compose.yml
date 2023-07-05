@@ -1,0 +1,19 @@
+version: '3.4'
+services:
+  mongodb:
+    image: mongo:6.0.5
+    ports:
+      - "27017:27017"
+    container_name: mongodb_
+
+  rabbit:
+    container_name: amqp_
+    image: rabbitmq:3-management
+    environment:
+      - RABBITMQ_ERLANG_COOKIE=SWQOKODSQALRPCLNMEQG
+      - RABBITMQ_DEFAULT_USER=adm
+      - RABBITMQ_DEFAULT_PASS=123456
+      - RABBITMQ_DEFAULT_VHOST=virtualhost
+    ports:
+      - 15672:15672
+      - 5672:5672

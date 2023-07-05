@@ -10,30 +10,27 @@ import TablePagination from '@mui/material/TablePagination';
 import TableRow from '@mui/material/TableRow';
 import Typography from '@mui/material/Typography';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
-import { IMeusEmprestimos, LoansForApprove } from '@/types/types';
+import { EmprestimoCaixinha, IMeusEmprestimos, LoansForApprove } from '@/types/types';
 import { Scrollbar } from '../scrollbar';
 import { useRouter } from 'next/router';
 
 const agrupar = (items: IMeusEmprestimos) => {
-    const data = {
+    const data: any = {
         'para aprovar': [],
         pendentes: [],
         quitados: []
     }
 
     items.caixinhas.forEach(caixa => {
-        //@ts-ignore
-        caixa.loansForApprove.forEach((loan: any) => data['para aprovar'].push(loan))
-        //@ts-ignore
-        caixa.myLoans.filter(loan => loan.approved).forEach(loan => data.quitados.push(loan))
-        //@ts-ignore
-        caixa.myLoans.filter(loan => !loan.approved).forEach(loan => data.quitados.push(loan))
+        caixa.emprestimosParaAprovar.forEach((loan: any) => data['para aprovar'].push(loan))
+        caixa.meusEmprestimos.forEach(loan => data.pendentes.push(loan))
+        caixa.meusEmprestimosQuitados.forEach(loan => data.quitados.push(loan))
     })
 
     return data
 };
 
-export const getInitials = (name = '') => name
+export const getInitials = (name: string = '') => name
     .replace(/\s+/, ' ')
     .split(' ')
     .slice(0, 2)
@@ -42,10 +39,9 @@ export const getInitials = (name = '') => name
 
 
 const InvoiceRow = (props: any) => {
-    const { invoice, ...other }: { invoice: LoansForApprove, other: any } = props;
+    const { invoice, goToDetalhesEmprestimo, ...other }: { invoice: LoansForApprove, goToDetalhesEmprestimo: any, other: any } = props;
 
-    //@ts-ignore
-    const jump = () => other.goToDetalhesEmprestimo(invoice)
+    const jump = () => goToDetalhesEmprestimo(invoice)
 
     return (
         <TableRow
@@ -201,9 +197,9 @@ export const MeuEmprestimosListTable = (props: any) => {
         );
     } else {
         const data: LoansForApprove[] = []
-        items?.caixinhas.forEach((caixa: any) => {
-            caixa.loansForApprove.forEach((loan: any) => data.push(loan))
-            caixa.myLoans.forEach((loan: any) => data.push(loan))
+        items?.caixinhas.forEach((caixa: EmprestimoCaixinha) => {
+            caixa.emprestimosParaAprovar.forEach((loan: any) => data.push(loan))
+            caixa.meusEmprestimos.forEach((loan: any) => data.push(loan))
         })
 
         content = (

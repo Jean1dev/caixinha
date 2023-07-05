@@ -1,12 +1,18 @@
 import Layout from "@/components/Layout";
-import { Box, Container, Stack, Typography } from "@mui/material";
+import { Avatar, Box, Button, Container, Divider, Link, Stack, SvgIcon, Typography } from "@mui/material";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
-import { DetalhesUser } from "../../components/emprestimos/detalhes-user";
 import { GestaoEmprestimo } from "../../components/emprestimos/gestao-emprestimo";
 import { PagamentoEmprestimo } from "../../components/emprestimos/pagamento-emprestimo";
 import Grid from '@mui/material/Unstable_Grid2';
+import { RouterLink } from "@/components/RouterLink";
+import { Seo } from "@/components/Seo";
+import { getInitials } from "@/components/meus-emprestimos/meus-emprestimos-table";
+import { ArrowBackIos } from "@mui/icons-material";
+import { LoansForApprove } from "@/types/types";
+import { EmprestimoPdf } from "@/components/emprestimos/emprestimo-pdsf";
+import { PDFDownloadLink } from "@react-pdf/renderer";
 
 export default function DetalhesEmprestimo() {
     const [isMeuEmprestimo, setMeuEmprestimo] = useState(false)
@@ -24,52 +30,98 @@ export default function DetalhesEmprestimo() {
 
     return (
         <Layout>
-            <Box
-                component="main"
-                sx={{
-                    flexGrow: 1,
-                    py: 8
-                }}
-            >
-                <Container maxWidth="lg">
-                    <Stack spacing={3}>
-                        <div>
-                            <Typography variant="h4">
-                                {isMeuEmprestimo ? 'Detalhes do seu emprestimo' : `Detalhes do emprestimo do ${emprestimo.memberName}`}
-                            </Typography>
-                        </div>
-                        <div>
-                            <Grid
-                                container
-                                spacing={3}
-                            >
-                                <Grid
-                                    xs={12}
-                                    md={6}
-                                    lg={4}
-                                >
-                                    <DetalhesUser user={{
-                                        name: emprestimo.memberName
-                                    }} />
-                                </Grid>
-                                <Grid
-                                    xs={12}
-                                    md={6}
-                                    lg={8}
-                                >
-                                    <GestaoEmprestimo data={{
-                                        //@ts-ignore
-                                        emprestimo,
-                                        meuEmprestimo: isMeuEmprestimo
-                                    }} />
-                                </Grid>
-                            </Grid>
+            <>
+                <Seo title="Detalhes emprestimo" />
 
-                            {isMeuEmprestimo && (
-                                <Grid
-                                    container
-                                    spacing={3}
+                <Box
+                    component="main"
+                    sx={{
+                        flexGrow: 1,
+                        py: 8
+                    }}
+                >
+                    <Container maxWidth="lg">
+
+                        <Stack
+                            divider={<Divider />}
+                            spacing={4}
+                        >
+                            <Stack spacing={4}>
+                                <div>
+                                    <Link
+                                        color="text.primary"
+                                        component={RouterLink}
+                                        href={'meus-emprestimos'}
+                                        sx={{
+                                            alignItems: 'center',
+                                            display: 'inline-flex'
+                                        }}
+                                        underline="hover"
+                                    >
+                                        <SvgIcon sx={{ mr: 1 }}>
+                                            <ArrowBackIos />
+                                        </SvgIcon>
+                                        <Typography variant="subtitle2">
+                                            {isMeuEmprestimo ? 'Detalhes do seu emprestimo' : `Detalhes do emprestimo do ${emprestimo.memberName}`}
+                                        </Typography>
+                                    </Link>
+                                </div>
+                                <Stack
+                                    alignItems="flex-start"
+                                    direction="row"
+                                    justifyContent="space-between"
+                                    spacing={4}
                                 >
+
+                                    <Stack
+                                        alignItems="center"
+                                        direction="row"
+                                        spacing={2}
+                                    >
+                                        <Avatar
+                                            sx={{
+                                                height: 42,
+                                                width: 42
+                                            }}
+                                        >
+                                            {getInitials(`${emprestimo.memberName}`)}
+                                        </Avatar>
+                                        <div>
+                                            <Typography variant="h4">
+                                                EMP659-7
+                                            </Typography>
+                                            <Typography
+                                                color="text.secondary"
+                                                variant="body2"
+                                            >
+                                                {emprestimo.memberName}
+                                            </Typography>
+                                        </div>
+                                    </Stack>
+
+                                    <Stack
+                                        alignItems="center"
+                                        direction="row"
+                                        spacing={2}
+                                    >
+
+                                        <PDFDownloadLink
+                                            document={<EmprestimoPdf emprestimo={emprestimo} />}
+                                            fileName="invoice"
+                                            style={{ textDecoration: 'none' }}
+                                        >
+                                            <Button
+                                                color="primary"
+                                                variant="contained"
+                                            >
+                                                Download
+                                            </Button>
+                                        </PDFDownloadLink>
+                                    </Stack>
+                                </Stack>
+                            </Stack>
+                            {isMeuEmprestimo && (
+                                <Grid spacing={3}>
                                     <Grid
                                         xs={12}
                                         md={6}
@@ -88,11 +140,14 @@ export default function DetalhesEmprestimo() {
                                     </Grid>
                                 </Grid>
                             )}
-
-                        </div>
-                    </Stack>
-                </Container>
-            </Box>
+                            <GestaoEmprestimo data={{
+                                emprestimo: emprestimo as unknown as LoansForApprove,
+                                meuEmprestimo: isMeuEmprestimo
+                            }} />
+                        </Stack>
+                    </Container>
+                </Box>
+            </>
         </Layout>
     )
 }
