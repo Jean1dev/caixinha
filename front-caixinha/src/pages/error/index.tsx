@@ -8,7 +8,7 @@ export default function ErrorPage() {
         <>
             <Head>
                 <title>
-                    404 | Devias Kit
+                    404 | Caixinha
                 </title>
             </Head>
             <Box
@@ -49,15 +49,15 @@ export default function ErrorPage() {
                             sx={{ mb: 3 }}
                             variant="h3"
                         >
-                            404: The page you are looking for isn’t here
+                            404: Essa pagina não existe ou esta com algum problema
                         </Typography>
                         <Typography
                             align="center"
                             color="text.secondary"
                             variant="body1"
                         >
-                            You either tried some shady route or you came here by mistake.
-                            Whichever it is, try using the navigation
+                            Você tentou alguma rota desconhecido ou veio aqui por engano.
+                            Seja qual for, tente usar a navegação
                         </Typography>
                         <Button
                             component={NextLink}
@@ -70,7 +70,7 @@ export default function ErrorPage() {
                             sx={{ mt: 3 }}
                             variant="contained"
                         >
-                            Go back to dashboard
+                            Voltar
                         </Button>
                     </Box>
                 </Container>

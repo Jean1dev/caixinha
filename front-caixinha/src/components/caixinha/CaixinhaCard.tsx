@@ -1,7 +1,6 @@
 import { Caixinha } from '@/types/types';
-import { InfoOutlined } from '@mui/icons-material';
-import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward'
-import { Avatar, Box, Button, Card, CardContent, Divider, IconButton, Stack, SvgIcon, Typography } from '@mui/material';
+import { InfoOutlined, PeopleAltOutlined } from '@mui/icons-material';
+import { Box, Button, Card, CardContent, CardMedia, Divider, IconButton, Stack, SvgIcon, Typography } from '@mui/material';
 import { useRouter } from 'next/router';
 import DisplayValorMonetario from '../display-valor-monetario';
 
@@ -30,21 +29,15 @@ export const CaixinhaCard = ({ caixinha }: { caixinha: Caixinha }) => {
                 height: '100%'
             }}
         >
+            <CardMedia
+                // component={RouterLink}
+                // href={paths.dashboard.academy.courseDetails}
+                image='https://static.vecteezy.com/system/resources/previews/001/759/904/original/crowdfunding-isometric-web-banner-vector.jpg'
+                sx={{ height: 180 }}
+            />
             <CardContent>
-                <Box
-                    sx={{
-                        display: 'flex',
-                        justifyContent: 'center',
-                        pb: 3
-                    }}
-                >
-                    <Avatar
-                        src='https://png.pngtree.com/png-clipart/20200225/original/pngtree-coin-money-icon-png-image_5278199.jpg'
-                        variant="square"
-                    />
-                </Box>
+              
                 <DisplayValorMonetario
-                    //@ts-ignore
                     align="center"
                     gutterBottom
                     variant="h5"
@@ -84,7 +77,7 @@ export const CaixinhaCard = ({ caixinha }: { caixinha: Caixinha }) => {
                             display="inline"
                             variant="body2"
                         >
-                            clique para ver os detalhes
+                             Detalhes
                         </Typography>
                     </IconButton>
                 </Stack>
@@ -97,7 +90,7 @@ export const CaixinhaCard = ({ caixinha }: { caixinha: Caixinha }) => {
                         color="action"
                         fontSize="small"
                     >
-                        <ArrowDownwardIcon />
+                        <PeopleAltOutlined />
                     </SvgIcon>
                     <Typography
                         color="text.secondary"
