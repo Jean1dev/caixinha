@@ -25,8 +25,16 @@ async function emprestimo(context, req) {
     })
 
     emprestimo.addApprove(member)
-    //emprestimo['box'] = null
-    //box['loans'].push(emprestimo)
+    /**
+     * TODO: Provavel q vai ter um bug aqui
+     * analisar se correto seria fazer essa logica dentro do core
+     * cenario ao abrir um emprestimo com 1 membro ele acaba duplicando o emprestimo
+     */
+    if (!emprestimo.isApproved) {
+        emprestimo['box'] = null
+        box['loans'].push(emprestimo)
+    }
+
     await replaceDocumentById(boxEntity._id, 'caixinhas', resolveCircularStructureBSON(box))
     await insertDocument('emprestimos', emprestimo)
 
