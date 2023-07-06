@@ -80,7 +80,7 @@ const routes = [
         icon: <CreditScore />
     },
     {
-        text: 'Depositos',
+        text: 'Novo Deposito',
         path: 'deposito',
         icon: <AttachMoney />
     },

@@ -17,7 +17,6 @@ export default function CarteiraStep1(props: any) {
                     <Grid xs={12} md={6}>
                         <TextField
                             fullWidth
-                            required
                             name="ativo"
                             label="Ativo"
                             value={carteira?.ativo}
@@ -33,7 +32,6 @@ export default function CarteiraStep1(props: any) {
                     >
                         <TextField
                             fullWidth
-                            required
                             name="quantidade"
                             label="quantidade"
                             value={carteira?.quantidade}
@@ -48,7 +46,6 @@ export default function CarteiraStep1(props: any) {
                     >
                         <TextField
                             fullWidth
-                            required
                             name="nota"
                             label="nota"
                             value={carteira?.nota}

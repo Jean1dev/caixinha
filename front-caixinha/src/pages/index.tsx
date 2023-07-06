@@ -6,6 +6,7 @@ import { Box, Card, CardContent, Container, Typography } from "@mui/material";
 import { useRouter } from "next/router";
 import Grid from '@mui/material/Unstable_Grid2';
 import { Seo } from "@/components/Seo";
+import { getAleatorio } from "@/utils/utils";
 
 const corAleatoriaCombinada = () => {
   const cores = [
@@ -18,8 +19,7 @@ const corAleatoriaCombinada = () => {
     "#8988B8-#AFAEE1"
   ]
 
-  const indiceAleatorio = Math.floor(Math.random() * cores.length);
-  return cores[indiceAleatorio];
+  return getAleatorio(cores)
 }
 
 const card = (title: string, description: string, action: any) => {

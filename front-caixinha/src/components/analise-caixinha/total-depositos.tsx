@@ -23,7 +23,7 @@ export const TotalDepositos = (props: any) => {
             </Typography>
             <DisplayValorMonetario
               variant="h4">
-              R$ {value}
+              {value}
             </DisplayValorMonetario>
           </Stack>
           <Avatar

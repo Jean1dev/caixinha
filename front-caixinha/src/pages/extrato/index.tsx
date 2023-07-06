@@ -1,6 +1,21 @@
 import Layout from "@/components/Layout";
 import { Scrollbar } from "@/components/scrollbar";
-import { Box, Container, Stack, Typography, Grid, Pagination, Card, Divider, Table, TableBody, TableCell, TableHead, TableRow, Chip } from "@mui/material";
+import {
+    Box,
+    Container,
+    Stack,
+    Typography,
+    Unstable_Grid2 as Grid,
+    Pagination,
+    Card,
+    Divider,
+    Table,
+    TableBody,
+    TableCell,
+    TableHead,
+    TableRow,
+    Chip
+} from "@mui/material";
 import { useEffect, useState } from "react";
 import { getExtrato } from "../api/api.service";
 import { useRouter } from "next/router";

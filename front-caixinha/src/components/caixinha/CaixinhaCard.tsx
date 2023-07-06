@@ -3,9 +3,17 @@ import { InfoOutlined, PeopleAltOutlined } from '@mui/icons-material';
 import { Box, Button, Card, CardContent, CardMedia, Divider, IconButton, Stack, SvgIcon, Typography } from '@mui/material';
 import { useRouter } from 'next/router';
 import DisplayValorMonetario from '../display-valor-monetario';
+import { getAleatorio } from '@/utils/utils';
+
+const images = [
+    'https://static.vecteezy.com/system/resources/previews/001/759/904/original/crowdfunding-isometric-web-banner-vector.jpg',
+    'https://www.siteware.com.br/wp-content/uploads/2018/07/colaboracao-ambiente-de-trabalho.png',
+    'https://www.siteware.com.br/wp-content/uploads/2018/12/colaboracao-corporativa.png'
+]
 
 export const CaixinhaCard = ({ caixinha }: { caixinha: Caixinha }) => {
     const router = useRouter()
+    const imagemAleatoria = getAleatorio(images)
 
     const join = () => {
         router.push({
@@ -32,7 +40,7 @@ export const CaixinhaCard = ({ caixinha }: { caixinha: Caixinha }) => {
             <CardMedia
                 // component={RouterLink}
                 // href={paths.dashboard.academy.courseDetails}
-                image='https://static.vecteezy.com/system/resources/previews/001/759/904/original/crowdfunding-isometric-web-banner-vector.jpg'
+                image={imagemAleatoria}
                 sx={{ height: 180 }}
             />
             <CardContent>
