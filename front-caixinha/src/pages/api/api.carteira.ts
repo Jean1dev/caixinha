@@ -89,3 +89,54 @@ export async function getMinhasCarteiras(user: string, email: string) {
 
     return asyncFetch(`/carteira?user=${user}&email=${email}`, 'GET')
 }
+
+export async function getMeusAtivos(carteiraId: string) {
+    if (dev) {
+        return retornaComAtraso([
+            {
+                "id": "64a32459bc8fe91194c8e2b6",
+                "carteiraRef": "64a31a89e5be69144c4aac8c",
+                "tipoAtivo": "ACAO_NACIONAL",
+                "localAlocado": "PETR4",
+                "percentualRecomendado": 0.0,
+                "valorAtual": 66.23,
+                "nota": 5,
+                "percentualTotal": 100.0,
+                "quantidade": 2.0,
+                "ticker": "VALE3",
+                "valorRecomendado": 100.0,
+                "image": "https://s3-symbol-logo.tradingview.com/brasileiro-petrobras--600.png"
+            },
+            {
+                "id": "64a32459bc8fe91194c8e2b1",
+                "carteiraRef": "64a31a89e5be69144c4aac8c",
+                "tipoAtivo": "ACAO_NACIONAL",
+                "localAlocado": "DASA3",
+                "percentualRecomendado": 0.0,
+                "valorAtual": 12.18,
+                "nota": 9,
+                "percentualTotal": 100.0,
+                "quantidade": 4,
+                "ticker": "DASA3",
+                "valorRecomendado": 100.0,
+                "image": "https://s3-symbol-logo.tradingview.com/dasa-on-nm--600.png"
+            },
+            {
+                "id": "64a32459bc8fe91194c8A2b1",
+                "carteiraRef": "64a31a89e5be69144c4aac8c",
+                "tipoAtivo": "ACAO_NACIONAL",
+                "localAlocado": "VALE3",
+                "percentualRecomendado": 0.0,
+                "valorAtual": 12.18,
+                "nota": 1,
+                "percentualTotal": 100.0,
+                "quantidade": 4,
+                "ticker": "VALE3",
+                "valorRecomendado": 100.0,
+                "image": "https://s3-symbol-logo.tradingview.com/vale--600.png"
+            }
+        ])
+    }
+
+    return asyncFetch(`/carteira/meus-ativos/${carteiraId}`, 'GET')
+}

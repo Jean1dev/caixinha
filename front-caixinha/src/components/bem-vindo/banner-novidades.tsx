@@ -47,7 +47,7 @@ export const BannerNovidades = (props: any) => {
           sx={{ mt: 2 }}
           variant="h6"
         >
-          Mais transparencia, mais segurança e praticidade
+          Mais transparencia, segurança e praticidade
         </Typography>
         <Typography
           color="text.primary"

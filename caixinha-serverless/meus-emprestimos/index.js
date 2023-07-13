@@ -18,7 +18,7 @@ function mapItem(item, caixinha) {
         interest: item.interest.value,
         fees: item.fees.value,
         valueRequested: item.valueRequested.value,
-        date: moment(item.date).format('DD/MM/YYY'),
+        date: moment(item.date).format('DD/MM/YYYY'),
         totalValue: item.totalValue?.value,
         approved: item.approved,
         uid: item.uid,
@@ -26,7 +26,15 @@ function mapItem(item, caixinha) {
         totalValue: item?.totalValue?.value,
         remainingAmount: item?.remainingAmount?.value,
         isPaidOff: item.isPaidOff,
-        caixinha: caixinha.name
+        caixinha: caixinha.name,
+        parcelas: item.installments,
+        billingDates: item.billingDates.map(payday => {
+            const valor = Number((item.totalValue.value / item.installments).toFixed(2))
+            return {
+                valor,
+                data: moment(payday).format('DD/MM/YYYY')
+            }
+        })
     }
 }
 

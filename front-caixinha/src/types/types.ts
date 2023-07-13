@@ -38,3 +38,19 @@ export interface LoansForApprove {
   isPaidOff?: boolean
   caixinha?: string
 }
+
+export interface AtivoCarteira {
+  id: string
+  carteiraRef: string
+  tipoAtivo: string
+  localAlocado: string
+  percentualRecomendado: number
+  valorAtual: number
+  nota: number
+  percentualTotal: number
+  quantidade: number
+  ticker: string
+  valorRecomendado: number
+  image?: string
+}
+

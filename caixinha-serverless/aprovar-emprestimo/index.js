@@ -8,7 +8,6 @@ async function aprovarEmprestimo(context, req) {
     const { memberName, emprestimoId, caixinhaid } = req.body
     const collectionName = 'caixinhas'
 
-
     await connect()
     const caixinhaEntity = await getByIdOrThrow(caixinhaid, collectionName)
 
@@ -31,6 +30,13 @@ async function aprovarEmprestimo(context, req) {
     }
 
     await replaceDocumentById(caixinhaEntity._id, collectionName, resolveCircularStructureBSON(domain))
+    context.res = {
+        body: {
+            aprovado: emprestimo.isApproved,
+            uid: emprestimo.UUID,
+            id: caixinhaid
+        }
+    }
 }
 
 module.exports = async (context, req) => await middleware(context, req, aprovarEmprestimo)

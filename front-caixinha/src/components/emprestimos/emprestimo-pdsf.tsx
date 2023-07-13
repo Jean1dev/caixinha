@@ -209,19 +209,16 @@ export const EmprestimoPdf = (props: any) => {
                 </View>
                 <View style={styles.billing}>
                     <Text style={[styles.subtitle2, styles.gutterBottom]}>
-                        Billed to
+                        Favorecido
                     </Text>
                     <Text style={styles.body2}>
-                        Tracey Herman
+                        {emprestimo.memberName}
                     </Text>
                     <Text style={styles.body2}>
-                        Countdown Grey Lynn
+                        Endereço não fornecido
                     </Text>
                     <Text style={styles.body2}>
-                        6934656584231
-                    </Text>
-                    <Text style={styles.body2}>
-                        271 Richmond Rd, Grey Lynn, Auckland 1022, New Zealand
+                        Juros % {emprestimo.interest}
                     </Text>
                 </View>
                 <View style={styles.items}>
@@ -233,7 +230,7 @@ export const EmprestimoPdf = (props: any) => {
                         </View>
                         <View style={styles.itemDescription}>
                             <Text style={styles.h6}>
-                                Description
+                                Descrição
                             </Text>
                         </View>
                         <View style={styles.itemQty}>
@@ -243,7 +240,7 @@ export const EmprestimoPdf = (props: any) => {
                         </View>
                         <View style={styles.itemUnitAmount}>
                             <Text style={styles.h6}>
-                                Unit Price
+                                Valor
                             </Text>
                         </View>
                         <View style={styles.itemTotalAmount}>

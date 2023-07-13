@@ -241,7 +241,7 @@ export default function Emprestimo() {
                                                     </Typography>
                                                 </Box>
                                                 <Typography variant="h6">
-                                                    Justificativa
+                                                    Descrição
                                                 </Typography>
                                             </Stack>
                                             <div>

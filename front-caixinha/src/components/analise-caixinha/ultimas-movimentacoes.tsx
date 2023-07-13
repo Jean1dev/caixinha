@@ -15,12 +15,6 @@ import {
 } from '@mui/material';
 import { Scrollbar } from '../scrollbar';
 
-// const statusMap = {
-//   pending: 'warning',
-//   delivered: 'success',
-//   refunded: 'error'
-// };
-
 export const UltimasMovimentacoes = (props: any) => {
   const { orders = [], sx } = props;
 

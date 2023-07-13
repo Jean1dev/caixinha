@@ -39,7 +39,7 @@ async function emprestimo(context, req) {
     await insertDocument('emprestimos', emprestimo)
 
     context.res = {
-        body: emprestimo
+        body: emprestimo.UUID
     }
 
     sendSMS(`Novo emprestimo do ${member.memberName} - valor ${valor}`)

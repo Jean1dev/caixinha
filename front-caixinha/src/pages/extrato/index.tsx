@@ -111,71 +111,63 @@ export default function Extrato() {
                         {
                             loading && <CenteredCircularProgress />
                         }
-                        <Grid
-                            container
-                            spacing={3}
-                        >
-                            {
-                                !loading && (
-                                    <Card sx={{ width: '100%' }}>
-                                        <Scrollbar sx={{ flexGrow: 1 }}>
-                                            <Box>
-                                                <Table>
-                                                    <TableHead>
-                                                        <TableRow>
+                        {
+                            !loading && (
+                                <Card sx={{ width: '100%' }}>
+                                    <Scrollbar sx={{ flexGrow: 1 }}>
+                                        <Table>
+                                            <TableHead>
+                                                <TableRow>
+                                                    <TableCell>
+                                                        Operação
+                                                    </TableCell>
+                                                    <TableCell>
+                                                        membro
+                                                    </TableCell>
+                                                    <TableCell>
+                                                        Valor
+                                                    </TableCell>
+                                                    <TableCell sortDirection="desc">
+                                                        Data
+                                                    </TableCell>
+                                                    <TableCell>
+                                                        Status
+                                                    </TableCell>
+                                                </TableRow>
+                                            </TableHead>
+                                            <TableBody>
+                                                {data.map((order: any) => {
+                                                    return (
+                                                        <TableRow
+                                                            hover
+                                                            key={order.id}
+                                                        >
                                                             <TableCell>
-                                                                Operação
+                                                                {order.tipo}
                                                             </TableCell>
                                                             <TableCell>
-                                                                membro
+                                                                {order.nick}
                                                             </TableCell>
                                                             <TableCell>
-                                                                Valor
-                                                            </TableCell>
-                                                            <TableCell sortDirection="desc">
-                                                                Data
+                                                                <DisplayValorMonetario>
+                                                                    {order.valor}
+                                                                </DisplayValorMonetario>
                                                             </TableCell>
                                                             <TableCell>
-                                                                Status
+                                                                {order.date}
+                                                            </TableCell>
+                                                            <TableCell>
+                                                                {order.status}
                                                             </TableCell>
                                                         </TableRow>
-                                                    </TableHead>
-                                                    <TableBody>
-                                                        {data.map((order: any) => {
-                                                            return (
-                                                                <TableRow
-                                                                    hover
-                                                                    key={order.id}
-                                                                >
-                                                                    <TableCell>
-                                                                        {order.tipo}
-                                                                    </TableCell>
-                                                                    <TableCell>
-                                                                        {order.nick}
-                                                                    </TableCell>
-                                                                    <TableCell>
-                                                                        <DisplayValorMonetario>
-                                                                            {order.valor}
-                                                                        </DisplayValorMonetario>
-                                                                    </TableCell>
-                                                                    <TableCell>
-                                                                        {order.date}
-                                                                    </TableCell>
-                                                                    <TableCell>
-                                                                        {order.status}
-                                                                    </TableCell>
-                                                                </TableRow>
-                                                            );
-                                                        })}
-                                                    </TableBody>
-                                                </Table>
-                                            </Box>
-                                        </Scrollbar>
-                                        <Divider />
-                                    </Card>
-                                )
-                            }
-                        </Grid>
+                                                    );
+                                                })}
+                                            </TableBody>
+                                        </Table>
+                                    </Scrollbar>
+                                </Card>
+                            )
+                        }
                         <Box
                             sx={{
                                 display: 'flex',

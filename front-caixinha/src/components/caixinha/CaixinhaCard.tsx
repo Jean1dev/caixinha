@@ -8,7 +8,8 @@ import { getAleatorio } from '@/utils/utils';
 const images = [
     'https://static.vecteezy.com/system/resources/previews/001/759/904/original/crowdfunding-isometric-web-banner-vector.jpg',
     'https://www.siteware.com.br/wp-content/uploads/2018/07/colaboracao-ambiente-de-trabalho.png',
-    'https://www.siteware.com.br/wp-content/uploads/2018/12/colaboracao-corporativa.png'
+    'https://www.siteware.com.br/wp-content/uploads/2018/12/colaboracao-corporativa.png',
+    'https://www.napratica.org.br/wp-content/uploads/2020/07/btg.jpg'
 ]
 
 export const CaixinhaCard = ({ caixinha }: { caixinha: Caixinha }) => {
@@ -38,8 +39,6 @@ export const CaixinhaCard = ({ caixinha }: { caixinha: Caixinha }) => {
             }}
         >
             <CardMedia
-                // component={RouterLink}
-                // href={paths.dashboard.academy.courseDetails}
                 image={imagemAleatoria}
                 sx={{ height: 180 }}
             />

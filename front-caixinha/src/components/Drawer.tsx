@@ -9,9 +9,8 @@ import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import FormatListNumberedIcon from '@mui/icons-material/FormatListNumbered';
-import NextLink from 'next/link';
 import { AttachMoney, ListAltSharp, Home, ShowChartOutlined, CreditScore, Wallet, ChevronRight, ChevronLeft } from '@mui/icons-material';
-import { Chip } from '@mui/material';
+import { Chip, Link } from '@mui/material';
 
 const drawerWidth = 240;
 
@@ -66,7 +65,7 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' 
 const routes = [
     {
         text: 'Caixinhas',
-        path: 'caixinhas-disponiveis',
+        path: '/caixinhas-disponiveis',
         icon: <FormatListNumberedIcon />
     },
     {
@@ -97,6 +96,12 @@ const carteiraRoutes = [
         path: 'carteira',
         icon: <ShowChartOutlined />,
         newFeature: true
+    },
+    {
+        text: '[Beta] Meus ativos',
+        path: 'carteira/meus-ativos',
+        icon: <ShowChartOutlined />,
+        newFeature: true
     }
 ]
 
@@ -119,7 +124,7 @@ export default function MiniDrawer({ open, handleDrawerClose }: any) {
                 {routes.map((it, index) => (
                     <ListItem key={it.text} disablePadding sx={{ display: 'block' }}>
                         <ListItemButton
-                            LinkComponent={NextLink}
+                            LinkComponent={Link}
                             href={it.path}
                             sx={{
                                 minHeight: 48,
@@ -146,7 +151,7 @@ export default function MiniDrawer({ open, handleDrawerClose }: any) {
                 {carteiraRoutes.map((it, index) => (
                     <ListItem key={it.text} disablePadding sx={{ display: 'block' }}>
                         <ListItemButton
-                            LinkComponent={NextLink}
+                            LinkComponent={Link}
                             href={it.path}
                             sx={{
                                 minHeight: 48,
@@ -180,7 +185,7 @@ export default function MiniDrawer({ open, handleDrawerClose }: any) {
                 {['Home'].map((text, _index) => (
                     <ListItem key={text} disablePadding sx={{ display: 'block' }}>
                         <ListItemButton
-                            LinkComponent={NextLink}
+                            LinkComponent={Link}
                             href="/"
                             sx={{
                                 minHeight: 48,
