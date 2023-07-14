@@ -217,6 +217,9 @@ describe('Teste end to end', () => {
                     "uid": result.loans[0].uid,
                     "memberName": "jean",
                     "requiredNumberOfApprovals": 2,
+                    "totalValue": {
+                        "value": 5.1,
+                    },
                     "listOfMembersWhoHaveAlreadyApproved": [
                         {
                             "name": "jean",
@@ -297,6 +300,9 @@ describe('Teste end to end', () => {
                     "uid": result.loans[0].uid,
                     "memberName": "jean",
                     "requiredNumberOfApprovals": 2,
+                    "totalValue": {
+                        "value": 5.1,
+                    },
                     "listOfMembersWhoHaveAlreadyApproved": [
                         {
                             "name": "jean",
@@ -323,10 +329,10 @@ describe('Teste end to end', () => {
         // 1 membro pagar o emprestimo
         const pagarEmprestimo = require('../pagamento-emprestimo')
         req.body = {
-            caixinhaId: 'e2e-test', 
-            emprestimoUid: result.loans[0].uid, 
-            valor: 5.1, 
-            name: 'jean', 
+            caixinhaId: 'e2e-test',
+            emprestimoUid: result.loans[0].uid,
+            valor: 5.1,
+            name: 'jean',
             email: 'jean@jean'
         }
 
@@ -397,6 +403,9 @@ describe('Teste end to end', () => {
                     "uid": result.loans[0].uid,
                     "memberName": "jean",
                     "requiredNumberOfApprovals": 2,
+                    "totalValue": {
+                        "value": 5.1,
+                    },
                     "listOfMembersWhoHaveAlreadyApproved": [
                         {
                             "name": "jean",
