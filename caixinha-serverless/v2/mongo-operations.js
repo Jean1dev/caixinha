@@ -36,6 +36,13 @@ async function insertDocument(collection, document) {
     return collectionName.insertOne(document)
 }
 
+async function findOrderByDesc(projection, collection = 'caixinhas') {
+    const collectionName = client.db(database).collection(collection)
+    return collectionName.find(projection)
+        .sort({ _id: -1 })
+        .toArray()
+}
+
 async function find(collection, projection) {
     const collectionName = client.db(database).collection(collection)
     return collectionName.find(projection).toArray()
@@ -66,5 +73,6 @@ module.exports = {
     getByIdOrThrow,
     deleteAll,
     findWithLimit,
-    upsert
+    upsert,
+    findOrderByDesc
 }

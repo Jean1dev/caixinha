@@ -12,13 +12,13 @@ import {
 import { alpha } from '@mui/material/styles';
 import { AccountPopover } from './account-popover';
 import { usePopover } from '@/hooks/usePopover';
-import React, { MouseEventHandler, useState } from 'react';
+import React, { useState } from 'react';
 import { signIn, useSession } from 'next-auth/react';
 import MiniDrawer from './Drawer';
 import ApplicationSelectCaixinha from './application-select.caixinha';
 import { useUserAuth } from '@/hooks/useUserAuth';
 import { NotificationsButton } from './notificacoes/notificacaoes-button';
-import { AttachMoney, MoneyOff } from '@mui/icons-material';
+import { Visibility, VisibilityOff } from '@mui/icons-material';
 
 const SIDE_NAV_WIDTH = 280;
 const TOP_NAV_HEIGHT = 64;
@@ -104,8 +104,8 @@ export const TopNav = ({ settings }: { settings: any }) => {
                             <Tooltip title="Mostrar valores" >
                                 <IconButton onClick={settings.handleShowValoresMonetarios}>
                                     <SvgIcon fontSize="small">
-                                        { settings.showValoresMonetarios && <AttachMoney/>}
-                                        { !settings.showValoresMonetarios && <MoneyOff/>}
+                                        { settings.showValoresMonetarios && <Visibility/>}
+                                        { !settings.showValoresMonetarios && <VisibilityOff/>}
                                     </SvgIcon>
                                 </IconButton>
                             </Tooltip>

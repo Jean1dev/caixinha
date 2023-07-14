@@ -1,7 +1,7 @@
 const middleware = require('../utils/middleware')
 const { ObjectId } = require('mongodb')
 const moment = require('moment')
-const { connect, getByIdOrThrow, find } = require("../v2/mongo-operations");
+const { connect, getByIdOrThrow, find, findOrderByDesc } = require("../v2/mongo-operations");
 
 function groupElementsByMemberName(deposits) {
     const groupedElements = {};
@@ -29,7 +29,7 @@ async function dadosAnalise(context, req) {
 
     await connect()
     const boxEntity = await getByIdOrThrow(caixinhaId, 'caixinhas')
-    const depositos = await find('depositos', { idCaixinha: new ObjectId(caixinhaId) })
+    const depositos = await findOrderByDesc({ idCaixinha: new ObjectId(caixinhaId) }, 'depositos')
     const patrimonio = await find('evolucaoPatrimonial', { idCaixinha: new ObjectId(caixinhaId) })
     const evolucaoPatrimonial = [
         {

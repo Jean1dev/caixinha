@@ -1,7 +1,7 @@
 const middleware = require('../utils/middleware')
 const moment = require('moment')
 const { ObjectId } = require('mongodb')
-const { connect, find } = require("../v2/mongo-operations")
+const { connect, find, getDocumentById } = require("../v2/mongo-operations")
 
 function ordenarPorData(lista) {
     return lista.sort((a, b) => {
@@ -61,6 +61,24 @@ async function extrato(context, req) {
         })
     }
 
+    async function findEmprestimosNaCaixinha(idCaixinha) {
+        const caixinha = await getDocumentById(idCaixinha)
+        if (!caixinha) {
+            return
+        }
+
+        caixinha['loans'].forEach(it => {
+            result.push({
+                id: it._id,
+                tipo: 'EMPRESTIMO',
+                valor: it.valueRequested.value,
+                nick: it.member.name,
+                status: it.approved ? 'completed' : 'requested',
+                date: moment(it.date).format('DD/MM/YYYY')
+            })
+        })
+    }
+
     const { meuExtrato, emprestimos, depositos } = parseQuery(req.query)
 
     if (meuExtrato) {
@@ -79,7 +97,7 @@ async function extrato(context, req) {
         }
 
         if (emprestimos) {
-            await findEmprestimosAndPutOnResult({ idCaixinha: new ObjectId(caixinhaId) })
+            await findEmprestimosNaCaixinha(caixinhaId)
         }
 
     }

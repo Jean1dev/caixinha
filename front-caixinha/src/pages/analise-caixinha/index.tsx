@@ -73,7 +73,7 @@ export default function AnaliseCaixinha() {
                             lg={3}
                         >
                             <SaldoTotal
-                                difference={102}
+                                difference={113}
                                 positive
                                 sx={{ height: '100%' }}
                                 value={state.data.saldoTotal}
@@ -85,7 +85,7 @@ export default function AnaliseCaixinha() {
                             lg={3}
                         >
                             <TotalDepositos
-                                difference={16}
+                                difference={90}
                                 positive={false}
                                 sx={{ height: '100%' }}
                                 value={state.data.totalDepositos}
