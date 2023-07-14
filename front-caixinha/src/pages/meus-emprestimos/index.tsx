@@ -51,7 +51,7 @@ export default function MeusEmprestimos() {
             setItems(data)
             setLoading(false)
         }).catch(() => router.push('error'))
-    }, [])
+    }, [session])
 
     if (loading) {
         return <CenteredCircularProgress/>
