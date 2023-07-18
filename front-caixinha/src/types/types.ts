@@ -37,6 +37,13 @@ export interface LoansForApprove {
   remainingAmount?: number
   isPaidOff?: boolean
   caixinha?: string
+  billingDates: IBillingDate[]
+  parcelas: number
+}
+
+export interface IBillingDate {
+  data: string
+  valor: number | null
 }
 
 export interface AtivoCarteira {

@@ -3,12 +3,10 @@ const moment = require('moment')
 const { ObjectId } = require('mongodb')
 const { connect, find, getDocumentById } = require("../v2/mongo-operations")
 
-function ordenarPorData(lista) {
-    return lista.sort((a, b) => {
-        const dataA = moment(a.date, 'DD/MM/YYYY');
-        const dataB = moment(b.date, 'DD/MM/YYYY');
-        return dataA - dataB;
-    });
+function compareByDate(a, b) {
+    const dateA = new Date(a.date.split('/').reverse().join('/'));
+    const dateB = new Date(b.date.split('/').reverse().join('/'));
+    return dateB - dateA;
 }
 
 function parseQuery(query) {
@@ -103,7 +101,7 @@ async function extrato(context, req) {
     }
 
     context.res = {
-        body: ordenarPorData(result)
+        body: result.sort(compareByDate)
     }
 
 }

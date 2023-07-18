@@ -137,10 +137,12 @@ export const MeuEmprestimosListTable = (props: any) => {
     } = props;
     const router = useRouter()
 
-    const goToDetalhesEmprestimo = (item: any) => {
+    const goToDetalhesEmprestimo = (item: LoansForApprove) => {
         router.push({
             pathname: 'detalhes-emprestimo',
-            query: item
+            query: {
+                uid: item.uid
+            }
         })
     }
 

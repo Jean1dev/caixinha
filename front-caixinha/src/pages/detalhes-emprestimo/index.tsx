@@ -1,7 +1,6 @@
 import Layout from "@/components/Layout";
 import { Avatar, Box, Button, Container, Divider, Link, Stack, SvgIcon, Typography } from "@mui/material";
 import { useSession } from "next-auth/react";
-import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { GestaoEmprestimo } from "../../components/emprestimos/gestao-emprestimo";
 import { PagamentoEmprestimo } from "../../components/emprestimos/pagamento-emprestimo";
@@ -13,12 +12,11 @@ import { ArrowBackIos } from "@mui/icons-material";
 import { LoansForApprove } from "@/types/types";
 import { EmprestimoPdf } from "@/components/emprestimos/emprestimo-pdsf";
 import { PDFDownloadLink } from "@react-pdf/renderer";
+import { getEmprestimo } from "../api/api.service";
 
-export default function DetalhesEmprestimo() {
+export default function DetalhesEmprestimo({ data: emprestimo }: { data: LoansForApprove }) {
     const [isMeuEmprestimo, setMeuEmprestimo] = useState(false)
-    const router = useRouter()
     const { data } = useSession()
-    const { query: emprestimo } = router
 
     useEffect(() => {
         if (data?.user?.name === emprestimo.memberName) {
@@ -26,7 +24,7 @@ export default function DetalhesEmprestimo() {
         } else {
             setMeuEmprestimo(false)
         }
-    }, [router, data])
+    }, [data])
 
     return (
         <Layout>
@@ -150,4 +148,15 @@ export default function DetalhesEmprestimo() {
             </>
         </Layout>
     )
+}
+
+export async function getServerSideProps(context: any) {
+    const { uid } = context.query;
+    const response = await getEmprestimo(uid)
+
+    return {
+        props: {
+            data: response
+        }
+    };
 }

@@ -22,14 +22,25 @@ export const InformacoesGeraisPerfil = () => {
     const { user, updateUser } = useUserAuth()
     const [loadingPhoto, setLoadingPhoto] = useState(false)
 
+    const [values, setValues] = useState({
+        firstName: '',
+        lastName: 'Visser',
+        email: '',
+        phone: 'user?.phone',
+        pix: '',
+        photoUrl: 'CPF'
+    });
+
     const updateProfile = () => {
         updatePerfil({
             memberName: user?.name,
             email: user?.email,
             user: {
-                phone: user?.phone,
-                pix: user?.pix,
-                photoUrl: user?.photoUrl
+                phone: values.phone,
+                photoUrl: user?.photoUrl,
+                accounts: [{
+                    keyPix: values.pix
+                }]
             }
         }).then(() => {
             updateUser({
@@ -44,15 +55,6 @@ export const InformacoesGeraisPerfil = () => {
             toast.error(e.message)
         })
     }
-
-    const [values, setValues] = useState({
-        firstName: '',
-        lastName: 'Visser',
-        email: '',
-        phone: 'user?.phone',
-        pix: '',
-        photoUrl: 'CPF'
-    });
 
     useEffect(() => {
         setValues({

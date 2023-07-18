@@ -1,12 +1,10 @@
-import { ArrowRight, ArrowUpward } from '@mui/icons-material';
 import {
-    Button,
     Card,
     CardActions,
     CardContent,
     CardHeader,
     Divider,
-    SvgIcon
+    Typography
 } from '@mui/material';
 import { alpha, useTheme } from '@mui/material/styles';
 import { Chart } from '../chart';
@@ -109,19 +107,6 @@ export const EvolucaoPatrimonial = (props: any) => {
     return (
         <Card sx={sx}>
             <CardHeader
-                action={(
-                    <Button
-                        color="inherit"
-                        size="small"
-                        startIcon={(
-                            <SvgIcon fontSize="small">
-                                <ArrowUpward />
-                            </SvgIcon>
-                        )}
-                    >
-                        Sync
-                    </Button>
-                )}
                 title="Evolução patrimonial"
             />
             <CardContent>
@@ -135,17 +120,10 @@ export const EvolucaoPatrimonial = (props: any) => {
             </CardContent>
             <Divider />
             <CardActions sx={{ justifyContent: 'flex-end' }}>
-                <Button
-                    color="inherit"
-                    endIcon={(
-                        <SvgIcon fontSize="small">
-                            <ArrowRight />
-                        </SvgIcon>
-                    )}
-                    size="small"
+                <Typography
                 >
-                    Acessar extrato de anos anteriores
-                </Button>
+                    O calculo de patrimonio é feito toda segunda-feira as 10h
+                </Typography>
             </CardActions>
         </Card>
     );

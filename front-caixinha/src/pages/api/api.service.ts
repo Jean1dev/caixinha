@@ -133,58 +133,66 @@ export async function getMinhasCaixinhas(name: string, email: string) {
 export async function getMeusEmprestimos({ name, email }: any): Promise<IMeusEmprestimos> {
     if (dev) {
         return retornaComAtraso({
-            "totalPendente": 1350,
-            "totalPago": 450.6,
-            "totalGeral": 899.45,
             "caixinhas": [
                 {
-                    "currentBalance": 84,
+                    "currentBalance": 15.89,
                     "meusEmprestimosQuitados": [],
                     "meusEmprestimos": [
                         {
-                            "requiredNumberOfApprovals": 2,
-                            "description": "meu emprestimo?",
-                            "approvals": 2,
-                            "interest": 3,
-                            "fees": 0,
-                            "valueRequested": 1,
-                            "date": "2023-05-09T14:09:57.110Z",
-                            "totalValue": 1.03,
-                            "approved": true,
-                            "uid": "013b1172-f830-41bf-9f36-92127c66b36c",
-                            "memberName": "jeanluca jeanlucajea"
-                        },
-                    ],
-                    "emprestimosParaAprovar": [
-                        {
-                            "requiredNumberOfApprovals": 2,
+                            "requiredNumberOfApprovals": 1,
                             "description": "sera que foi mesmo?",
-                            "approvals": 2,
+                            "approvals": 1,
                             "interest": 3,
                             "fees": 0,
-                            "valueRequested": 1,
-                            "date": "2023-05-09T14:09:57.110Z",
-                            "totalValue": 1.03,
+                            "valueRequested": 5,
+                            "date": "11/07/2023",
+                            "totalValue": 5.15,
                             "approved": true,
-                            "uid": "013b1172-f830-41bf-9f36-92177c66b36c",
-                            "memberName": "augusto"
+                            "uid": "ef1f02e3-f6bf-4570-b50f-e581d41f3b08",
+                            "memberName": "jean",
+                            "remainingAmount": 0,
+                            "isPaidOff": null,
+                            "caixinha": "teste",
+                            "parcelas": 2,
+                            "billingDates": [
+                                {
+                                    "valor": 2.58,
+                                    "data": "06/08/2023"
+                                },
+                                {
+                                    "valor": 2.58,
+                                    "data": "05/09/2023"
+                                }
+                            ]
                         },
                         {
-                            "requiredNumberOfApprovals": 2,
+                            "requiredNumberOfApprovals": 1,
                             "description": "sera que foi mesmo?",
-                            "approvals": 2,
+                            "approvals": 1,
                             "interest": 3,
                             "fees": 0,
-                            "valueRequested": 1,
-                            "date": "2023-05-09T14:09:57.110Z",
-                            "totalValue": 1.03,
+                            "valueRequested": 5,
+                            "date": "11/07/2023",
+                            "totalValue": 5.15,
                             "approved": true,
-                            "uid": "013b1172-f830-41bf-9f36-92177c66bf6c",
-                            "memberName": "augusto"
+                            "uid": "3bce4d18-8af8-4db2-a7a5-03b67d455ad6",
+                            "memberName": "jean",
+                            "caixinha": "teste",
+                            "parcelas": 0,
+                            "billingDates": [
+                                {
+                                    "valor": null,
+                                    "data": "10/08/2023"
+                                }
+                            ]
                         }
-                    ]
+                    ],
+                    "emprestimosParaAprovar": []
                 }
-            ]
+            ],
+            "totalPendente": 10.3,
+            "totalPago": 0,
+            "totalGeral": 10.3
         })
     }
 
@@ -299,7 +307,7 @@ export async function getDadosAnaliseCaixinha(idCaixinha: string) {
             ],
             percentuais: {
                 series: [25.9, 23.9, 23.8, 15.6, 6.9, 3.8],
-                labels: ['jean', 'augusto', 'gava', 'arnaldo', 'arthur', 'gean']
+                labels: ['jean luca fernandes', 'augusto', 'gava', 'arnaldo', 'arthur', 'gean']
             },
             evolucaoPatrimonial: [
                 {
@@ -377,4 +385,31 @@ export async function getDadosPerfil(email: string, name: string) {
     }
 
     return asyncGetWithParamethers(`${BASE_URL}/get-user-data`, { email, memberName: name })
+}
+
+export async function getEmprestimo(uid: string) {
+    if (dev) {
+        return retornaComAtraso({
+            "requiredNumberOfApprovals": 1,
+            "description": "sera que foi mesmo?",
+            "approvals": 1,
+            "interest": 3,
+            "fees": 0,
+            "valueRequested": 5,
+            "date": "17/07/2023",
+            "totalValue": 5.15,
+            "approved": true,
+            "uid": "044b0dd2-a21f-4b6f-b0f1-f93865e0ead0",
+            "memberName": "jean",
+            "parcelas": 0,
+            "billingDates": [
+                {
+                    "valor": null,
+                    "data": "16/08/2023"
+                }
+            ]
+        })
+    }
+
+    return asyncGetWithParamethers(`${BASE_URL}/get-emprestimo`, { uid })
 }
