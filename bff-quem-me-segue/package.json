@@ -7,6 +7,6 @@
     "test": "echo \"No tests yet...\""
   },
   "dependencies": {
-    "mongoose": "^6.6.0"
+    "mongoose": "^6.11.3"
   }
 }
