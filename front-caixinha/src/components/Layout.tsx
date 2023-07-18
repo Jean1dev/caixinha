@@ -71,7 +71,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                                 }}
                             />
                             <Divider />
-                            <AlertNav />
+
                             <>
                                 {children}
                                 <Toaster />
