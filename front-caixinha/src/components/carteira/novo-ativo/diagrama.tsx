@@ -11,71 +11,61 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Typography from '@mui/material/Typography';
 
+export const Diagrama = (props: any) => {
+  const {
+    criterios,
+    updateNota
+  } = props
+  return (
+    <Box
+      sx={{
+        backgroundColor: (theme) => theme.palette.mode === 'dark'
+          ? 'neutral.800'
+          : 'neutral.100',
+        p: 3
+      }}
+    >
+      <Card>
+        <CardHeader title="Diagrama" />
+        <Divider />
+        <Scrollbar>
+          <Table sx={{ minWidth: 700 }}>
+            <TableHead>
+              <TableRow>
+                <TableCell>
+                  Pergunta
+                </TableCell>
+                <TableCell>
+                  Criterio
+                </TableCell>
+                <TableCell>
+                  Resposta
+                </TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {criterios.map((item: any, index: any) => {
 
-const orderItems = [
-  {
-    id: '5ecb8abbdd6dfb1f9d6bf98b',
-    pergunta: 'As propriedades são novas e não consomem manutenção excessiva?',
-    criterio: 'TEMP',
-    reposta: false
-  },
-  {
-    id: '5ecb8ac10f116d04bed990eb',
-    pergunta: 'O fundo imobiliário está negociado abaixo do P/VP 1? (Acima de 1,5, eu descarto o investimento em qualquer hipótese)',
-    criterio: 'TEMP',
-    reposta: false
-  }
-];
-
-export const Diagrama = () => (
-  <Box
-    sx={{
-      backgroundColor: (theme) => theme.palette.mode === 'dark'
-        ? 'neutral.800'
-        : 'neutral.100',
-      p: 3
-    }}
-  >
-    <Card>
-      <CardHeader title="Diagrama" />
-      <Divider />
-      <Scrollbar>
-        <Table sx={{ minWidth: 700 }}>
-          <TableHead>
-            <TableRow>
-              <TableCell>
-                Pergunta
-              </TableCell>
-              <TableCell>
-                Criterio
-              </TableCell>
-              <TableCell>
-                Resposta
-              </TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {orderItems.map((item) => {
-
-              return (
-                <TableRow key={item.id}>
-                  <TableCell>
-                    <Typography variant="subtitle2">
-                      {item.pergunta}
-                    </Typography>
-                  </TableCell>
-                  <TableCell>
-                    {item.criterio}
-                  </TableCell>
-                  <TableCell>
-                    <Switch defaultChecked />
-                  </TableCell>
-                </TableRow>
-              );
-            })}
-          </TableBody>
-        </Table>
-      </Scrollbar>
-    </Card>
-  </Box>
-);
+                return (
+                  <TableRow key={index}>
+                    <TableCell>
+                      <Typography variant="subtitle2">
+                        {item.pergunta}
+                      </Typography>
+                    </TableCell>
+                    <TableCell>
+                      {item.criterio}
+                    </TableCell>
+                    <TableCell>
+                      <Switch value={item.simOuNao} onChange={() => updateNota(item)} />
+                    </TableCell>
+                  </TableRow>
+                );
+              })}
+            </TableBody>
+          </Table>
+        </Scrollbar>
+      </Card>
+    </Box>
+  )
+}

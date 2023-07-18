@@ -1,13 +1,16 @@
-import { getTipoAtivos } from "@/pages/api/api.carteira";
+import { criarAtivo, getMinhasCarteiras, getTipoAtivos } from "@/pages/api/api.carteira";
 import { Button, Card, CardContent, FormControlLabel, MenuItem, Stack, Switch, TextField, Typography } from "@mui/material"
 import Grid from '@mui/material/Unstable_Grid2';
 import { useState, useCallback, useEffect } from "react"
 import { DisplayResumoNota } from "./display-resumo-nota";
-import { Diagrama } from "./diagrama";
+import toast from "react-hot-toast";
+import { useSession } from "next-auth/react";
 
 export const NovoAtivoForm = () => {
     const [state, setState] = useState<any>({})
     const [categoryOptions, setOptions] = useState<any[]>([])
+    const [carteiras, setCarteiras] = useState<any[] | null>(null)
+    const { data: user } = useSession()
 
     useEffect(() => {
         getTipoAtivos().then(ativos => {
@@ -19,10 +22,34 @@ export const NovoAtivoForm = () => {
         })
     }, [])
 
-    const handleSubmit = () => {
-        alert('submited')
+    useEffect(() => {
+        if (!user?.user)
+            return
+        //@ts-ignore
+        getMinhasCarteiras(user?.user?.name, user?.user?.email)
+            .then(response => {
+                setCarteiras(response)
+                if (response.length > 0) {
+                    setState((prevSate: any) => ({
+                        ...prevSate,
+                        identificacaoCarteira: response[0]['id']
+                    }))
+                }
+            })
+    }, [user])
+
+    const handleSubmit = async (e: React.ChangeEvent<HTMLFormElement>) => {
+        e.preventDefault()
+        toast.loading('Enviando dados')
+        await criarAtivo({
+            tipoAtivo: state.tipoAtivo,
+            nota: state.nota,
+            quantidade: state.quantidade,
+            nome: state.nome,
+            identificacaoCarteira: state.identificacaoCarteira
+        })
     }
-    
+
     const handleChange = useCallback(
         (event: React.ChangeEvent<HTMLInputElement>) => {
             setState((prevState: any) => ({
@@ -36,8 +63,56 @@ export const NovoAtivoForm = () => {
     return (
         <form onSubmit={handleSubmit}>
             <Stack spacing={4}>
+                {
+                    carteiras != null && (
+                        <Card>
+                            <CardContent>
+
+                                <Grid
+                                    container
+                                    spacing={3}
+                                >
+                                    <Grid
+                                        xs={12}
+                                        md={4}
+                                    >
+                                        <Typography variant="h6">
+                                            Carteira
+                                        </Typography>
+                                    </Grid>
+                                    <Grid
+                                        xs={12}
+                                        md={8}
+                                    >
+                                        <Stack spacing={3}>
+                                            <TextField
+                                                fullWidth
+                                                label="Carteira"
+                                                name="identificacaoCarteira"
+                                                onChange={handleChange}
+                                                select
+                                                value={state.identificacaoCarteira}
+                                            >
+                                                {carteiras.map((option) => (
+                                                    <MenuItem
+                                                        key={option.id}
+                                                        value={option.id}
+                                                    >
+                                                        {option.nome}
+                                                    </MenuItem>
+                                                ))}
+                                            </TextField>
+                                        </Stack>
+                                    </Grid>
+                                </Grid>
+                            </CardContent>
+                        </Card>
+
+                    )
+                }
                 <Card>
                     <CardContent>
+
                         <Grid
                             container
                             spacing={3}
@@ -153,8 +228,7 @@ export const NovoAtivoForm = () => {
                                                     value={state.nota}
                                                 />
                                             </Stack>
-                                            <DisplayResumoNota />
-                                            <Diagrama/>
+                                            <DisplayResumoNota tipoAtivo={state.tipoAtivo} changeNota={handleChange} />
                                         </Grid>
                                     </Grid>
                                 </CardContent>
