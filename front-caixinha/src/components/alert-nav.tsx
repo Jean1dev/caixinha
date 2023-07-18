@@ -1,4 +1,6 @@
 import {
+    Alert,
+    AlertTitle,
     Box,
     Stack,
     Typography,
@@ -31,51 +33,19 @@ export const AlertNav = () => {
     }
 
     return (
-        <>
-            <Box
-                component="header"
-                sx={{
-                    backdropFilter: 'blur(6px)',
-                    backgroundColor: 'red',
-                    position: 'sticky',
-                    top: 0,
-                    zIndex: (theme) => theme.zIndex.appBar
-                }}
-            >
-                <Stack
-                    alignItems="center"
-                    direction="row"
-                    justifyContent="space-between"
-                    spacing={2}
-                    sx={{
-                        minHeight: TOP_NAV_HEIGHT,
-                        px: 2
-                    }}
-                >
-                    <Stack
-                        alignItems="center"
-                        direction="row"
-                        spacing={2}
-                    >
-                        <Typography> Atenção você precisa selecionar uma caixinha para fazer as operações</Typography>
-                    </Stack>
-                    <Stack
-                        alignItems="center"
-                        direction="row"
-                        spacing={2}
-                    >
-                        <ArrowUpward />
-                        <ArrowUpward />
-                        <ArrowUpward />
-                        <ArrowUpward />
-                        <ArrowUpward />
-                        <ArrowUpward />
-                        <ArrowUpward />
-                        <ArrowUpward />
-                        <ArrowUpward />
-                    </Stack>
-                </Stack>
-            </Box>
-        </>
+
+        <><Alert onClose={() => { setShow(false) }} severity="error" variant='filled' sx={{
+
+
+            backgroundColor: 'red',
+            position: 'absolute',
+            top: 65,
+
+
+            zIndex: (theme) => theme.zIndex.appBar + 2
+        }}>
+            <strong>ATENÇÃO</strong> Você precisa <strong>selecionar</strong> uma caixinha!
+        </Alert></>
+
     )
 };
