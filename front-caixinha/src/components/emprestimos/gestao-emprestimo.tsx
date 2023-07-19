@@ -60,7 +60,7 @@ export const GestaoEmprestimo = ({ data }: { data: IGestaoInput }) => {
     if (loading) {
         return <CenteredCircularProgress />
     }
-
+    console.log(data.emprestimo.billingDates)
     return (
         <Card sx={{ p: 6 }}>
             <Stack
@@ -98,7 +98,7 @@ export const GestaoEmprestimo = ({ data }: { data: IGestaoInput }) => {
                     >
                         {data.emprestimo.isPaidOff ? 'Pago' : 'Pendente'}
                     </Typography>
-                 
+
                 </div>
             </Stack>
             <Box sx={{ mt: 4 }}>
@@ -173,9 +173,18 @@ export const GestaoEmprestimo = ({ data }: { data: IGestaoInput }) => {
                             variant="subtitle2"
                         >
                             Data limite
+                            {
+                                data.emprestimo.parcelas > 0
+                                    ? `\n Esse é um emprestimo parcelado em ${data.emprestimo.parcelas}x`
+                                    : ''
+                            }
                         </Typography>
                         <Typography variant="body2">
-                            {data.emprestimo.date}
+                            {
+                                data.emprestimo.parcelas == 0
+                                    ? data.emprestimo.billingDates[0].data
+                                    : data.emprestimo.billingDates[data.emprestimo.billingDates.length - 1].data
+                            }
                         </Typography>
                     </Grid>
                     <Grid

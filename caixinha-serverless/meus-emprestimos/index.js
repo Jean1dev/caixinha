@@ -2,6 +2,14 @@ const moment = require('moment')
 const middleware = require('../utils/middleware')
 const { connect, find } = require('../v2/mongo-operations')
 
+function somenteOsQueNaoEstaoAprovados(emprestimo) {
+    if (!emprestimo.approved) {
+        return true
+    }
+
+    return false
+}
+
 function somenteOsQueAindaFaltamPagar(emprestimo) {
     if (emprestimo.isPaidOff) {
         return false
@@ -60,6 +68,7 @@ async function meusEmprestimos(context, req) {
                 .map(item => (mapItem(item, c))),
             emprestimosParaAprovar: c.loans
                 .filter(l => l.memberName != name)
+                .filter(somenteOsQueNaoEstaoAprovados)
                 .map(item => (mapItem(item, c))),
         }))
     }

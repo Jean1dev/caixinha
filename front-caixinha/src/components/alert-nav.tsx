@@ -1,16 +1,9 @@
 import {
     Alert,
-    AlertTitle,
-    Box,
-    Stack,
-    Typography,
 } from '@mui/material';
 import { useEffect, useState } from 'react';
 import { useSession } from 'next-auth/react';
 import { useCaixinhaSelect } from '@/hooks/useCaixinhaSelect';
-import { ArrowUpward } from '@mui/icons-material';
-
-const TOP_NAV_HEIGHT = 34;
 
 export const AlertNav = () => {
     const { status } = useSession()

@@ -36,6 +36,7 @@ async function emprestimo(context, req) {
     }
 
     await replaceDocumentById(boxEntity._id, 'caixinhas', resolveCircularStructureBSON(box))
+    emprestimo['boxId'] = caixinhaID
     await insertDocument('emprestimos', emprestimo)
 
     context.res = {
@@ -43,10 +44,18 @@ async function emprestimo(context, req) {
     }
 
     sendSMS(`Novo emprestimo do ${member.memberName} - valor ${valor}`)
-    dispatchEvent({
-        type: 'EMPRESTIMO',
-        data: emprestimo
-    })
+    dispatchEvent([
+        {
+            type: 'EMPRESTIMO',
+            data: emprestimo
+        }, {
+            type: 'EMAIL',
+            data: {
+                message: `VocÊ abriu um novo emprestimo, protocolo ${emprestimo.UUID}`,
+                remetentes: ['jeanlucafp@gmail.com', member._email]
+            }
+        }
+    ])
 }
 
 module.exports = async (context, req) => await middleware(context, req, emprestimo)

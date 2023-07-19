@@ -17,6 +17,15 @@ module.exports = function dispatchEvent(message) {
                 return handleAMQPError(channelError)
             }
 
+            if (Array.isArray(message)) {
+                for (const key of message) {
+                    channel.sendToQueue('caixinha-serverless', Buffer.from(JSON.stringify(key)))
+                    console.log(" [x] Sent %s", message);
+                }
+
+                return
+            }
+
             channel.sendToQueue('caixinha-serverless', Buffer.from(JSON.stringify(message)))
             console.log(" [x] Sent %s", message);
         })

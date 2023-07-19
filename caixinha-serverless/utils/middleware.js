@@ -6,7 +6,9 @@ async function middleware(context, req, nextFunction) {
     } catch (error) {
         context.log(error.message)
 
-        asyncAPM(error)
+        if (!error.language) {
+            asyncAPM(error)
+        }
 
         context.res = {
             status: 400,

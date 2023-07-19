@@ -193,9 +193,18 @@ export const EmprestimoPdf = (props: any) => {
                     <View>
                         <Text style={[styles.subtitle2, styles.gutterBottom]}>
                             Data limite
+                            {
+                                emprestimo.parcelas > 0
+                                    ? `Esse é um emprestimo parcelado em ${emprestimo.parcelas}x`
+                                    : ''
+                            }
                         </Text>
                         <Text style={styles.body2}>
-                            {emprestimo.date}
+                            {
+                                emprestimo.parcelas == 0
+                                    ? emprestimo.billingDates[0].data
+                                    : emprestimo.billingDates[emprestimo.billingDates.length - 1].data
+                            }
                         </Text>
                     </View>
                     <View>

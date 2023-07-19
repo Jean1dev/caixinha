@@ -19,7 +19,11 @@ const useChartOptions = (labels: any) => {
     colors: [
       theme.palette.primary.main,
       theme.palette.success.main,
-      theme.palette.warning.main
+      theme.palette.warning.main,
+      theme.palette.info.light,
+      theme.palette.primary.light,
+      theme.palette.warning.light,
+      theme.palette.success.light
     ],
     dataLabels: {
       enabled: false
@@ -81,6 +85,8 @@ export const GraficoPizzaMembros = (props: any) => {
         >
           {chartSeries.map((item: any, index: any) => {
             const label = labels[index];
+            const nameParts = label.trim().split(" ");
+            const firstName = nameParts[0]
 
             return (
               <Box
@@ -95,7 +101,7 @@ export const GraficoPizzaMembros = (props: any) => {
                   sx={{ my: 1 }}
                   variant="h6"
                 >
-                  {label}
+                  {firstName}
                 </Typography>
                 <Typography
                   color="text.secondary"

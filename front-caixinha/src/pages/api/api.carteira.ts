@@ -2,9 +2,15 @@ import axios from 'axios'
 import { retornaComAtraso } from './api.service'
 
 const dev = process.env.NODE_ENV === 'development'
+const baseURL = 'https://carteira-production-7aeb1.up.railway.app'
+/**
+ * 'https://carteira-14bc707a7fab.herokuapp.com'
+ * http://localhost:8080  
+ */
+
 
 const http = axios.create({
-    baseURL: 'https://carteira-production-7aeb1.up.railway.app', //'https://carteira-14bc707a7fab.herokuapp.com',
+    baseURL,
     timeout: 30000
 })
 
@@ -64,26 +70,6 @@ export async function getMinhasCarteiras(user: string, email: string) {
                 "nome": "minha-primeira-carteira",
                 "quantidadeAtivos": 0
             },
-            {
-                "id": "6499f9895bbd71299aa85f8a",
-                "nome": "minha-primeira-carteira",
-                "quantidadeAtivos": 1
-            },
-            {
-                "id": "649aed140f31fd4311ef67e4",
-                "nome": "nome da minha carteira",
-                "quantidadeAtivos": 0
-            },
-            {
-                "id": "649aed190f31fd4311ef67e5",
-                "nome": "nome da minha carteira",
-                "quantidadeAtivos": 0
-            },
-            {
-                "id": "649af067f996d030a53cc27a",
-                "nome": "nome da minha carteira",
-                "quantidadeAtivos": 0
-            }
         ])
     }
 
@@ -139,4 +125,12 @@ export async function getMeusAtivos(carteiraId: string) {
     }
 
     return asyncFetch(`/carteira/meus-ativos/${carteiraId}`, 'GET')
+}
+
+export async function getCriterios(tipo: string) {
+    return asyncFetch(`/criterio?tipo=${tipo}`, 'GET')
+}
+
+export async function criarAtivo(payload: any) {
+    return asyncFetch('/ativo', 'POST', payload)
 }

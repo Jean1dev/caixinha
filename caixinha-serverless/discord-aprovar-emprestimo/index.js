@@ -10,15 +10,25 @@ async function handle(context, req) {
     const caixinha = Box.fromJson(await getByIdOrThrow(caixinhaId))
     const emprestimo = caixinha.getLoanByUUID(emprestimoUid)
 
+    if (emprestimo.isApproved)
+        return
+
     caixinha['members']
         .map(member => Member.build({ name: member.name, email: member.email }))
         .forEach(member => {
             try {
                 emprestimo.addApprove(member)
             } catch (error) {
-
+                context.log(`error ir try catch ${error.message}`)
             }
         });
+
+    caixinha['loans'] = caixinha._loans.filter(loan => {
+        if (loan.UUID === emprestimoUid && !loan.isApproved)
+            return false
+
+        return true
+    })
 
     await replaceDocumentById(caixinhaId, 'caixinhas', resolveCircularStructureBSON(caixinha))
 
