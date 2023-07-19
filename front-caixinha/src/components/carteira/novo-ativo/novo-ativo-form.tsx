@@ -48,6 +48,10 @@ export const NovoAtivoForm = () => {
             nome: state.nome,
             identificacaoCarteira: state.identificacaoCarteira
         })
+        toast.success('Ativo adicionado')
+        setState({
+            identificacaoCarteira: state.identificacaoCarteira
+        })
     }
 
     const handleChange = useCallback(

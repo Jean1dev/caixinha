@@ -2,9 +2,15 @@ import axios from 'axios'
 import { retornaComAtraso } from './api.service'
 
 const dev = process.env.NODE_ENV === 'development'
+const baseURL = 'https://carteira-production-7aeb1.up.railway.app'
+/**
+ * 'https://carteira-14bc707a7fab.herokuapp.com'
+ * http://localhost:8080  
+ */
+
 
 const http = axios.create({
-    baseURL: 'https://carteira-production-7aeb1.up.railway.app', //'https://carteira-14bc707a7fab.herokuapp.com',
+    baseURL,
     timeout: 30000
 })
 
