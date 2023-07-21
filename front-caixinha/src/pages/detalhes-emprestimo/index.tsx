@@ -1,5 +1,15 @@
 import Layout from "@/components/Layout";
-import { Avatar, Box, Button, Container, Divider, Link, Stack, SvgIcon, Typography } from "@mui/material";
+import { 
+    Avatar, 
+    Box, 
+    Button, 
+    Container, 
+    Divider, 
+    Link, 
+    Stack, 
+    SvgIcon, 
+    Typography 
+} from "@mui/material";
 import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 import { GestaoEmprestimo } from "../../components/emprestimos/gestao-emprestimo";
@@ -13,15 +23,17 @@ import { LoansForApprove } from "@/types/types";
 import { EmprestimoPdf } from "@/components/emprestimos/emprestimo-pdsf";
 import { PDFDownloadLink } from "@react-pdf/renderer";
 import { getEmprestimo } from "../api/api.service";
+import { useRouter } from "next/router";
+import CenteredCircularProgress from "@/components/CenteredCircularProgress";
 
-export default function DetalhesEmprestimo({ data: idEmprestimo }: { data: string }) {
-    //@ts-ignore
-    const [emprestimo, setEmprestimo] = useState<LoansForApprove>({})
+export default function DetalhesEmprestimo() {
+    const [emprestimo, setEmprestimo] = useState<LoansForApprove | null>(null)
     const [isMeuEmprestimo, setMeuEmprestimo] = useState(false)
     const { data } = useSession()
+    const router = useRouter()
 
     useEffect(() => {
-        if (data?.user?.name === emprestimo.memberName) {
+        if (data?.user?.name === emprestimo?.memberName) {
             setMeuEmprestimo(true)
         } else {
             setMeuEmprestimo(false)
@@ -29,8 +41,16 @@ export default function DetalhesEmprestimo({ data: idEmprestimo }: { data: strin
     }, [data, emprestimo])
 
     useEffect(() => {
-        getEmprestimo(idEmprestimo).then(res => setEmprestimo(res))
-    }, [idEmprestimo])
+        const { uid } = router.query
+        if (!uid)
+            return
+        
+        getEmprestimo(uid as string).then(res => setEmprestimo(res))
+    }, [router])
+
+    if (!emprestimo){
+        return <CenteredCircularProgress/>
+    }
 
     return (
         <Layout>
@@ -156,12 +176,12 @@ export default function DetalhesEmprestimo({ data: idEmprestimo }: { data: strin
     )
 }
 
-export async function getServerSideProps(context: any) {
-    const { uid } = context.query;
+// export async function getServerSideProps(context: any) {
+//     const  = context.query;
 
-    return {
-        props: {
-            data: uid
-        }
-    };
-}
+//     return {
+//         props: {
+//             data: uid
+//         }
+//     };
+// }
