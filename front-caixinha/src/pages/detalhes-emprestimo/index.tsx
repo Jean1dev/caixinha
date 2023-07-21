@@ -14,7 +14,9 @@ import { EmprestimoPdf } from "@/components/emprestimos/emprestimo-pdsf";
 import { PDFDownloadLink } from "@react-pdf/renderer";
 import { getEmprestimo } from "../api/api.service";
 
-export default function DetalhesEmprestimo({ data: emprestimo }: { data: LoansForApprove }) {
+export default function DetalhesEmprestimo({ data: idEmprestimo }: { data: string }) {
+    //@ts-ignore
+    const [emprestimo, setEmprestimo] = useState<LoansForApprove>({})
     const [isMeuEmprestimo, setMeuEmprestimo] = useState(false)
     const { data } = useSession()
 
@@ -24,7 +26,11 @@ export default function DetalhesEmprestimo({ data: emprestimo }: { data: LoansFo
         } else {
             setMeuEmprestimo(false)
         }
-    }, [data])
+    }, [data, emprestimo])
+
+    useEffect(() => {
+        getEmprestimo(idEmprestimo).then(res => setEmprestimo(res))
+    }, [idEmprestimo])
 
     return (
         <Layout>
@@ -152,11 +158,10 @@ export default function DetalhesEmprestimo({ data: emprestimo }: { data: LoansFo
 
 export async function getServerSideProps(context: any) {
     const { uid } = context.query;
-    const response = await getEmprestimo(uid)
 
     return {
         props: {
-            data: response
+            data: uid
         }
     };
 }
