@@ -104,7 +104,8 @@ const useChartOptions = () => {
 
 const indices = [
     "INDEX:IBOV|1D",
-    "OANDA:SPX500USD|1D"
+    "OANDA:SPX500USD|1D",
+    "CRYPTOCAP:BTC.D|1D"
 ]
 
 export const ResumoMercado = () => {
@@ -131,7 +132,7 @@ export const ResumoMercado = () => {
                             md={6}
                             lg={3}
                         >
-                            <TradingView data={`[ [${indice}] ]`} />
+                            <TradingView data={`[ ["${indice}"] ]`} />
                         </Grid>
                     ))}
 

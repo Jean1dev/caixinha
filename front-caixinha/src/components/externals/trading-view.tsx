@@ -4,8 +4,7 @@ import React, { useEffect, useRef, memo } from 'react';
 
 function TradingViewWidget({ data }: { data: string }) {
     const container: any = useRef();
-    const theme: any = useTheme()
-
+    const theme: any = useTheme()    
     useEffect(
         () => {
             const script = document.createElement("script");
@@ -60,5 +59,4 @@ function TradingViewWidget({ data }: { data: string }) {
     );
 }
 
-//export default memo(TradingViewWidget);
-export default TradingViewWidget
+export default memo(TradingViewWidget);
