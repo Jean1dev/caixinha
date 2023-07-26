@@ -80,6 +80,7 @@ export default function CarteiraStep2({ changeMeta }: { changeMeta: Function }) 
                 </FormControl>
             </Box>
             <GraficoPizzaMembros
+                naoAbreviarNomes={true}
                 chartSeries={ativoComPorcentagem.map((it: any) => it.valor)}
                 labels={ativoComPorcentagem.map((it: any) => it.label)}
                 sx={{ height: '100%' }}

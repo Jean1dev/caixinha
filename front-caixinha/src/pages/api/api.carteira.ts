@@ -134,3 +134,33 @@ export async function getCriterios(tipo: string) {
 export async function criarAtivo(payload: any) {
     return asyncFetch('/ativo', 'POST', payload)
 }
+
+export async function getDistribuicaoPorMeta(carteiraId: string) {
+    if (dev) {
+        return retornaComAtraso({
+            "Cryptomoedas": 25,
+            "Renda Fixa": 0.0,
+            "Real Estate": 0.0,
+            "Ações Internacionais": 0.0,
+            "Fundos Imobiliarios": 0.0,
+            "Ações Nacionais": 75
+        })
+    }
+    return asyncFetch(`carteira/distribuicao-por-meta/${carteiraId}`, 'GET')
+}
+
+export async function atualizarAtivo(payload: any) {
+    if (dev) {
+        return retornaComAtraso(true)
+    }
+
+    return asyncFetch('/ativo', 'PUT', payload)
+}
+
+export async function removerAtivo(ativoId: string) {
+    if (dev) {
+        return retornaComAtraso(true)
+    }
+
+    return asyncFetch(`/ativo/${ativoId}`, 'DELETE')
+}

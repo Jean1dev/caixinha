@@ -10,6 +10,8 @@ const CenteredCircularProgress = () => {
         height: '100vh',
       }}
     >
+      <p> Powered by</p>
+      <img src='/assets/logos/azure.svg' />
       <CircularProgress />
     </div>
   );

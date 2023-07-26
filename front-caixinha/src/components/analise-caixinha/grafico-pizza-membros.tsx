@@ -62,7 +62,7 @@ const useChartOptions = (labels: any) => {
 };
 
 export const GraficoPizzaMembros = (props: any) => {
-  const { chartSeries, labels, sx } = props;
+  const { chartSeries, labels, sx, naoAbreviarNomes } = props;
   const chartOptions = useChartOptions(labels);
 
   return (
@@ -84,9 +84,14 @@ export const GraficoPizzaMembros = (props: any) => {
           sx={{ mt: 2 }}
         >
           {chartSeries.map((item: any, index: any) => {
-            const label = labels[index];
-            const nameParts = label.trim().split(" ");
-            const firstName = nameParts[0]
+            let label, nameParts, firstName
+            if (!naoAbreviarNomes) {
+              label = labels[index];
+              nameParts = label.trim().split(" ");
+              firstName = nameParts[0]
+            } else {
+              firstName = labels[index];
+            }
 
             return (
               <Box

@@ -34,6 +34,7 @@ export default function MeusAtivos() {
         count: 10,
         rowsPerPage: 10        
     })
+    const [carteiras, setCarteiras] = useState<any>([])
     const { data } = useSession()
 
     useEffect(() => {
@@ -48,10 +49,16 @@ export default function MeusAtivos() {
                                 count: ativos.length,
                                 rowsPerPage: 10
                             })
+
+                            setCarteiras(carteiras)
                         })
                 }
             })
     }, [data])
+
+    const onFiltersChange = (filters: any) => {
+        console.log(filters)
+    }
 
     return (
         <Layout>
@@ -126,7 +133,7 @@ export default function MeusAtivos() {
                             </Stack>
                         </Stack>
                         <Card>
-                            <MeusAtivosSearch onFiltersChange={() => { }} />
+                            <MeusAtivosSearch onFiltersChange={onFiltersChange} carteiras={carteiras}/>
                             <AtivosTable
                                 onPageChange={() => { alert('click')}}
                                 onRowsPerPageChange={() => { alert('click')}}

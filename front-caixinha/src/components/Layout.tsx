@@ -2,11 +2,11 @@ import { CssBaseline, Divider, ThemeProvider } from "@mui/material";
 import { TopNav } from "./top-nav";
 import { useEffect } from 'react';
 import Hotjar from '@hotjar/browser';
-import { AlertNav } from "./alert-nav";
 import { SettingsConsumer, SettingsProvider } from "@/contexts/settings";
 import { createTheme } from "@/theme/theme";
 import { SettingsDrawer } from "./tema-configuracoes";
 import { Toaster } from "./Toaster";
+import CenteredCircularProgress from "./CenteredCircularProgress";
 
 const siteId = process.env.NEXT_PUBLIC_HOTJAR_ID
 const hotjarVersion = 6
@@ -28,7 +28,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
             <SettingsConsumer>
                 {(settings) => {
                     if (!settings.isInitialized) {
-                        return <h1>Falha no carregamento</h1>
+                        return <CenteredCircularProgress />
                     }
 
                     const theme = createTheme({
@@ -41,16 +41,6 @@ export default function Layout({ children }: { children: React.ReactNode }) {
 
                     return (
                         <ThemeProvider theme={theme}>
-                            {/* <Head>
-                                <meta
-                                    name="color-scheme"
-                                    content={settings.paletteMode}
-                                />
-                                <meta
-                                    name="theme-color"
-                                    content={theme.palette.neutral[900]}
-                                />
-                            </Head> */}
                             <CssBaseline />
                             <TopNav settings={settings} />
                             <SettingsDrawer
