@@ -12,6 +12,9 @@ import Typography from '@mui/material/Typography';
 import { useTheme } from '@mui/material/styles';
 import { Chart } from '../chart';
 import { ArrowCircleDownOutlined, ArrowCircleUpOutlined } from '@mui/icons-material';
+import { useEffect, useMemo, useState } from 'react';
+import { getDistribuicaoPorMeta } from '@/pages/api/api.carteira';
+import toast from 'react-hot-toast';
 
 const useChartOptions = (labels: any) => {
     const theme = useTheme();
@@ -23,7 +26,11 @@ const useChartOptions = (labels: any) => {
         colors: [
             theme.palette.primary.main,
             theme.palette.info.main,
-            theme.palette.warning.main
+            theme.palette.warning.main,
+            theme.palette.info.light,
+            theme.palette.primary.light,
+            theme.palette.warning.light,
+            theme.palette.success.light
         ],
         dataLabels: {
             enabled: false
@@ -75,7 +82,7 @@ const useChartOptions = (labels: any) => {
             fillSeriesColor: false,
             y: {
                 formatter(value: any) {
-                    return `$${value}`;
+                    return `%${value}`;
                 }
             }
         }
@@ -83,16 +90,34 @@ const useChartOptions = (labels: any) => {
 };
 
 export const CarteiraBalanco = (props: any) => {
-    const { chartSeries, labels } = props;
+    const { carteiras } = props;
+    const [chartSeries, setChartSeries] = useState<any[]>([])
+    const [labels, setLabels] = useState<String[]>([])
     const chartOptions = useChartOptions(labels);
-    const totalAmount = chartSeries.reduce((acc: any, item: any) => acc += item, 0);
-    const formattedTotalAmount = `$${totalAmount}`;
+
+    const totalAmount = useMemo(() => {
+        return chartSeries.reduce((acc: any, item: any) => acc += item, 0)
+    }, [chartSeries]);
+
+    useEffect(() => {
+        if (carteiras.length > 0) {
+            getDistribuicaoPorMeta(carteiras[0]['id'])
+                .then((response: any) => {
+                    const categorias = Object.keys(response);
+                    const valores = Object.values(response);
+
+                    setLabels(categorias)
+                    setChartSeries(valores)
+                })
+                .catch(() => toast.error('Nao foi possivel buscar a distruicao por ativos'))
+        }
+    }, [carteiras])
 
     return (
         <Card>
             <CardHeader
                 title="Balanço"
-                subheader="Balanço entre suas contas"
+                subheader="Distribuicao de ativos por meta"
             />
             <CardContent>
                 <Stack
@@ -129,7 +154,7 @@ export const CarteiraBalanco = (props: any) => {
                                 Balanço total
                             </Typography>
                             <Typography variant="h4">
-                                {formattedTotalAmount}
+                                {`%${totalAmount}`}
                             </Typography>
                         </Stack>
                         <Stack spacing={1}>
@@ -149,7 +174,7 @@ export const CarteiraBalanco = (props: any) => {
                                 }}
                             >
                                 {chartSeries.map((item: any, index: any) => {
-                                    const amount = `$${item}`;
+                                    const amount = `%${item}`;
 
                                     return (
                                         <Stack
@@ -209,7 +234,7 @@ export const CarteiraBalanco = (props: any) => {
                     )}
                     size="small"
                 >
-                    Transferir fundos
+                    Transferir entre carteiras
                 </Button>
             </CardActions>
         </Card>

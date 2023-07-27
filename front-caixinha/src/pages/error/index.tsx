@@ -40,7 +40,7 @@ export default function ErrorPage() {
                                 style={{
                                     display: 'inline-block',
                                     maxWidth: '100%',
-                                    width: 400
+                                    width: 300
                                 }}
                             />
                         </Box>

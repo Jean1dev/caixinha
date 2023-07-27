@@ -10,15 +10,20 @@ import { Search } from '@mui/icons-material';
 import { MultiSelect } from './multi-select';
 import { getTipoAtivos } from '@/pages/api/api.carteira';
 
-const statusOptions: any = [];
-
-const stockOptions: any = [];
+interface ChipType {
+    label: string,
+    field: string,
+    value: string,
+    displayValue: string,
+}
 
 export const MeusAtivosSearch = (props: any) => {
-    const { onFiltersChange, ...other } = props;
+    const { onFiltersChange, carteiras, ...other } = props;
     const queryRef: any = useRef(null);
-    const [chips, setChips] = useState([]);
+    const [chips, setChips] = useState<ChipType[]>([]);
     const [categoryOptions, setOptions] = useState<any>([])
+    const [carteiraOptions, setCarteiraOptions] = useState<any>([])
+    const [searchText, setSearchText] = useState('')
 
     useEffect(() => {
         getTipoAtivos().then(ativos => {
@@ -30,30 +35,22 @@ export const MeusAtivosSearch = (props: any) => {
         })
     }, [])
 
-    const handleChipsUpdate = useCallback(() => {
+    const handleFiltersInputsChange = useCallback((search: any = undefined) => {
         const filters: any = {
-            name: undefined,
+            search,
             tipo: [],
-            status: [],
-            inStock: undefined
+            carteira: [],
         };
 
-        chips.forEach((chip: any) => {
+        setSearchText(search || '')
+
+        chips.forEach((chip: ChipType) => {
             switch (chip.field) {
-                case 'name':
-                    // There will (or should) be only one chips with field "name"
-                    // so we can set up it directly
-                    filters.name = chip.value;
-                    break;
                 case 'tipo':
                     filters.tipo.push(chip.value);
                     break;
-                case 'status':
-                    filters.status.push(chip.value);
-                    break;
-                case 'inStock':
-                    // The value can be "available" or "outOfStock" and we transform it to a boolean
-                    filters.inStock = chip.value === 'available';
+                case 'carteira':
+                    filters.carteira.push(chip.value);
                     break;
                 default:
                     break;
@@ -64,12 +61,12 @@ export const MeusAtivosSearch = (props: any) => {
     }, [chips, onFiltersChange]);
 
     useEffect(() => {
-        handleChipsUpdate();
-    }, [chips, handleChipsUpdate]);
+        handleFiltersInputsChange();
+    }, [chips, handleFiltersInputsChange]);
 
-    const handleChipDelete = useCallback((deletedChip: any) => {
+    const handleChipDelete = useCallback((deletedChip: ChipType) => {
         setChips((prevChips) => {
-            return prevChips.filter((chip: any) => {
+            return prevChips.filter((chip: ChipType) => {
                 // There can exist multiple chips for the same field.
                 // Filter them by value.
 
@@ -84,10 +81,10 @@ export const MeusAtivosSearch = (props: any) => {
         const value = queryRef.current?.value || '';
 
         setChips((prevChips: any) => {
-            const found = prevChips.find((chip: any) => chip.field === 'name');
+            const found = prevChips.find((chip: ChipType) => chip.field === 'name');
 
             if (found && value) {
-                return prevChips.map((chip: any) => {
+                return prevChips.map((chip: ChipType) => {
                     if (chip.field === 'name') {
                         return {
                             ...chip,
@@ -100,7 +97,7 @@ export const MeusAtivosSearch = (props: any) => {
             }
 
             if (found && !value) {
-                return prevChips.filter((chip: any) => chip.field !== 'name');
+                return prevChips.filter((chip: ChipType) => chip.field !== 'name');
             }
 
             if (!found && value) {
@@ -126,7 +123,7 @@ export const MeusAtivosSearch = (props: any) => {
             const valuesFound: any = [];
 
             // First cleanup the previous chips
-            const newChips = prevChips.filter((chip: any) => {
+            const newChips = prevChips.filter((chip: ChipType) => {
                 if (chip.field !== 'tipo') {
                     return true;
                 }
@@ -145,7 +142,7 @@ export const MeusAtivosSearch = (props: any) => {
                 return newChips;
             }
 
-            values.forEach((value: any) => {
+            values.forEach((value: ChipType) => {
                 if (!valuesFound.includes(value)) {
                     const option: any = categoryOptions.find((option: any) => option.value === value);
 
@@ -162,12 +159,12 @@ export const MeusAtivosSearch = (props: any) => {
         });
     }, [categoryOptions]);
 
-    const handleStatusChange = useCallback((values: any) => {
+    const handleCarteiraChange = useCallback((values: any) => {
         setChips((prevChips: any) => {
             const valuesFound: any = [];
 
             // First cleanup the previous chips
-            const newChips = prevChips.filter((chip: any) => {
+            const newChips = prevChips.filter((chip: ChipType) => {
                 if (chip.field !== 'status') {
                     return true;
                 }
@@ -186,80 +183,50 @@ export const MeusAtivosSearch = (props: any) => {
                 return newChips;
             }
 
-            values.forEach((value: any) => {
+            values.forEach((value: ChipType) => {
                 if (!valuesFound.includes(value)) {
-                    const option: any = statusOptions.find((option: any) => option.value === value);
+                    const option: any = carteiraOptions.find((option: any) => option.value === value);
 
                     newChips.push({
-                        label: 'Status',
-                        field: 'status',
+                        label: 'Carteira',
+                        field: 'carteira',
                         value,
-                        displayValue: option.label
+                        displayValue: option?.label
                     });
                 }
             });
 
             return newChips;
         });
-    }, []);
+    }, [carteiraOptions]);
 
-    const handleStockChange = useCallback((values: any) => {
-        // Stock can only have one value, even if displayed as multi-select, so we select the first one.
-        // This example allows you to select one value or "All", which is not included in the
-        // rest of multi-selects.
+    useEffect(() => {
+        setCarteiraOptions(carteiras.map((carteira: any) => ({
+            label: carteira.nome,
+            value: carteira.id
+        })))
 
-        setChips((prevChips) => {
-            // First cleanup the previous chips
-            const newChips: any = prevChips.filter((chip: any) => chip.field !== 'inStock');
-            const latestValue = values[values.length - 1];
+        if (carteiras.length > 0) {
+            setChips([
+                {
+                    label: 'Carteira',
+                    field: 'carteira',
+                    value: carteiras[0]['id'],
+                    displayValue: carteiras[0]['nome']
+                }
+            ])
 
-            switch (latestValue) {
-                case 'available':
-                    newChips.push({
-                        label: 'Stock',
-                        field: 'inStock',
-                        value: 'available',
-                        displayValue: 'Available'
-                    });
-                    break;
-                case 'outOfStock':
-                    newChips.push({
-                        label: 'Stock',
-                        field: 'inStock',
-                        value: 'outOfStock',
-                        displayValue: 'Out of Stock'
-                    });
-                    break;
-                default:
-                    // Should be "all", so we do not add this filter
-                    break;
-            }
-
-            return newChips;
-        });
-    }, []);
+        }
+    }, [carteiras])
 
     // We memoize this part to prevent re-render issues
     const categoryValues = useMemo(() => chips
-        .filter((chip: any) => chip.field === 'tipo')
-        .map((chip: any) => chip.value), [chips]);
+        .filter((chip: ChipType) => chip.field === 'tipo')
+        .map((chip: ChipType) => chip.value), [chips]);
 
-    const statusValues = useMemo(() => chips
-        .filter((chip: any) => chip.field === 'status')
-        .map((chip: any) => chip.value), [chips]);
-
-    const stockValues = useMemo(() => {
-        const values = chips
-            .filter((chip: any) => chip.field === 'inStock')
-            .map((chip: any) => chip.value);
-
-        // Since we do not display the "all" as chip, we add it to the multi-select as a selected value
-        if (values.length === 0) {
-            values.unshift('all');
-        }
-
-        return values;
-    }, [chips]);
+    const carteiraValues = useMemo(() => chips
+        .filter((chip: ChipType) => chip.field === 'carteira')
+        .map((chip: ChipType) => chip.value), [chips]);
 
     const showChips = chips.length > 0;
 
@@ -277,9 +244,10 @@ export const MeusAtivosSearch = (props: any) => {
                     <Search />
                 </SvgIcon>
                 <Input
-                    defaultValue=""
                     disableUnderline
+                    value={searchText}
                     fullWidth
+                    onChange={(e) => handleFiltersInputsChange(e.target.value)}
                     inputProps={{ ref: queryRef }}
                     placeholder="Pesquisar"
                     sx={{ flexGrow: 1 }}
@@ -349,16 +317,10 @@ export const MeusAtivosSearch = (props: any) => {
                     value={categoryValues}
                 />
                 <MultiSelect
-                    label="Status"
-                    onChange={handleStatusChange}
-                    options={statusOptions}
-                    value={statusValues}
-                />
-                <MultiSelect
-                    label="Stock"
-                    onChange={handleStockChange}
-                    options={stockOptions}
-                    value={stockValues}
+                    label="Carteira"
+                    onChange={handleCarteiraChange}
+                    options={carteiraOptions}
+                    value={carteiraValues}
                 />
             </Stack>
         </div>

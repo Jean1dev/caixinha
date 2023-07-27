@@ -8,10 +8,8 @@ import Grid from '@mui/material/Grid';
 import IconButton from '@mui/material/IconButton';
 import InputAdornment from '@mui/material/InputAdornment';
 import LinearProgress from '@mui/material/LinearProgress';
-import MenuItem from '@mui/material/MenuItem';
 import Stack from '@mui/material/Stack';
 import SvgIcon from '@mui/material/SvgIcon';
-import Switch from '@mui/material/Switch';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
@@ -20,9 +18,11 @@ import TablePagination from '@mui/material/TablePagination';
 import TableRow from '@mui/material/TableRow';
 import TextField from '@mui/material/TextField';
 import { Scrollbar } from '@/components/scrollbar';
-import { ChevronLeftOutlined, ChevronRight, Image, MoreVert } from '@mui/icons-material';
+import { ChevronLeftOutlined, ChevronRight, Image, QueryStats } from '@mui/icons-material';
 import Typography from '@mui/material/Typography';
 import { AtivoCarteira } from '@/types/types';
+import { DisplayTipoAtivo } from '../display-tipo-ativo';
+import { atualizarAtivo, removerAtivo } from '@/pages/api/api.carteira';
 
 export const AtivosTable = (props: any) => {
     const {
@@ -33,10 +33,21 @@ export const AtivosTable = (props: any) => {
         page = 0,
         rowsPerPage = 0
     } = props;
-    const [currentProduct, setCurrentProduct] = useState(null);
+    const [currentProduct, setCurrentProduct] = useState<any>(null);
+    const [state, setState] = useState<any>({})
+
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const { name, value } = e.target;
+        setState({ ...state, [name]: value });
+    }
+
+    const detalhes = useCallback((ativo: any) => {
+        const url = `https://br.tradingview.com/chart/?symbol=${ativo.localAlocado}`
+        window.open(url, "_blank")
+    }, [])
 
     const handleProductToggle = useCallback((productId: any) => {
-        setCurrentProduct((prevProductId) => {
+        setCurrentProduct((prevProductId: any) => {
             if (prevProductId === productId) {
                 return null;
             }
@@ -50,13 +61,25 @@ export const AtivosTable = (props: any) => {
     }, []);
 
     const handleProductUpdate = useCallback(() => {
+        atualizarAtivo({
+            identificacao: currentProduct,
+            nota: state.nota,
+            quantidade: state.quantidade
+        }).then(() => toast.success('Ativo atualizado'))
         setCurrentProduct(null);
-        toast.success('Product updated');
-    }, []);
+
+    }, [currentProduct, state]);
 
     const handleProductDelete = useCallback(() => {
-        toast.error('Product cannot be deleted');
-    }, []);
+        removerAtivo(currentProduct)
+            .then(() => toast.success('Ativo removido'))
+            .catch((e: any) => {
+                console.log(e)
+                toast.error('Ocorreu um erro ao tentar remover esse ativo');
+            })
+        setCurrentProduct(null);
+
+    }, [currentProduct]);
 
     return (
         <div>
@@ -199,15 +222,17 @@ export const AtivosTable = (props: any) => {
                                             </Typography>
                                         </TableCell>
                                         <TableCell>
-                                            {ativo.tipoAtivo}
+                                            <DisplayTipoAtivo tipo={ativo.tipoAtivo} />
                                         </TableCell>
                                         <TableCell>
                                             {ativo.quantidade}
                                         </TableCell>
                                         <TableCell align="right">
-                                            <IconButton>
+                                            <IconButton
+                                                onClick={() => detalhes(ativo)}
+                                            >
                                                 <SvgIcon>
-                                                    <MoreVert />
+                                                    <QueryStats />
                                                 </SvgIcon>
                                             </IconButton>
                                         </TableCell>
@@ -261,53 +286,6 @@ export const AtivosTable = (props: any) => {
                                                                         name="name"
                                                                     />
                                                                 </Grid>
-                                                                {/* <Grid
-                                                                    item
-                                                                    md={6}
-                                                                    xs={12}
-                                                                >
-                                                                    <TextField
-                                                                        defaultValue={ativo.ticker}
-                                                                        disabled
-                                                                        fullWidth
-                                                                        label="SKU"
-                                                                        name="sku"
-                                                                    />
-                                                                </Grid> */}
-                                                                {/* <Grid
-                                                                    item
-                                                                    md={6}
-                                                                    xs={12}
-                                                                >
-                                                                    <TextField
-                                                                        defaultValue={ativo.ticker}
-                                                                        fullWidth
-                                                                        label="Category"
-                                                                        select
-                                                                    >
-                                                                        {categoryOptions.map((option) => (
-                                                                            <MenuItem
-                                                                                key={option.value}
-                                                                                value={option.value}
-                                                                            >
-                                                                                {option.label}
-                                                                            </MenuItem>
-                                                                        ))}
-                                                                    </TextField>
-                                                                </Grid> */}
-                                                                {/* <Grid
-                                                                    item
-                                                                    md={6}
-                                                                    xs={12}
-                                                                >
-                                                                    <TextField
-                                                                        defaultValue={ativo.id}
-                                                                        disabled
-                                                                        fullWidth
-                                                                        label="Barcode"
-                                                                        name="barcode"
-                                                                    />
-                                                                </Grid> */}
                                                             </Grid>
                                                         </Grid>
                                                         <Grid
@@ -330,6 +308,8 @@ export const AtivosTable = (props: any) => {
                                                                 >
                                                                     <TextField
                                                                         defaultValue={ativo.nota}
+                                                                        value={state.nota}
+                                                                        onChange={handleChange}
                                                                         fullWidth
                                                                         label="Nota"
                                                                         name="nota"
@@ -344,32 +324,20 @@ export const AtivosTable = (props: any) => {
                                                                     <TextField
                                                                         defaultValue={ativo.quantidade}
                                                                         fullWidth
+                                                                        value={state.quantidade}
+                                                                        onChange={handleChange}
                                                                         label="Quantidade"
                                                                         name="quantidade"
                                                                         InputProps={{
                                                                             startAdornment: (
                                                                                 <InputAdornment position="start">
-                                                                                    
+
                                                                                 </InputAdornment>
                                                                             )
                                                                         }}
                                                                         type="number"
                                                                     />
                                                                 </Grid>
-                                                                {/* <Grid
-                                                                    item
-                                                                    md={6}
-                                                                    xs={12}
-                                                                    sx={{
-                                                                        alignItems: 'center',
-                                                                        display: 'flex'
-                                                                    }}
-                                                                >
-                                                                    <Switch />
-                                                                    <Typography variant="subtitle2">
-                                                                        Keep selling when stock is empty
-                                                                    </Typography>
-                                                                </Grid> */}
                                                             </Grid>
                                                         </Grid>
                                                     </Grid>
