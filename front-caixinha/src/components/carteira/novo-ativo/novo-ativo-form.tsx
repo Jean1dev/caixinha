@@ -7,7 +7,9 @@ import toast from "react-hot-toast";
 import { useSession } from "next-auth/react";
 
 export const NovoAtivoForm = () => {
-    const [state, setState] = useState<any>({})
+    const [state, setState] = useState<any>({
+        tipoAtivo: ''
+    })
     const [categoryOptions, setOptions] = useState<any[]>([])
     const [carteiras, setCarteiras] = useState<any[] | null>(null)
     const { data: user } = useSession()
@@ -50,7 +52,8 @@ export const NovoAtivoForm = () => {
         })
         toast.success('Ativo adicionado')
         setState({
-            identificacaoCarteira: state.identificacaoCarteira
+            identificacaoCarteira: state.identificacaoCarteira,
+            tipoAtivo: ''
         })
     }
 

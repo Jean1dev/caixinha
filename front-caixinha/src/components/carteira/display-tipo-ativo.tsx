@@ -30,7 +30,7 @@ const SeverityPillRoot = styled('span')(({ theme, customColor }: { theme: any, c
     };
 });
 
-function get(tipo: String) {
+function get(tipo: string) {
     function data(text: string, color: string) {
         return {
             customColor: color,
@@ -50,8 +50,20 @@ function get(tipo: String) {
             return data('Cryptomoedas', 'warning')
         case `RENDA_FIXA`:
             return data('Renda Fixa', 'success')
+        case `Ações Nacionais`:
+            return data('Ações Nacionais', 'primary')
+        case `Ações Internacionais`:
+            return data('Ações Internacionais', 'secondary')
+        case `Real Estate`:
+            return data('Real Estate', 'error')
+        case `Fundos Imobiliarios`:
+            return data('Fundos Imobiliarios', 'info')
+        case `Cryptomoedas`:
+            return data('Cryptomoedas', 'warning')
+        case `Renda Fixa`:
+            return data('Renda Fixa', 'success')
         default:
-            return data('', '')
+            return data(tipo, 'primary')
     }
 }
 

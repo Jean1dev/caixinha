@@ -1,7 +1,14 @@
 import axios from 'axios'
 import { retornaComAtraso } from './api.service'
 
-const dev = process.env.NODE_ENV === 'development'
+function isDev() {
+    if (process.env.NEXT_PUBLIC_LOCAL)
+        return false
+
+    return process.env.NODE_ENV === 'development'
+}
+
+const dev = isDev()
 const baseURL = 'https://carteira-production-7aeb1.up.railway.app'
 /**
  * 'https://carteira-14bc707a7fab.herokuapp.com'
