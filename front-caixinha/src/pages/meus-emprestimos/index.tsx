@@ -13,9 +13,9 @@ import { MeusEmprestimosListSummary } from '@/components/meus-emprestimos/meus-e
 import { MeuEmprestimosListTable } from '@/components/meus-emprestimos/meus-emprestimos-table';
 import { useRouter } from 'next/router';
 import { useSession } from 'next-auth/react';
-import { getMeusEmprestimos } from '../api/api.service';
 import { IMeusEmprestimos } from '@/types/types';
 import CenteredCircularProgress from '@/components/CenteredCircularProgress';
+import { getMeusEmprestimos } from '../api/meus-emprestimos';
 
 export default function MeusEmprestimos() {
     const router = useRouter()

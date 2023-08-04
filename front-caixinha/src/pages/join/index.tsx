@@ -2,12 +2,13 @@ import Layout from "@/components/Layout";
 import { Box, Button, FormControl, Grid, Paper, TextField, Typography } from "@mui/material";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
-import { getCaixinhas, joinABox } from "../api/api.service";
+import { joinABox } from "../api/api.service";
 import { Caixinha } from "@/types/types";
 import { useSession } from "next-auth/react";
 import CenteredCircularProgress from "@/components/CenteredCircularProgress";
 import { toast } from "react-hot-toast";
 import DisplayValorMonetario from "@/components/display-valor-monetario";
+import { getCaixinhas } from "../api/caixinhas";
 
 export default function Join() {
     const { status, data } = useSession()

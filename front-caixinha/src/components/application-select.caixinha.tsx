@@ -5,11 +5,11 @@ import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 import { CircularProgress, FormHelperText } from '@mui/material';
-import { getMinhasCaixinhas } from '@/pages/api/api.service';
 import { Caixinha } from '@/types/types';
 import { useCaixinhaSelect } from '@/hooks/useCaixinhaSelect';
 import { useSession } from 'next-auth/react';
 import { AlertNav } from './alert-nav';
+import { getMinhasCaixinhas } from '@/pages/api/caixinhas-disponiveis';
 
 export default function ApplicationSelectCaixinha() {
     const { data } = useSession()
@@ -21,8 +21,14 @@ export default function ApplicationSelectCaixinha() {
 
 
     React.useEffect(() => {
-        //@ts-ignore
-        getMinhasCaixinhas(data?.user?.name, data?.user?.email).then(caixinhas => {
+        if (!data?.user?.name || !data?.user?.email) {
+            return
+        }
+
+        const name = data.user.name
+        const email = data.user.email
+
+        getMinhasCaixinhas(name, email as string).then(caixinhas => {
             setCaixinhas(caixinhas)
             setLoading(false)
         })

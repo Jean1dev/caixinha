@@ -1,4 +1,3 @@
-//@ts-nocheck
 import { Box, Button, Card, CardContent, Container, Unstable_Grid2 as Grid, Typography } from '@mui/material';
 import { SaldoTotal } from '../../components/analise-caixinha/saldo-total';
 import { TotalDepositos } from '../../components/analise-caixinha/total-depositos';
@@ -8,13 +7,13 @@ import Layout from '@/components/Layout';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import CenteredCircularProgress from '@/components/CenteredCircularProgress';
-import { getDadosAnaliseCaixinha } from '../api/api.service';
 import { EvolucaoPatrimonial } from '@/components/analise-caixinha/evolucao-patrimonial';
 import { Participantes } from '@/components/analise-caixinha/participantes';
+import { getDadosAnaliseCaixinha } from '../api/analise-caixinha';
 
 export default function AnaliseCaixinha() {
     const router = useRouter()
-    const [state, setState] = useState({
+    const [state, setState] = useState<any>({
         data: null,
         loading: true
     })
@@ -76,7 +75,7 @@ export default function AnaliseCaixinha() {
                                 difference={113}
                                 positive
                                 sx={{ height: '100%' }}
-                                value={state.data.saldoTotal}
+                                value={state.data?.saldoTotal}
                             />
                         </Grid>
                         <Grid
@@ -88,7 +87,7 @@ export default function AnaliseCaixinha() {
                                 difference={90}
                                 positive={false}
                                 sx={{ height: '100%' }}
-                                value={state.data.totalDepositos}
+                                value={state.data?.totalDepositos}
                             />
                         </Grid>
                         <Grid

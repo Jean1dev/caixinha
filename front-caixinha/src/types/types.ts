@@ -48,16 +48,12 @@ export interface IBillingDate {
 
 export interface AtivoCarteira {
   id: string
-  carteiraRef: string
+  carteira: string
   tipoAtivo: string
-  localAlocado: string
-  percentualRecomendado: number
-  valorAtual: number
+  nome: string
   nota: number
-  percentualTotal: number
   quantidade: number
-  ticker: string
-  valorRecomendado: number
-  image?: string
+  image: string | null
+  valorAtual: number
 }
 

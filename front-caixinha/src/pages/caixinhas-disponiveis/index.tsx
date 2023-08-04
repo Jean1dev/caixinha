@@ -12,8 +12,8 @@ import { CaixinhaSearch } from '@/components/caixinha/CaixinhaSearch'
 import { CaixinhaCard } from '@/components/caixinha/CaixinhaCard'
 import CenteredCircularProgress from '@/components/CenteredCircularProgress'
 import { useRouter } from 'next/router'
-import { getCaixinhas } from '../api/api.service'
 import Grid from '@mui/material/Unstable_Grid2';
+import { getCaixinhas } from '../api/caixinhas'
 
 export default function Home() {
   const [data, setData] = useState<Caixinha[]>([])

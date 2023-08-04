@@ -2,8 +2,8 @@ import { useEffect, useState } from "react";
 import { useLocalStorage } from "./useLocalStorage";
 import { IUser } from "@/pages/perfil";
 import { useSession } from "next-auth/react";
-import { getDadosPerfil } from "@/pages/api/api.service";
 import { setDefaultHeaders } from "@/pages/api/api.carteira";
+import { getDadosPerfil } from "@/pages/api/perfil";
 
 export function useUserAuth() {
     const [user, setUser] = useState<IUser | null>({

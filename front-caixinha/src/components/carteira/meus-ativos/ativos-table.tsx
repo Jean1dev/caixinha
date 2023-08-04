@@ -41,10 +41,19 @@ export const AtivosTable = (props: any) => {
         setState({ ...state, [name]: value });
     }
 
-    const detalhes = useCallback((ativo: any) => {
-        const url = `https://br.tradingview.com/chart/?symbol=${ativo.localAlocado}`
-        window.open(url, "_blank")
+    const detalhes = useCallback((ativo: AtivoCarteira) => {
+        window.open(`https://br.tradingview.com/chart/?symbol=${ativo.nome}`, "_blank")
     }, [])
+
+    const fundamentos = useCallback(() => {
+        const ativo: AtivoCarteira = items.find((i: AtivoCarteira) => i.id === currentProduct)
+        if (ativo.tipoAtivo !== 'Ações Nacionais') {
+            toast('apenas tipo Ações Nacional')
+            return
+        }
+        
+        window.open(`https://www.fundamentus.com.br/detalhes.php?papel=${ativo.nome}`, "_blank")
+    }, [currentProduct])
 
     const handleProductToggle = useCallback((productId: any) => {
         setCurrentProduct((prevProductId: any) => {
@@ -193,7 +202,7 @@ export const AtivosTable = (props: any) => {
                                                     }}
                                                 >
                                                     <Typography variant="subtitle2">
-                                                        {ativo.ticker}
+                                                        {ativo.nome}
                                                     </Typography>
                                                     <Typography
                                                         color="text.secondary"
@@ -279,7 +288,7 @@ export const AtivosTable = (props: any) => {
                                                                     xs={12}
                                                                 >
                                                                     <TextField
-                                                                        defaultValue={ativo.ticker}
+                                                                        defaultValue={ativo.nome}
                                                                         fullWidth
                                                                         disabled
                                                                         label="Ticker"
@@ -354,6 +363,12 @@ export const AtivosTable = (props: any) => {
                                                         direction="row"
                                                         spacing={2}
                                                     >
+                                                        <Button
+                                                            onClick={fundamentos}
+                                                            variant="outlined"
+                                                        >
+                                                            Ver fundamentos
+                                                        </Button>
                                                         <Button
                                                             onClick={handleProductUpdate}
                                                             type="submit"

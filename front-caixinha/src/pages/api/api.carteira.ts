@@ -9,9 +9,8 @@ function isDev() {
 }
 
 const dev = isDev()
-const baseURL = 'https://carteira-production-7aeb1.up.railway.app'
+const baseURL = 'https://carteira-14bc707a7fab.herokuapp.com'
 /**
- * 'https://carteira-14bc707a7fab.herokuapp.com'
  * http://localhost:8080  
  */
 
@@ -83,7 +82,18 @@ export async function getMinhasCarteiras(user: string, email: string) {
     return asyncFetch(`/carteira?user=${user}&email=${email}`, 'GET')
 }
 
-export async function getMeusAtivos(carteiraId: string) {
+export interface AtivoDto {
+    id: string
+    carteira: string
+    tipoAtivo: string
+    nome: string
+    nota: number
+    quantidade: number
+    image: string | null
+    valorAtual: number
+}
+
+export async function getMeusAtivos(carteiraId: string): Promise<AtivoDto[]> {
     if (dev) {
         return retornaComAtraso([
             {

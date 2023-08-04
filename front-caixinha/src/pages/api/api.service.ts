@@ -25,6 +25,16 @@ http.interceptors.response.use((response) => {
     throw error
 })
 
+const state = {
+    CAIXINHA_URL: BASE_URL,
+    STORAGE_URL: URL_STORAGE_SERVER,
+    httpCaixinha: http,
+    isDev: dev,
+    cache: new Map()
+}
+
+export default state
+
 export function getBuckets() {
     http.get(`${URL_STORAGE_SERVER}/v1/s3/buckets`).then(({ data }) => {
         console.log(data)
@@ -69,7 +79,7 @@ export function retornaComAtraso(value: any): Promise<any> {
     })
 }
 
-async function asyncGetWithParamethers(url: string, params: any) {
+export async function asyncGetWithParamethers(url: string, params: any) {
     try {
         const response = await http({
             url,
@@ -87,7 +97,7 @@ async function asyncGetWithParamethers(url: string, params: any) {
     }
 }
 
-async function asyncFetch(url: string, method: string, body?: any): Promise<any> {
+export async function asyncFetch(url: string, method: string, body?: any): Promise<any> {
     try {
         const response = await http({
             url,
@@ -111,117 +121,6 @@ export async function aprovarEmprestimo(payload: any): Promise<any> {
     }
 
     return asyncFetch(`${BASE_URL}/aprovar-emprestimo`, 'POST', payload)
-}
-
-export async function getMinhasCaixinhas(name: string, email: string) {
-    if (dev) {
-        return retornaComAtraso([
-            {
-                "id": "6463d5093d725c4efc81a530",
-                "name": "primeira-caixinha"
-            },
-            {
-                "id": "6463e5601f8126593381a55d",
-                "name": "segunda-caixinha"
-            }
-        ])
-    }
-
-    return asyncFetch(`${BASE_URL}/minhas-caixinhas?name=${name}&email=${email}`, 'GET')
-}
-
-export async function getMeusEmprestimos({ name, email }: any): Promise<IMeusEmprestimos> {
-    if (dev) {
-        return retornaComAtraso({
-            "caixinhas": [
-                {
-                    "currentBalance": 15.89,
-                    "meusEmprestimosQuitados": [],
-                    "meusEmprestimos": [
-                        {
-                            "requiredNumberOfApprovals": 1,
-                            "description": "sera que foi mesmo?",
-                            "approvals": 1,
-                            "interest": 3,
-                            "fees": 0,
-                            "valueRequested": 5,
-                            "date": "11/07/2023",
-                            "totalValue": 5.15,
-                            "approved": true,
-                            "uid": "ef1f02e3-f6bf-4570-b50f-e581d41f3b08",
-                            "memberName": "jean",
-                            "remainingAmount": 0,
-                            "isPaidOff": null,
-                            "caixinha": "teste",
-                            "parcelas": 2,
-                            "billingDates": [
-                                {
-                                    "valor": 2.58,
-                                    "data": "06/08/2023"
-                                },
-                                {
-                                    "valor": 2.58,
-                                    "data": "05/09/2023"
-                                }
-                            ]
-                        },
-                        {
-                            "requiredNumberOfApprovals": 1,
-                            "description": "sera que foi mesmo?",
-                            "approvals": 1,
-                            "interest": 3,
-                            "fees": 0,
-                            "valueRequested": 5,
-                            "date": "11/07/2023",
-                            "totalValue": 5.15,
-                            "approved": true,
-                            "uid": "3bce4d18-8af8-4db2-a7a5-03b67d455ad6",
-                            "memberName": "jean",
-                            "caixinha": "teste",
-                            "parcelas": 0,
-                            "billingDates": [
-                                {
-                                    "valor": null,
-                                    "data": "10/08/2023"
-                                }
-                            ]
-                        }
-                    ],
-                    "emprestimosParaAprovar": []
-                }
-            ],
-            "totalPendente": 10.3,
-            "totalPago": 0,
-            "totalGeral": 10.3
-        })
-    }
-
-    return asyncFetch(`${BASE_URL}/meus-emprestimos?name=${name}&email=${email}`, 'GET')
-}
-
-export async function getCaixinhas(): Promise<Caixinha[]> {
-    if (dev) {
-        return retornaComAtraso([
-            {
-                "members": [],
-                "currentBalance": {
-                    "value": 85
-                },
-                "id": "644ab7f5f10d4800c629a1d2",
-                "name": "caixinha da ana"
-            },
-            {
-                "members": [],
-                "currentBalance": {
-                    "value": 885
-                },
-                "id": "644ab7f5f10d4800c629a1d3",
-                "name": "caixinha do jorge"
-            }
-        ])
-    }
-
-    return asyncFetch(`${BASE_URL}/get-caixinhas`, 'GET')
 }
 
 export async function doEmprestimo(params: any) {
@@ -282,49 +181,6 @@ export async function getValorParcelas(params: any) {
     )
 }
 
-export async function getDadosAnaliseCaixinha(idCaixinha: string) {
-    if (dev) {
-        return retornaComAtraso({
-            saldoTotal: 102,
-            totalDepositos: 1600,
-            movimentacoes: [{
-                id: 'f69f88012978187a6c12897f',
-                tipo: 'DEPOSITO',
-                valor: 30.5,
-                nick: 'Arnando',
-                date: '25/05/2022',
-                status: 'pending'
-            }],
-            membros: [
-                {
-                    "name": "jeanluca jeanlucajea",
-                    "email": "jeanlucafp@gmail.com"
-                },
-                {
-                    "name": "Augusto Savi",
-                    "email": "guto_savi@outlook.com"
-                },
-            ],
-            percentuais: {
-                series: [25.9, 23.9, 23.8, 15.6, 6.9, 3.8],
-                labels: ['jean luca fernandes', 'augusto', 'gava', 'arnaldo', 'arthur', 'gean']
-            },
-            evolucaoPatrimonial: [
-                {
-                    name: 'Saldo da carteira',
-                    data: [1500, 1505, 1545, 1590, 1650, 1750, 1800, 2100, 2250, 2300, 2450, 2800]
-                },
-                {
-                    name: 'Saldo disponivel no mês',
-                    data: [1500, 463, 505, 505, 909, 1545, 2000, 505, 498, 1997, 1800, 0]
-                }
-            ]
-        })
-    }
-
-    return asyncFetch(`${BASE_URL}/dados-analise?caixinhaId=${idCaixinha}`, 'GET')
-}
-
 export async function getChavesPix(caixinhaID: string) {
     if (dev) {
         return retornaComAtraso({
@@ -371,20 +227,6 @@ export async function updatePerfil(body: any) {
     }
 
     return asyncFetch(`${BASE_URL}/update-profile-member`, 'POST', body)
-}
-
-export async function getDadosPerfil(email: string, name: string) {
-    if (dev) {
-        return retornaComAtraso({
-            "_id": "648a2846b29e9b382ceb970b",
-            "email": "jeanlucafp@gmail.com",
-            "name": "Jeanluca FP",
-            "phoneNumber": "5548998457797",
-            "photoUrl": "https://eletrovibez.com/wp-content/uploads/2022/11/Boris-Brejcha-talento-i%CC%81mpar-que-converge-em-sonoridade-u%CC%81nica.jpg"
-        })
-    }
-
-    return asyncGetWithParamethers(`${BASE_URL}/get-user-data`, { email, memberName: name })
 }
 
 export async function getEmprestimo(uid: string) {

@@ -20,7 +20,7 @@ export const UltimasMovimentacoes = (props: any) => {
 
   return (
     <Card sx={sx}>
-      <CardHeader title="Ultimas transações" />
+      <CardHeader title="Ultimos depositos" />
       <Scrollbar sx={{ flexGrow: 1 }}>
         <Box sx={{ minWidth: 800 }}>
           <Table>
