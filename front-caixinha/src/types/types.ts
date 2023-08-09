@@ -57,3 +57,28 @@ export interface AtivoCarteira {
   valorAtual: number
 }
 
+export interface INovoAporte {
+  recomendacaoAporteList: RecomendacaoAporteList[]
+  metaComValorRecomendados: MetaComValorRecomendado[]
+}
+
+export interface RecomendacaoAporteList {
+  recomendacao: number
+  ativo: Ativo
+}
+
+export interface Ativo {
+  tipoAtivo: string
+  localAlocado: string
+  percentualRecomendado: number
+  valorAtual: number
+  nota: number
+  percentualTotal: number
+  quantidade: number
+  ticker: string
+}
+
+export interface MetaComValorRecomendado {
+  tipoAtivo: string
+  valorRecomendado: number
+}

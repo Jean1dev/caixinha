@@ -9,7 +9,7 @@ import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import FormatListNumberedIcon from '@mui/icons-material/FormatListNumbered';
-import { AttachMoney, ListAltSharp, Home, ShowChartOutlined, CreditScore, Wallet, ChevronRight, ChevronLeft, CurrencyBitcoin } from '@mui/icons-material';
+import { AttachMoney, ListAltSharp, Home, ShowChartOutlined, CreditScore, Wallet, ChevronRight, ChevronLeft, CurrencyBitcoin, SavingsOutlined } from '@mui/icons-material';
 import { Chip, Link } from '@mui/material';
 
 const drawerWidth = 240;
@@ -101,6 +101,12 @@ const carteiraRoutes = [
         text: 'Meus ativos',
         path: 'carteira/meus-ativos',
         icon: <CurrencyBitcoin />,
+        newFeature: true
+    },
+    {
+        text: 'Novo aporte',
+        path: 'carteira/aporte',
+        icon: <SavingsOutlined />,
         newFeature: true
     }
 ]
