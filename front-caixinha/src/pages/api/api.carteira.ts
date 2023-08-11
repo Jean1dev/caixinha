@@ -1,19 +1,16 @@
 import axios from 'axios'
 import { retornaComAtraso } from './api.service'
+import { INovoAporte } from '@/types/types'
 
 function isDev() {
-    if (process.env.NEXT_PUBLIC_LOCAL)
+    if (process.env.NEXT_PUBLIC_API_CARTEIRA)
         return false
 
     return process.env.NODE_ENV === 'development'
 }
 
 const dev = isDev()
-const baseURL = 'https://carteira-14bc707a7fab.herokuapp.com'
-/**
- * http://localhost:8080  
- */
-
+const baseURL = process.env.NEXT_PUBLIC_API_CARTEIRA || 'https://carteira-14bc707a7fab.herokuapp.com'
 
 const http = axios.create({
     baseURL,
@@ -180,4 +177,12 @@ export async function removerAtivo(ativoId: string) {
     }
 
     return asyncFetch(`/ativo/${ativoId}`, 'DELETE')
+}
+
+export async function calcularAporte(carteira: string, valor: number): Promise<INovoAporte> {
+    if (dev) {
+        return retornaComAtraso({})
+    }
+
+    return asyncFetch('/carteira/novo-aporte/' + carteira, 'POST', { valor })
 }
