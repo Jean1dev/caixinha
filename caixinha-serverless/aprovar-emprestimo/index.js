@@ -1,6 +1,6 @@
 const middleware = require('../utils/middleware')
 const { Box, Member } = require('caixinha-core/dist/src')
-const { connect, getByIdOrThrow, replaceDocumentById } = require('../v2/mongo-operations')
+const { connect, getByIdOrThrow, replaceDocumentById, upsert } = require('../v2/mongo-operations')
 const { resolveCircularStructureBSON } = require('../utils')
 const sendSMS = require('../utils/sendSMS')
 
@@ -27,9 +27,11 @@ async function aprovarEmprestimo(context, req) {
             uuidAdicionados.push(iterator.uid)
             return true
         })
+        await upsert('emprestimos', { approved: true }, { uid: emprestimo.UUID })
     }
 
     await replaceDocumentById(caixinhaEntity._id, collectionName, resolveCircularStructureBSON(domain))
+
     context.res = {
         body: {
             aprovado: emprestimo.isApproved,

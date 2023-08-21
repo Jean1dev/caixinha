@@ -24,6 +24,9 @@ jest.mock('../v2/mongo-operations.js', () => {
         replaceDocumentById: function (id, fileName, document) {
             const fs = require('fs')
             fs.writeFileSync(`${fileName}.json`, JSON.stringify(document))
+        },
+        upsert: function (collection, document, filter) {
+            console.log('upsert mock')
         }
     }
 })

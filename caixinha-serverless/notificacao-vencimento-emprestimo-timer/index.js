@@ -18,12 +18,13 @@ function enviarEvento({ name, email, dia }) {
     ])
 }
 
-module.exports = async function (context, myTimer) {
+module.exports = async function (context, _myTimer) {
     var timeStamp = new Date().toISOString();
-    context.log('JavaScript timer trigger function ran!', timeStamp);
+    context.log('Notificacao vencimento emprestimo trigger function ran!', timeStamp);
 
     await connect()
     const results = await find('emprestimos', { approved: true })
+    context.log(`${results.length} encontrados`)
     const hoje = moment()
 
     results.forEach(emprestimo => {
