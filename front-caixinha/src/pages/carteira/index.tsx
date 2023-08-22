@@ -3,15 +3,16 @@ import { Seo } from "@/components/Seo";
 import { useSettings } from "@/hooks/useSettings";
 import { Box, Container, Stack, Typography, Button, SvgIcon } from "@mui/material";
 import Grid from '@mui/material/Unstable_Grid2';
-import { PlusOne } from "@mui/icons-material";
+import { LowPriority, PlusOne } from "@mui/icons-material";
 import { CarteiraBalanco } from "@/components/carteira/carteira-balanco";
 import { CriarCarteiraNova } from "@/components/carteira/criar-nova-carteira";
 import NextLink from 'next/link';
-import { useEffect, useState } from "react";
-import { getMinhasCarteiras } from "../api/api.carteira";
+import { useCallback, useEffect, useState } from "react";
+import { consolidar, getMinhasCarteiras } from "../api/api.carteira";
 import { useSession } from "next-auth/react";
 import { MinhasCarteirasList } from "@/components/carteira/minhas-carteiras-list";
 import { ResumoMercado } from "@/components/carteira/resumo-mercado";
+import toast from "react-hot-toast";
 
 export default function Carteira() {
     const settings = useSettings();
@@ -21,6 +22,18 @@ export default function Carteira() {
     useEffect(() => {
         getMinhasCarteiras(data.data?.user?.name || '', data.data?.user?.email || '')
             .then(res => setCarteiras(res))
+    }, [data])
+
+    const consolidarCarteiras = useCallback(() => {
+        getMinhasCarteiras(data.data?.user?.name || '', data.data?.user?.email || '')
+            .then(carteiras => {
+                carteiras.forEach((carteira: any) => {
+                    toast.loading(`consolidando carteira ${carteira.nome}`)
+                    consolidar(carteira.id)
+                        .then(() => toast.success(`processo iniciado para ${carteira.nome}`))
+                        .catch(() => toast.error(`nao foi possivel consolidar ${carteira.nome}`))
+                })
+            })
     }, [data])
 
     return (
@@ -65,6 +78,17 @@ export default function Carteira() {
                                         direction="row"
                                         spacing={2}
                                     >
+                                        <Button
+                                            onClick={consolidarCarteiras}
+                                            startIcon={(
+                                                <SvgIcon>
+                                                    <LowPriority />
+                                                </SvgIcon>
+                                            )}
+                                            variant="contained"
+                                        >
+                                            Consolidar carteiras
+                                        </Button>
                                         <Button
                                             LinkComponent={NextLink}
                                             href="/carteira/nova-carteira"

@@ -31,6 +31,7 @@ async function handle(context, req) {
     })
 
     await replaceDocumentById(caixinhaId, 'caixinhas', resolveCircularStructureBSON(caixinha))
-
+    await upsert('emprestimos', { approved: true }, { uid: emprestimo.UUID })
 }
+
 module.exports = async (context, req) => await middleware(context, req, handle)

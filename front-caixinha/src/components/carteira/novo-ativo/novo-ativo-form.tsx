@@ -48,7 +48,8 @@ export const NovoAtivoForm = () => {
             nota: state.nota,
             quantidade: state.quantidade,
             nome: state.nome,
-            identificacaoCarteira: state.identificacaoCarteira
+            identificacaoCarteira: state.identificacaoCarteira,
+            valorAtual: state.valorAtual
         })
         toast.success('Ativo adicionado')
         setState({
@@ -196,6 +197,16 @@ export const NovoAtivoForm = () => {
                                                     type="number"
                                                     value={state.quantidade}
                                                 />
+                                                {state.tipoAtivo === 'RENDA_FIXA' && (
+                                                    <TextField
+                                                        fullWidth
+                                                        label="Valor atual"
+                                                        name="valorAtual"
+                                                        onChange={handleChange}
+                                                        type="number"
+                                                        value={state.valorAtual}
+                                                    />
+                                                )}
                                                 <div>
                                                     <FormControlLabel
                                                         control={<Switch defaultChecked />}

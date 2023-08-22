@@ -1,12 +1,17 @@
-import { Caixinha, IMeusEmprestimos } from "@/types/types"
 import axios from 'axios'
 
-//const BASE_URL = 'http://localhost:7071/api'
-const BASE_URL = 'https://emprestimo-caixinha.azurewebsites.net/api'
+function isDev() {
+    if (process.env.NEXT_PUBLIC_API_URL)
+        return false
+
+    return process.env.NODE_ENV === 'development'
+}
+
+const BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'https://emprestimo-caixinha.azurewebsites.net/api'
 const URL_STORAGE_SERVER = 'https://storage-manager-svc.herokuapp.com'
 const BUCKET_STORAGE = 'binnoroteirizacao'
 
-const dev = process.env.NODE_ENV === 'development'
+const dev = isDev()
 
 const http = axios.create({
     baseURL: BASE_URL,
