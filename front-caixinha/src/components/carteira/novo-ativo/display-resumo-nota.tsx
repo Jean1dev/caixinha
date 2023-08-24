@@ -4,7 +4,7 @@ import Grid from '@mui/material/Unstable_Grid2';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import { Diagrama } from './diagrama';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { getCriterios } from '@/pages/api/api.carteira';
 
 export const DisplayResumoNota = ({ tipoAtivo, changeNota }: { tipoAtivo: string, changeNota: Function }) => {
@@ -29,7 +29,7 @@ export const DisplayResumoNota = ({ tipoAtivo, changeNota }: { tipoAtivo: string
     })
   }, [tipoAtivo])
 
-  const updateNota = (criterio: any) => {
+  const updateNota = useCallback((criterio: any) => {
     setCriterios(criterios.map((item: any) => {
       const copy = { ...item }
       if (item.pergunta === criterio.pergunta) {
@@ -62,6 +62,10 @@ export const DisplayResumoNota = ({ tipoAtivo, changeNota }: { tipoAtivo: string
         value: total
       }
     })
+  }, [criterios, nota, changeNota])
+
+  if (!criterios.length) {
+    return <></>
   }
 
   return (

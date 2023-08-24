@@ -51,7 +51,7 @@ export const AtivosTable = (props: any) => {
             toast('apenas tipo Ações Nacional')
             return
         }
-        
+
         window.open(`https://www.fundamentus.com.br/detalhes.php?papel=${ativo.nome}`, "_blank")
     }, [currentProduct])
 
@@ -73,8 +73,14 @@ export const AtivosTable = (props: any) => {
         atualizarAtivo({
             identificacao: currentProduct,
             nota: state.nota,
-            quantidade: state.quantidade
-        }).then(() => toast.success('Ativo atualizado'))
+            quantidade: state.quantidade,
+            valor: state?.valor
+        })
+            .then(() => toast.success('Ativo atualizado'))
+            .catch((e: any) => {
+                toast.error(e.message)
+            })
+
         setCurrentProduct(null);
 
     }, [currentProduct, state]);
@@ -315,6 +321,19 @@ export const AtivosTable = (props: any) => {
                                                                     md={6}
                                                                     xs={12}
                                                                 >
+                                                                    {
+                                                                        ativo.tipoAtivo === 'RENDA_FIXA' && (
+                                                                            <TextField
+                                                                                defaultValue={ativo.valorAtual}
+                                                                                value={state.valor}
+                                                                                onChange={handleChange}
+                                                                                fullWidth
+                                                                                label="Valor"
+                                                                                name="valor"
+                                                                                type="number"
+                                                                            />
+                                                                        )
+                                                                    }
                                                                     <TextField
                                                                         defaultValue={ativo.nota}
                                                                         value={state.nota}

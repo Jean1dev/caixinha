@@ -94,8 +94,7 @@ const carteiraRoutes = [
     {
         text: 'Carteira',
         path: 'carteira',
-        icon: <ShowChartOutlined />,
-        newFeature: true
+        icon: <ShowChartOutlined />
     },
     {
         text: 'Meus ativos',

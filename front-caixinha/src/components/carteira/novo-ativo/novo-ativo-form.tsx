@@ -43,7 +43,7 @@ export const NovoAtivoForm = () => {
     const handleSubmit = async (e: React.ChangeEvent<HTMLFormElement>) => {
         e.preventDefault()
         toast.loading('Enviando dados')
-        await criarAtivo({
+        criarAtivo({
             tipoAtivo: state.tipoAtivo,
             nota: state.nota,
             quantidade: state.quantidade,
@@ -51,7 +51,19 @@ export const NovoAtivoForm = () => {
             identificacaoCarteira: state.identificacaoCarteira,
             valorAtual: state.valorAtual
         })
-        toast.success('Ativo adicionado')
+            .then(() => {
+                toast.success('Ativo adicionado')
+                setState({
+                    identificacaoCarteira: state.identificacaoCarteira,
+                    tipoAtivo: ''
+                })
+            })
+            .catch((e: Error) => {
+                toast.error(e.message)
+            })
+    }
+
+    const cancel = () => {
         setState({
             identificacaoCarteira: state.identificacaoCarteira,
             tipoAtivo: ''
@@ -257,7 +269,7 @@ export const NovoAtivoForm = () => {
                                 justifyContent="flex-end"
                                 spacing={1}
                             >
-                                <Button color="inherit">
+                                <Button color="inherit" onClick={cancel}>
                                     Cancel
                                 </Button>
                                 <Button
