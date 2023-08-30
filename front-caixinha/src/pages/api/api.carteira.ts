@@ -181,7 +181,7 @@ export async function removerAtivo(ativoId: string) {
 
 export async function calcularAporte(carteira: string, valor: number): Promise<INovoAporte> {
     if (dev) {
-        return retornaComAtraso({})
+        return retornaComAtraso(null)
     }
 
     return asyncFetch('/carteira/novo-aporte/' + carteira, 'POST', { valor })

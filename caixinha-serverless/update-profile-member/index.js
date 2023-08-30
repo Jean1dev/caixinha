@@ -21,7 +21,8 @@ async function updateProfile(context, req) {
     }
 
     if (user.accounts) {
-        user.accounts.forEach(({ keyPix, Qrcode }) => member.addBankAccount(keyPix, Qrcode))
+        member['bankAccount'] = null
+        member.addBankAccount(user.accounts.keyPix, user.accounts.Qrcode)
     }
 
     member['photoUrl'] = user.photoUrl

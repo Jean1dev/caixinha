@@ -260,3 +260,11 @@ export async function getEmprestimo(uid: string) {
 
     return asyncGetWithParamethers(`${BASE_URL}/get-emprestimo`, { uid })
 }
+
+export async function sairDaCaixinha(body: any) {
+    if (dev) {
+        return retornaComAtraso(true)
+    }
+
+    return asyncFetch(`${BASE_URL}/remover-membro`, 'POST', body)
+}
