@@ -9,6 +9,7 @@ import Typography from '@mui/material/Typography';
 import { Seo } from '@/components/Seo';
 import Layout from '@/components/Layout';
 import { InformacoesGeraisPerfil } from '@/components/perfil2/informacoes-gerais-perfil';
+import { InformacoesCaixinhas } from '@/components/perfil2/informacoes-caixinhas';
 
 export interface IUser {
     name: string
@@ -20,13 +21,14 @@ export interface IUser {
 
 const tabs = [
     { label: 'Geral', value: 'geral' },
+    { label: 'Caixinhas', value: 'caixinhas' },
 ];
 
 export default function Perfil() {
     const [currentTab, setCurrentTab] = useState('geral');
 
 
-    const handleTabsChange = useCallback((event: any, value: any) => {
+    const handleTabsChange = useCallback((_event: any, value: any) => {
         setCurrentTab(value);
     }, []);
 
@@ -69,11 +71,10 @@ export default function Perfil() {
                         </div>
                     </Stack>
                     {currentTab === 'geral' && (
-                        <InformacoesGeraisPerfil
-                        />
+                        <InformacoesGeraisPerfil/>
                     )}
-                    {currentTab === 'billing' && (
-                        <h1>progress</h1>
+                    {currentTab === 'caixinhas' && (
+                        <InformacoesCaixinhas/>
                     )}
                     {currentTab === 'team' && (
                         <h1>progress</h1>

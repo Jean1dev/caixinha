@@ -2,6 +2,7 @@ const { resolveCircularStructureBSON } = require('../utils')
 const { Box, Member } = require('caixinha-core/dist/src')
 const { connect, getByIdOrThrow, replaceDocumentById } = require('../v2/mongo-operations')
 const middleware = require('../utils/middleware')
+const dispatch = require('../amqp/events')
 
 async function handle(context, req) {
     await connect()
@@ -32,6 +33,14 @@ async function handle(context, req) {
 
     await replaceDocumentById(caixinhaId, 'caixinhas', resolveCircularStructureBSON(caixinha))
     await upsert('emprestimos', { approved: true }, { uid: emprestimo.UUID })
+    dispatch({
+        type: 'EMPRESTIMO_APROVADO',
+        data: {
+            memberName: emprestimo._member.memberName,
+            emprestimoId: emprestimoUid,
+            caixinhaid: caixinhaId
+        }
+    })
 }
 
 module.exports = async (context, req) => await middleware(context, req, handle)

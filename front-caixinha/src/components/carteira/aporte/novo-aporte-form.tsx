@@ -1,9 +1,25 @@
 import { calcularAporte, getMinhasCarteiras } from "@/pages/api/api.carteira";
-import { Button, Card, CardContent, MenuItem, Stack, TextField, Typography } from "@mui/material"
+import {
+    Button,
+    Card,
+    CardContent,
+    CardHeader,
+    Divider,
+    MenuItem,
+    Stack,
+    Table,
+    TableBody,
+    TableCell,
+    TableHead,
+    TableRow,
+    TextField,
+    Typography
+} from "@mui/material"
 import Grid from '@mui/material/Unstable_Grid2';
 import { useState, useCallback, useEffect } from "react"
 import { useSession } from "next-auth/react";
 import toast from "react-hot-toast";
+import { Scrollbar } from "@/components/scrollbar";
 
 export const NovoAporteForm = () => {
     const [state, setState] = useState<any>({ valor: 0 })
@@ -39,7 +55,7 @@ export const NovoAporteForm = () => {
     const calcular = useCallback(() => {
         toast.loading('Calculando')
         calcularAporte(state.carteira, state.valor)
-            .then((response) => console.log(response))
+            .then((response) => setState({ aporte: response, ...state }))
     }, [state])
 
     return (
@@ -130,6 +146,51 @@ export const NovoAporteForm = () => {
                     </Grid>
                 </CardContent>
             </Card>
+            {
+                state.aporte && (
+                    <Card>
+                        <CardHeader title="Diagrama" />
+                        <Divider />
+                        <Scrollbar>
+                            <Table sx={{ minWidth: 700 }}>
+                                <TableHead>
+                                    <TableRow>
+                                        <TableCell>
+                                            Ativo
+                                        </TableCell>
+                                        <TableCell>
+                                            Percentual atual
+                                        </TableCell>
+                                        <TableCell>
+                                            Sugestao
+                                        </TableCell>
+                                    </TableRow>
+                                </TableHead>
+                                <TableBody>
+                                    {state.aporte.recomendacaoAporteList.map((item: any, index: any) => {
+
+                                        return (
+                                            <TableRow key={index}>
+                                                <TableCell>
+                                                    <Typography variant="subtitle2">
+                                                        {item.ativo.ticker}
+                                                    </Typography>
+                                                </TableCell>
+                                                <TableCell>
+                                                    {item.ativo.percentualTotal}
+                                                </TableCell>
+                                                <TableCell>
+                                                    {item.recomendacao}
+                                                </TableCell>
+                                            </TableRow>
+                                        );
+                                    })}
+                                </TableBody>
+                            </Table>
+                        </Scrollbar>
+                    </Card>
+                )
+            }
 
         </Stack>
     )
