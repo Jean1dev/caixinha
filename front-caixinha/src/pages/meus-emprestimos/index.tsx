@@ -47,10 +47,12 @@ export default function MeusEmprestimos() {
             setLoading(true)
         }
 
-        getMeusEmprestimos({ name: session?.user?.name, email: session?.user?.email }).then((data: IMeusEmprestimos) => {
-            setItems(data)
-            setLoading(false)
-        }).catch(() => router.push('error'))
+        if (session?.user?.name) {
+             getMeusEmprestimos({ name: session?.user?.name, email: session?.user?.email }).then((data: IMeusEmprestimos) => {
+                setItems(data)
+                setLoading(false)
+            }).catch(() => router.push('error'))   
+        }
     }, [session])
 
     if (loading) {
