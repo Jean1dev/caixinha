@@ -1,3 +1,4 @@
+import CenteredCircularProgress from "@/components/CenteredCircularProgress";
 import Layout from "@/components/Layout";
 import { RouterLink } from "@/components/RouterLink";
 import { Seo } from "@/components/Seo";
@@ -34,6 +35,7 @@ export default function MeusAtivos() {
         count: 10,
         rowsPerPage: 10        
     })
+    const [loading, setLoading] = useState(true)
     const [carteiras, setCarteiras] = useState<any>([])
     const { data } = useSession()
 
@@ -51,13 +53,20 @@ export default function MeusAtivos() {
                             })
 
                             setCarteiras(carteiras)
+                            setLoading(false)
                         })
+                } else {
+                    setLoading(false)
                 }
             })
     }, [data])
 
     const onFiltersChange = (filters: any) => {
         console.log(filters)
+    }
+
+    if (loading) {
+        return <CenteredCircularProgress/>
     }
 
     return (

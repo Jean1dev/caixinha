@@ -1,5 +1,16 @@
-import { criarAtivo, getMinhasCarteiras, getTipoAtivos } from "@/pages/api/api.carteira";
-import { Button, Card, CardContent, FormControlLabel, MenuItem, Stack, Switch, TextField, Typography } from "@mui/material"
+import { criarAtivo, getListaSugestao, getMinhasCarteiras, getTipoAtivos } from "@/pages/api/api.carteira";
+import {
+    Button,
+    Card,
+    CardContent,
+    FormControlLabel,
+    MenuItem,
+    Stack,
+    Switch,
+    TextField,
+    Typography,
+    Autocomplete
+} from "@mui/material"
 import Grid from '@mui/material/Unstable_Grid2';
 import { useState, useCallback, useEffect } from "react"
 import { DisplayResumoNota } from "./display-resumo-nota";
@@ -10,6 +21,7 @@ export const NovoAtivoForm = () => {
     const [state, setState] = useState<any>({
         tipoAtivo: ''
     })
+    const [sugestaoList, setSugestaoList] = useState<string[]>([])
     const [categoryOptions, setOptions] = useState<any[]>([])
     const [carteiras, setCarteiras] = useState<any[] | null>(null)
     const { data: user } = useSession()
@@ -70,8 +82,15 @@ export const NovoAtivoForm = () => {
         })
     }
 
+    const updateSugestaoList = (query: string) => {
+        getListaSugestao(query).then(data => setSugestaoList(data))
+    }
+
     const handleChange = useCallback(
         (event: React.ChangeEvent<HTMLInputElement>) => {
+            if (event.target.name === 'nome')
+                updateSugestaoList(event.target.value)
+
             setState((prevState: any) => ({
                 ...prevState,
                 [event.target.name]: event.target.value
@@ -194,12 +213,20 @@ export const NovoAtivoForm = () => {
                                             md={8}
                                         >
                                             <Stack spacing={3}>
-                                                <TextField
-                                                    fullWidth
-                                                    label="Nome"
-                                                    name="nome"
-                                                    onChange={handleChange}
-                                                    value={state.nome}
+                                                <Autocomplete
+                                                    freeSolo={true}
+                                                    options={sugestaoList.map((i: string) => (i))}
+
+                                                    renderInput={(params: any) => (
+                                                        <TextField
+                                                            {...params}
+                                                            fullWidth
+                                                            label="Nome"
+                                                            name="nome"
+                                                            onChange={handleChange}
+                                                            value={state.nome}
+                                                        />
+                                                    )}
                                                 />
                                                 <TextField
                                                     fullWidth

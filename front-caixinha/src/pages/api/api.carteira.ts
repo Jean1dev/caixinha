@@ -73,6 +73,11 @@ export async function getMinhasCarteiras(user: string, email: string) {
                 "nome": "minha-primeira-carteira",
                 "quantidadeAtivos": 0
             },
+            {
+                "id": "6496dee25b06ad77e23ccaad",
+                "nome": "outra carteira",
+                "quantidadeAtivos": 2
+            },
         ])
     }
 
@@ -193,4 +198,12 @@ export async function consolidar(carteira: string): Promise<void> {
     }
 
     return asyncFetch('/carteira/consolidar/' + carteira, 'POST')
+}
+
+export async function getListaSugestao(query: string): Promise<string[]> {
+    if (dev) {
+        return retornaComAtraso(['PETR4', 'ABCB4', 'ALUP11'])
+    }
+
+    return asyncFetch('/ativo/sugestao?query=' + query, 'GET')
 }

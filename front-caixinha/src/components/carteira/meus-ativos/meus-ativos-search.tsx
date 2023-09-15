@@ -162,13 +162,7 @@ export const MeusAtivosSearch = (props: any) => {
     const handleCarteiraChange = useCallback((values: any) => {
         setChips((prevChips: any) => {
             const valuesFound: any = [];
-
-            // First cleanup the previous chips
             const newChips = prevChips.filter((chip: ChipType) => {
-                if (chip.field !== 'status') {
-                    return true;
-                }
-
                 const found = values.includes(chip.value);
 
                 if (found) {
