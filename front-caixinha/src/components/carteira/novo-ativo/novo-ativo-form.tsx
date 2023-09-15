@@ -21,6 +21,7 @@ export const NovoAtivoForm = () => {
     const [state, setState] = useState<any>({
         tipoAtivo: ''
     })
+    
     const [sugestaoList, setSugestaoList] = useState<string[]>([])
     const [categoryOptions, setOptions] = useState<any[]>([])
     const [carteiras, setCarteiras] = useState<any[] | null>(null)
@@ -55,6 +56,7 @@ export const NovoAtivoForm = () => {
     const handleSubmit = async (e: React.ChangeEvent<HTMLFormElement>) => {
         e.preventDefault()
         toast.loading('Enviando dados')
+        console.log(state.nome)
         criarAtivo({
             tipoAtivo: state.tipoAtivo,
             nota: state.nota,
@@ -216,7 +218,7 @@ export const NovoAtivoForm = () => {
                                                 <Autocomplete
                                                     freeSolo={true}
                                                     options={sugestaoList.map((i: string) => (i))}
-
+                                                    onChange={(_, value) => setState({...state, nome: value})}
                                                     renderInput={(params: any) => (
                                                         <TextField
                                                             {...params}
