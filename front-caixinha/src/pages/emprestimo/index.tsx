@@ -359,7 +359,7 @@ export default function Emprestimo() {
                                 sx={{ mt: 2 }}
                                 variant="body2"
                             >
-                                Your purchases are secured by an industry best encryption
+                                Suas movimentacoes estao seguras by best encryption
                                 service – Braintree
                             </Typography>
                             <Button

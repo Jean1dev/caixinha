@@ -28,11 +28,12 @@ export const AtivosTable = (props: any) => {
     const {
         count = 0,
         items = [],
-        onPageChange = () => { },
+        onPageChange,
         onRowsPerPageChange,
         page = 0,
         rowsPerPage = 0
     } = props;
+    
     const [currentProduct, setCurrentProduct] = useState<any>(null);
     const [state, setState] = useState<any>({})
 
@@ -427,7 +428,7 @@ export const AtivosTable = (props: any) => {
                 onRowsPerPageChange={onRowsPerPageChange}
                 page={page}
                 rowsPerPage={rowsPerPage}
-                rowsPerPageOptions={[5, 10, 25]}
+                rowsPerPageOptions={[5, 20, 100]}
             />
         </div>
     );

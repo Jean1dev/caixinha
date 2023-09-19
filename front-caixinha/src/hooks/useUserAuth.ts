@@ -5,13 +5,27 @@ import { useSession } from "next-auth/react";
 import { setDefaultHeaders } from "@/pages/api/api.carteira";
 import { getDadosPerfil } from "@/pages/api/perfil";
 
+function getKeyPix(user: any): string {
+    const data = user['bankAccount']['keysPix']
+    if (data.length > 0)
+        return data[0]
+
+    return ''
+}
+
+function getUsernameAndMail(data: any) {
+    const username = data?.user?.name || ''
+    const email = data?.user?.email || ''
+    return { username, email }
+}
+
 export function useUserAuth() {
     const [user, setUser] = useState<IUser | null>({
         name: '',
         email: ''
     })
     const { data, status } = useSession()
-    const [storedUser, setStoredUser] = useLocalStorage<IUser | null>("caixinha-user1", null);
+    const [storedUser, setStoredUser] = useLocalStorage<IUser | null>("caixinha-user-stored", null);
 
     const updateUser = (userAuth: IUser | null) => {
         setStoredUser(userAuth);
@@ -29,28 +43,31 @@ export function useUserAuth() {
             return
         }
 
+        const { username, email } = getUsernameAndMail(data)
+
         if (!storedUser && data) {
-            setDefaultHeaders(data?.user?.name || '', data?.user?.email || '')
-            getDadosPerfil(data?.user?.email || '', data?.user?.name || '')
-                .then((r) => {
-                    if (r['_id']) {
+            setDefaultHeaders(username, email)
+            getDadosPerfil(email, username)
+                .then((responseUser) => {
+                    if (responseUser['_id']) {
                         updateUser({
-                            name: r['name'],
-                            email: r['email'],
-                            phone: r['phoneNumber'],
-                            photoUrl: r['photoUrl']
+                            name: responseUser['name'],
+                            email: responseUser['email'],
+                            phone: responseUser['phoneNumber'],
+                            photoUrl: responseUser['photoUrl'],
+                            pix: getKeyPix(responseUser)
                         })
                     } else {
                         updateUser({
-                            name: data?.user?.name || '',
-                            email: data?.user?.email || ''
+                            name: username,
+                            email
                         })
                     }
 
                 }).catch(() => {
                     updateUser({
-                        name: data?.user?.name || '',
-                        email: data?.user?.email || ''
+                        name: username,
+                        email
                     })
                 })
         }

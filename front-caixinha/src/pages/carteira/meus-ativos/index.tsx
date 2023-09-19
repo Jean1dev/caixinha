@@ -4,7 +4,7 @@ import { RouterLink } from "@/components/RouterLink";
 import { Seo } from "@/components/Seo";
 import { AtivosTable } from "@/components/carteira/meus-ativos/ativos-table";
 import { MeusAtivosSearch } from "@/components/carteira/meus-ativos/meus-ativos-search";
-import { getMeusAtivos, getMinhasCarteiras } from "@/pages/api/api.carteira";
+import { AtivoDto, MeusAtivosRequestFilter, SpringPage, getMeusAtivos, getMinhasCarteiras } from "@/pages/api/api.carteira";
 import { AtivoCarteira } from "@/types/types";
 import { PlusOneOutlined } from "@mui/icons-material";
 import {
@@ -19,7 +19,7 @@ import {
 } from "@mui/material";
 import Link from '@mui/material/Link';
 import { useSession } from "next-auth/react";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 interface MeusAtivoStateType {
     ativos: AtivoCarteira[]
@@ -31,25 +31,30 @@ interface MeusAtivoStateType {
 export default function MeusAtivos() {
     const [state, setstate] = useState<MeusAtivoStateType>({
         ativos: [],
-        page: 1,
+        page: 0,
         count: 10,
-        rowsPerPage: 10        
+        rowsPerPage: 5
     })
     const [loading, setLoading] = useState(true)
     const [carteiras, setCarteiras] = useState<any>([])
+    const [userFilters, setUserFilters] = useState({
+        carteira: [],
+        search: null,
+        tipo: []
+    })
     const { data } = useSession()
 
     useEffect(() => {
         getMinhasCarteiras(data?.user?.name || '', data?.user?.email || '')
             .then((carteiras: any) => {
                 if (carteiras.length > 0) {
-                    getMeusAtivos(carteiras[0]['id'])
-                        .then((ativos: AtivoCarteira[]) => {
+                    getMeusAtivos({ page: 0, size: 5, carteiras: [carteiras[0]['id']], tipos: null })
+                        .then((page: SpringPage<AtivoDto>) => {
                             setstate({
-                                ativos,
-                                page: 1,
-                                count: ativos.length,
-                                rowsPerPage: 10
+                                ativos: page.content,
+                                page: page.pageable.pageNumber,
+                                count: page.totalElements,
+                                rowsPerPage: page.size
                             })
 
                             setCarteiras(carteiras)
@@ -61,12 +66,36 @@ export default function MeusAtivos() {
             })
     }, [data])
 
-    const onFiltersChange = (filters: any) => {
-        console.log(filters)
+    const reloadData = useCallback((params: MeusAtivosRequestFilter) => {
+        getMeusAtivos(params)
+            .then((page: SpringPage<AtivoDto>) => {
+                setstate({
+                    ativos: page.content,
+                    page: page.pageable.pageNumber,
+                    count: page.totalElements,
+                    rowsPerPage: page.size
+                })
+            })
+    }, [])
+
+    const onFiltersChange = useCallback((filters: any) => {
+        console.log(filters, new Date().toString())
+        setUserFilters(filters)
+        reloadData({ page: state.page, size: state.rowsPerPage, carteiras: filters.carteira, tipos: filters.tipo })
+    }, [state])
+
+    const onPageChange = (params: any) => {
+        alert('onPageChange')
+        console.log('onPageChange', params)
+    }
+
+    const onRowsPerPageChange = (params: any) => {
+        const rows = params.target.value
+        reloadData({ page: state.page, size: rows, carteiras: userFilters.carteira, tipos: userFilters.tipo })
     }
 
     if (loading) {
-        return <CenteredCircularProgress/>
+        return <CenteredCircularProgress />
     }
 
     return (
@@ -142,10 +171,10 @@ export default function MeusAtivos() {
                             </Stack>
                         </Stack>
                         <Card>
-                            <MeusAtivosSearch onFiltersChange={onFiltersChange} carteiras={carteiras}/>
+                            <MeusAtivosSearch onFiltersChange={onFiltersChange} carteiras={carteiras} />
                             <AtivosTable
-                                onPageChange={() => { alert('click')}}
-                                onRowsPerPageChange={() => { alert('click')}}
+                                onPageChange={onPageChange}
+                                onRowsPerPageChange={onRowsPerPageChange}
                                 page={state.page}
                                 items={state.ativos}
                                 count={state.count}
