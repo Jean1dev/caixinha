@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { retornaComAtraso } from './api.service'
+import { asyncGetWithParamethers, retornaComAtraso } from './api.service'
 import { INovoAporte } from '@/types/types'
 
 function isDev() {
@@ -95,10 +95,40 @@ export interface AtivoDto {
     valorAtual: number
 }
 
-export async function getMeusAtivos(carteiraId: string): Promise<AtivoDto[]> {
+export interface SpringPage<T> {
+    content: T[]
+    pageable: Pageable
+    totalPages: number
+    totalElements: number
+    last: boolean
+    size: number
+    number: number
+    sort: any
+    numberOfElements: number
+    first: boolean
+    empty: boolean
+}
+
+export interface Pageable {
+    sort: any
+    offset: number
+    pageNumber: number
+    pageSize: number
+    paged: boolean
+    unpaged: boolean
+}
+
+export interface MeusAtivosRequestFilter {
+    page: number, 
+    size: number, 
+    carteiras: string[], 
+    tipos: string[] | null
+}
+
+export async function getMeusAtivos(params: MeusAtivosRequestFilter): Promise<SpringPage<AtivoDto>> {
     if (dev) {
-        return retornaComAtraso([
-            {
+        return retornaComAtraso({
+            content: [{
                 "id": "64a32459bc8fe91194c8e2b6",
                 "carteiraRef": "64a31a89e5be69144c4aac8c",
                 "tipoAtivo": "ACAO_NACIONAL",
@@ -139,11 +169,38 @@ export async function getMeusAtivos(carteiraId: string): Promise<AtivoDto[]> {
                 "ticker": "VALE3",
                 "valorRecomendado": 100.0,
                 "image": "https://s3-symbol-logo.tradingview.com/vale--600.png"
-            }
-        ])
+            }],
+            "pageable": {
+                "sort": {
+                    "empty": true,
+                    "sorted": false,
+                    "unsorted": true
+                },
+                "offset": 0,
+                "pageNumber": 0,
+                "pageSize": 10,
+                "paged": true,
+                "unpaged": false
+            },
+            "totalPages": 1,
+            "totalElements": 3,
+            "last": true,
+            "size": 5,
+            "number": 0,
+            "sort": {
+                "empty": true,
+                "sorted": false,
+                "unsorted": true
+            },
+            "numberOfElements": 3,
+            "first": true,
+            "empty": false
+        })
     }
 
-    return asyncFetch(`/carteira/meus-ativos/${carteiraId}`, 'GET')
+    return asyncGetWithParamethers(`/carteira/meus-ativos`, {
+        params
+    })
 }
 
 export async function getCriterios(tipo: string) {

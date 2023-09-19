@@ -22,14 +22,7 @@ export const InformacoesGeraisPerfil = () => {
     const { user, updateUser } = useUserAuth()
     const [loadingPhoto, setLoadingPhoto] = useState(false)
 
-    const [values, setValues] = useState({
-        firstName: '',
-        lastName: 'Visser',
-        email: '',
-        phone: 'user?.phone',
-        pix: '',
-        photoUrl: 'CPF'
-    });
+    const [values, setValues] = useState<any | null>(null);
 
     const updateProfile = () => {
         updatePerfil({
@@ -58,18 +51,17 @@ export const InformacoesGeraisPerfil = () => {
 
     useEffect(() => {
         setValues({
-            firstName: user?.name || '',
-            lastName: 'Visser',
-            email: user?.email || '',
-            phone: user?.phone || '',
-            pix: user?.pix || '',
-            photoUrl: user?.photoUrl || ''
+            firstName: user?.name,
+            email: user?.email,
+            phone: user?.phone,
+            pix: user?.pix,
+            photoUrl: user?.photoUrl
         })
     }, [user])
 
     const handleChange = useCallback(
         (event: React.ChangeEvent<HTMLInputElement>) => {
-            setValues((prevState) => ({
+            setValues((prevState: any) => ({
                 ...prevState,
                 [event.target.name]: event.target.value
             }));
@@ -223,7 +215,7 @@ export const InformacoesGeraisPerfil = () => {
                                         disabled={true}
                                         onChange={handleChange}
                                         required
-                                        value={values.firstName}
+                                        value={values?.firstName}
                                         sx={{ flexGrow: 1 }}
                                     />
                                 </Stack>
@@ -256,7 +248,7 @@ export const InformacoesGeraisPerfil = () => {
                                         disabled
                                         onChange={handleChange}
                                         required
-                                        value={values.email}
+                                        value={values?.email}
                                         sx={{
                                             flexGrow: 1,
                                             '& .MuiOutlinedInput-notchedOutline': {
@@ -277,7 +269,7 @@ export const InformacoesGeraisPerfil = () => {
                                         name="phone"
                                         onChange={handleChange}
                                         type="number"
-                                        value={values.phone}
+                                        value={values?.phone}
                                         sx={{ flexGrow: 1 }}
                                     />
                                 </Stack>
@@ -293,7 +285,7 @@ export const InformacoesGeraisPerfil = () => {
                                         name="pix"
                                         onChange={handleChange}
                                         required
-                                        value={values.pix}
+                                        value={values?.pix}
                                         sx={{ flexGrow: 1 }}
                                     />
                                 </Stack>

@@ -48,21 +48,22 @@ export const MeusAtivosSearch = (props: any) => {
             switch (chip.field) {
                 case 'tipo':
                     filters.tipo.push(chip.value);
+                    onFiltersChange?.(filters);
                     break;
                 case 'carteira':
                     filters.carteira.push(chip.value);
+                    onFiltersChange?.(filters);
                     break;
                 default:
                     break;
             }
         });
 
-        onFiltersChange?.(filters);
     }, [chips, onFiltersChange]);
 
     useEffect(() => {
         handleFiltersInputsChange();
-    }, [chips, handleFiltersInputsChange]);
+    }, [chips]);
 
     const handleChipDelete = useCallback((deletedChip: ChipType) => {
         setChips((prevChips) => {

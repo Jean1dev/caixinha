@@ -99,8 +99,7 @@ const carteiraRoutes = [
     {
         text: 'Meus ativos',
         path: 'carteira/meus-ativos',
-        icon: <CurrencyBitcoin />,
-        newFeature: true
+        icon: <CurrencyBitcoin />
     },
     {
         text: 'Novo aporte',

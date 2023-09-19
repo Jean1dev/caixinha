@@ -7,14 +7,16 @@ import { usePopover } from '@/hooks/usePopover';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import { NotificationsPopover } from './notificacoes-popover';
 
+interface NotificationType {
+  id: string
+  createdAt: string
+  description: string
+  read: boolean
+  type: 'new_feature' | 'job_add'
+}
+
 const useNotifications = () => {
-  const [notifications, setNotifications] = useState([{
-    id: '20d9df4f23fff19668d7031c',
-    createdAt: new Date().toISOString(),
-    description: 'Novo design disponivel',
-    read: false,
-    type: 'new_feature'
-  }]);
+  const [notifications, setNotifications] = useState<NotificationType[]>([]);
 
   const unread = useMemo(() => {
     return notifications.reduce((acc, notification) => acc + (notification.read ? 0 : 1), 0);
