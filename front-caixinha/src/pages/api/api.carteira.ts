@@ -198,7 +198,7 @@ export async function getMeusAtivos(params: MeusAtivosRequestFilter): Promise<Sp
         })
     }
 
-    return asyncGetWithParamethers(`/carteira/meus-ativos`, {
+    return asyncGetWithParamethers(`${baseURL}/carteira/meus-ativos`, {
         page: params.page,
         size: params.size,
         carteiras: params.carteiras.join(','),
