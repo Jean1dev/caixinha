@@ -198,7 +198,12 @@ export async function getMeusAtivos(params: MeusAtivosRequestFilter): Promise<Sp
         })
     }
 
-    return asyncGetWithParamethers(`/carteira/meus-ativos`, params)
+    return asyncGetWithParamethers(`/carteira/meus-ativos`, {
+        page: params.page,
+        size: params.size,
+        carteiras: params.carteiras.join(','),
+        tipos: params.tipos ? params.tipos.join(',') : null
+    })
 }
 
 export async function getCriterios(tipo: string) {
