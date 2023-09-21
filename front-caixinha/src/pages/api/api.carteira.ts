@@ -198,9 +198,7 @@ export async function getMeusAtivos(params: MeusAtivosRequestFilter): Promise<Sp
         })
     }
 
-    return asyncGetWithParamethers(`/carteira/meus-ativos`, {
-        params
-    })
+    return asyncGetWithParamethers(`/carteira/meus-ativos`, params)
 }
 
 export async function getCriterios(tipo: string) {
