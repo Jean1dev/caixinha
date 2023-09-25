@@ -8,8 +8,20 @@ import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
-import FormatListNumberedIcon from '@mui/icons-material/FormatListNumbered';
-import { AttachMoney, ListAltSharp, Home, ShowChartOutlined, CreditScore, Wallet, ChevronRight, ChevronLeft, CurrencyBitcoin, SavingsOutlined } from '@mui/icons-material';
+import {
+    AttachMoney,
+    ListAltSharp,
+    Home,
+    ShowChartOutlined,
+    ChevronRight,
+    ChevronLeft,
+    CurrencyBitcoin,
+    SavingsOutlined,
+    Reddit,
+    AssuredWorkload,
+    FiberNew,
+    Savings
+} from '@mui/icons-material';
 import { Chip, Link } from '@mui/material';
 
 const drawerWidth = 240;
@@ -66,17 +78,17 @@ const routes = [
     {
         text: 'Caixinhas',
         path: '/caixinhas-disponiveis',
-        icon: <FormatListNumberedIcon />
+        icon: <Savings />
     },
     {
         text: 'Novo emprestimo',
         path: 'emprestimo',
-        icon: <Wallet />
+        icon: <FiberNew />
     },
     {
         text: 'Meus emprestimos',
         path: 'meus-emprestimos',
-        icon: <CreditScore />
+        icon: <AssuredWorkload />
     },
     {
         text: 'Novo Deposito',
@@ -105,6 +117,15 @@ const carteiraRoutes = [
         text: 'Novo aporte',
         path: 'carteira/aporte',
         icon: <SavingsOutlined />,
+        newFeature: true
+    }
+]
+
+const socialRoutes = [
+    {
+        text: 'Feed',
+        path: 'feed',
+        icon: <Reddit />,
         newFeature: true
     }
 ]
@@ -153,6 +174,40 @@ export default function MiniDrawer({ open, handleDrawerClose }: any) {
             <Divider />
             <List>
                 {carteiraRoutes.map((it, index) => (
+                    <ListItem key={it.text} disablePadding sx={{ display: 'block' }}>
+                        <ListItemButton
+                            LinkComponent={Link}
+                            href={it.path}
+                            sx={{
+                                minHeight: 48,
+                                justifyContent: open ? 'initial' : 'center',
+                                px: 2.5,
+                            }}
+                        >
+                            <ListItemIcon
+                                sx={{
+                                    minWidth: 0,
+                                    mr: open ? 3 : 'auto',
+                                    justifyContent: 'center',
+                                }}
+                            >
+                                {it.icon}
+                            </ListItemIcon>
+                            <ListItemText primary={it.text} sx={{ opacity: open ? 1 : 0 }} />
+                            {it.newFeature && (
+                                <Chip
+                                    color="primary"
+                                    label="New"
+                                    size="small"
+                                />
+                            )}
+                        </ListItemButton>
+                    </ListItem>
+                ))}
+            </List>
+            <Divider />
+            <List>
+                {socialRoutes.map((it, index) => (
                     <ListItem key={it.text} disablePadding sx={{ display: 'block' }}>
                         <ListItemButton
                             LinkComponent={Link}

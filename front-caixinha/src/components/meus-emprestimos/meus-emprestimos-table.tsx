@@ -13,6 +13,7 @@ import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import { EmprestimoCaixinha, IMeusEmprestimos, LoansForApprove } from '@/types/types';
 import { Scrollbar } from '../scrollbar';
 import { useRouter } from 'next/router';
+import { getInitials } from '@/utils/utils';
 
 const agrupar = (items: IMeusEmprestimos) => {
     const data: any = {
@@ -29,14 +30,6 @@ const agrupar = (items: IMeusEmprestimos) => {
 
     return data
 };
-
-export const getInitials = (name: string = '') => name
-    .replace(/\s+/, ' ')
-    .split(' ')
-    .slice(0, 2)
-    .map((v) => v && v[0].toUpperCase())
-    .join('');
-
 
 const InvoiceRow = (props: any) => {
     const { invoice, goToDetalhesEmprestimo, ...other }: { invoice: LoansForApprove, goToDetalhesEmprestimo: any, other: any } = props;

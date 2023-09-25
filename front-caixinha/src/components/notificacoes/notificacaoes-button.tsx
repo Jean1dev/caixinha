@@ -6,6 +6,7 @@ import Tooltip from '@mui/material/Tooltip';
 import { usePopover } from '@/hooks/usePopover';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import { NotificationsPopover } from './notificacoes-popover';
+import useSocket from '@/hooks/useSocket';
 
 interface NotificationType {
   id: string
@@ -17,6 +18,9 @@ interface NotificationType {
 
 const useNotifications = () => {
   const [notifications, setNotifications] = useState<NotificationType[]>([]);
+  const socket = useSocket('my_notifications', () => {
+    console.log('my_notifications')
+  })
 
   const unread = useMemo(() => {
     return notifications.reduce((acc, notification) => acc + (notification.read ? 0 : 1), 0);
@@ -29,13 +33,17 @@ const useNotifications = () => {
   }, []);
 
   const handleMarkAllAsRead = useCallback(() => {
+    socket.send(JSON.stringify({
+      type: 'simple_message',
+      payload: ['isso', 'e', 'um', 'teste']
+    }))
     setNotifications((prevState) => {
       return prevState.map((notification) => ({
         ...notification,
         read: true
       }));
     });
-  }, []);
+  }, [socket]);
 
   return {
     handleMarkAllAsRead,

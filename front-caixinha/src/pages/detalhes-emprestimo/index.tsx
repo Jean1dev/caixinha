@@ -17,7 +17,6 @@ import { PagamentoEmprestimo } from "../../components/emprestimos/pagamento-empr
 import Grid from '@mui/material/Unstable_Grid2';
 import { RouterLink } from "@/components/RouterLink";
 import { Seo } from "@/components/Seo";
-import { getInitials } from "@/components/meus-emprestimos/meus-emprestimos-table";
 import { ArrowBackIos } from "@mui/icons-material";
 import { LoansForApprove } from "@/types/types";
 import { EmprestimoPdf } from "@/components/emprestimos/emprestimo-pdsf";
@@ -25,6 +24,7 @@ import { PDFDownloadLink } from "@react-pdf/renderer";
 import { getEmprestimo } from "../api/api.service";
 import { useRouter } from "next/router";
 import CenteredCircularProgress from "@/components/CenteredCircularProgress";
+import { getInitials } from "@/utils/utils";
 
 export default function DetalhesEmprestimo() {
     const [emprestimo, setEmprestimo] = useState<LoansForApprove | null>(null)

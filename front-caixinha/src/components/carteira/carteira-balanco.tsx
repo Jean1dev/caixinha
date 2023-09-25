@@ -1,4 +1,4 @@
-
+import NextLink from 'next/link';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
@@ -215,6 +215,8 @@ export const CarteiraBalanco = (props: any) => {
             <Divider />
             <CardActions>
                 <Button
+                    LinkComponent={NextLink}
+                    href="/carteira/aporte"
                     color="inherit"
                     endIcon={(
                         <SvgIcon fontSize="small">
