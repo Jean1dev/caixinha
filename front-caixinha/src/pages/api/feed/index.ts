@@ -13,7 +13,7 @@ export async function getMeuFeed(username: string) {
     if (state.isDev) {
         dados = await retornaComAtraso(data)
     } else {
-        dados = await asyncFetch(`${COMMUNICATION_SERVICE}/social-feed?username=${username}`, 'GET')
+        dados = await asyncFetch(`https://${COMMUNICATION_SERVICE}/social-feed?username=${username}`, 'GET')
     }
 
     state.cache.set(CACHE_KEY, dados)
