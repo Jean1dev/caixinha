@@ -1,3 +1,4 @@
+import { CAIXINHA_SERVICE, COMMUNICATION_SERVICE, STORAGE_SERVICE } from '@/constants/ApiConts'
 import axios from 'axios'
 
 function isDev() {
@@ -7,8 +8,8 @@ function isDev() {
     return process.env.NODE_ENV === 'development'
 }
 
-const BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'https://emprestimo-caixinha.azurewebsites.net/api'
-const URL_STORAGE_SERVER = 'https://storage-manager-svc.herokuapp.com'
+const BASE_URL = process.env.NEXT_PUBLIC_API_URL || CAIXINHA_SERVICE
+const URL_STORAGE_SERVER = STORAGE_SERVICE
 const BUCKET_STORAGE = 'binnoroteirizacao'
 
 const dev = isDev()
@@ -267,4 +268,44 @@ export async function sairDaCaixinha(body: any) {
     }
 
     return asyncFetch(`${BASE_URL}/remover-membro`, 'POST', body)
+}
+
+export async function publicarPost(payload: any) {
+    if (dev) {
+        return retornaComAtraso(true)
+    }
+
+    return asyncFetch(`${COMMUNICATION_SERVICE}/social-feed`, 'POST', payload)
+}
+
+export async function likePost(postId: string) {
+    if (dev) {
+        return retornaComAtraso(true)
+    }
+
+    return asyncFetch(`${COMMUNICATION_SERVICE}/social-feed/like`, 'POST', {
+        postId,
+        like: true,
+        unlike: false
+    })
+}
+
+export async function unlikePost(postId: string) {
+    if (dev) {
+        return retornaComAtraso(true)
+    }
+
+    return asyncFetch(`${COMMUNICATION_SERVICE}/social-feed/like`, 'POST', {
+        postId,
+        like: false,
+        unlike: true
+    })
+}
+
+export async function publicarComentario(payload: any) {
+    if (dev) {
+        return retornaComAtraso(true)
+    }
+
+    return asyncFetch(`${COMMUNICATION_SERVICE}/social-feed/comment`, 'POST', payload)
 }

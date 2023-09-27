@@ -1,6 +1,7 @@
 import axios from 'axios'
 import { asyncGetWithParamethers, retornaComAtraso } from './api.service'
 import { INovoAporte } from '@/types/types'
+import { CARTEIRA_SERVICE } from '@/constants/ApiConts'
 
 function isDev() {
     if (process.env.NEXT_PUBLIC_API_CARTEIRA)
@@ -10,7 +11,7 @@ function isDev() {
 }
 
 const dev = isDev()
-const baseURL = process.env.NEXT_PUBLIC_API_CARTEIRA || 'https://carteira-14bc707a7fab.herokuapp.com'
+const baseURL = process.env.NEXT_PUBLIC_API_CARTEIRA || CARTEIRA_SERVICE
 
 const http = axios.create({
     baseURL,

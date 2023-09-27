@@ -26,8 +26,7 @@ export const AlertNav = () => {
     }
 
     return (
-
-        <><Alert onClose={() => { setShow(false) }} severity="error" variant='filled' sx={{
+        <Alert onClose={() => { setShow(false) }} severity="error" variant='filled' sx={{
 
 
             backgroundColor: 'red',
@@ -38,7 +37,6 @@ export const AlertNav = () => {
             zIndex: (theme) => theme.zIndex.appBar + 2
         }}>
             <strong>ATENÇÃO</strong> Você precisa <strong>selecionar</strong> uma caixinha!
-        </Alert></>
-
+        </Alert>
     )
 };
