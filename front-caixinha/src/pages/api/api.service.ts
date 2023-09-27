@@ -274,6 +274,38 @@ export async function publicarPost(payload: any) {
     if (dev) {
         return retornaComAtraso(true)
     }
-    
-    return asyncFetch(`${COMMUNICATION_SERVICE}/something`, 'POST', payload)
+
+    return asyncFetch(`${COMMUNICATION_SERVICE}/social-feed`, 'POST', payload)
+}
+
+export async function likePost(postId: string) {
+    if (dev) {
+        return retornaComAtraso(true)
+    }
+
+    return asyncFetch(`${COMMUNICATION_SERVICE}/social-feed/like`, 'POST', {
+        postId,
+        like: true,
+        unlike: false
+    })
+}
+
+export async function unlikePost(postId: string) {
+    if (dev) {
+        return retornaComAtraso(true)
+    }
+
+    return asyncFetch(`${COMMUNICATION_SERVICE}/social-feed/like`, 'POST', {
+        postId,
+        like: false,
+        unlike: true
+    })
+}
+
+export async function publicarComentario(payload: any) {
+    if (dev) {
+        return retornaComAtraso(true)
+    }
+
+    return asyncFetch(`${COMMUNICATION_SERVICE}/social-feed/comment`, 'POST', payload)
 }

@@ -41,7 +41,12 @@ export const SocialPostAdd = (props: any) => {
 
     const post = () => {
         toast.loading('Publicando...')
-        publicarPost({ media, postText})
+        publicarPost({
+            authorName: user?.name,
+            authorAvatar: user?.photoUrl,
+            message: postText,
+            media
+        })
             .then(() => {
                 toast.success('publicado')
                 setPostText('')

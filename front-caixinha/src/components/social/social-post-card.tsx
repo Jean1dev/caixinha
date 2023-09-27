@@ -15,9 +15,11 @@ import Typography from '@mui/material/Typography';
 import { Favorite, HeartBroken, Schedule, Share } from '@mui/icons-material';
 import { SocialComment } from './social-comment';
 import { SocialCommentAdd } from './social-comment-add';
+import { likePost, unlikePost } from '@/pages/api/api.service';
 
 export const SocialPostCard = (props: any) => {
   const {
+    postId,
     authorAvatar,
     authorName,
     comments,
@@ -32,14 +34,16 @@ export const SocialPostCard = (props: any) => {
   const [likes, setLikes] = useState(likesProp);
 
   const handleLike = useCallback(() => {
+    likePost(postId)
     setIsLiked(true);
     setLikes((prevLikes: any) => prevLikes + 1);
-  }, []);
+  }, [postId]);
 
   const handleUnlike = useCallback(() => {
+    unlikePost(postId)
     setIsLiked(false);
     setLikes((prevLikes: any) => prevLikes - 1);
-  }, []);
+  }, [postId]);
 
   return (
     <Card {...other}>
@@ -181,7 +185,7 @@ export const SocialPostCard = (props: any) => {
           ))}
         </Stack>
         <Divider sx={{ my: 3 }} />
-        <SocialCommentAdd />
+        <SocialCommentAdd parentPostId={postId}/>
       </Box>
     </Card>
   );

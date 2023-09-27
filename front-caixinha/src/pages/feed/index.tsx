@@ -5,14 +5,20 @@ import { SocialPostCard } from "@/components/social/social-post-card";
 import { Box, Container, Stack, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 import { getMeuFeed } from "../api/feed";
+import { useUserAuth } from "@/hooks/useUserAuth";
 
 export default function Feed() {
     const [posts, setPosts] = useState([])
+    const { user } = useUserAuth()
 
     useEffect(() => {
-        getMeuFeed({})
+        const username = user?.name
+        if (!username)
+            return
+
+        getMeuFeed(username)
             .then((data: any) => setPosts(data))
-    }, [])
+    }, [user])
 
     return (
         <Layout>
@@ -44,6 +50,7 @@ export default function Feed() {
                         {posts.map((post: any) => (
                             <SocialPostCard
                                 key={post.id}
+                                postId={post.id}
                                 authorAvatar={post.author.avatar}
                                 authorName={post.author.name}
                                 comments={post.comments}

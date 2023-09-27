@@ -1,3 +1,5 @@
+import { useUserAuth } from '@/hooks/useUserAuth';
+import { publicarComentario } from '@/pages/api/api.service';
 import { getInitials } from '@/utils/utils';
 import { Attachment, Face, Image, Link, PlusOne } from '@mui/icons-material';
 import Avatar from '@mui/material/Avatar';
@@ -7,15 +9,27 @@ import Stack from '@mui/material/Stack';
 import SvgIcon from '@mui/material/SvgIcon';
 import TextField from '@mui/material/TextField';
 import useMediaQuery from '@mui/material/useMediaQuery';
+import { useState } from 'react';
+import toast from 'react-hot-toast';
 
 export const SocialCommentAdd = (props: any) => {
     const smUp = useMediaQuery((theme: any) => theme.breakpoints.up('sm'));
-    const user = {
-        id: '5e86809283e28b96d2d38537',
-        avatar: '/assets/avatars/avatar-anika-visser.png',
-        name: 'Anika Visser',
-        email: 'anika.visser@devias.io'
-    };
+    const { parentPostId } = props
+    const { user } = useUserAuth()
+    const [comment, setComment] = useState('')
+    const [disableButton, setDisableButton] = useState(false)
+
+    const reply = () => {
+        setDisableButton(true)
+        publicarComentario({
+            message: comment,
+            postId: parentPostId,
+            authorName: user?.name
+        }).then(() => {
+            toast.success('Comentario publicado')
+            setComment('')
+        })
+    }
 
     return (
         <div {...props}>
@@ -25,19 +39,21 @@ export const SocialCommentAdd = (props: any) => {
                 spacing={2}
             >
                 <Avatar
-                    src={user.avatar}
+                    src={user?.photoUrl}
                     sx={{
                         height: 40,
                         width: 40
                     }}
                 >
-                    {getInitials(user.name)}
+                    {getInitials(user?.name)}
                 </Avatar>
                 <Stack
                     spacing={3}
                     sx={{ flexGrow: 1 }}
                 >
                     <TextField
+                        value={comment}
+                        onChange={(e) => setComment(e.target.value)}
                         fullWidth
                         multiline
                         placeholder="Type your reply"
@@ -88,7 +104,7 @@ export const SocialCommentAdd = (props: any) => {
                             )}
                         </Stack>
                         <div>
-                            <Button variant="contained">
+                            <Button variant="contained" onClick={reply} disabled={disableButton}>
                                 Reply
                             </Button>
                         </div>

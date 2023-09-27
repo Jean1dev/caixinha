@@ -1,8 +1,8 @@
-import { TextField, Box, Button } from "@mui/material";
+import { Box, Button } from "@mui/material";
 import Grid from '@mui/material/Unstable_Grid2';
 
 export default function CarteiraStep1(props: any) {
-    const { carteira, setCarteira, criarCarteira } = props
+    const { criarCarteira } = props
 
     return (
         <Box sx={{ p: 3 }}>
@@ -15,14 +15,14 @@ export default function CarteiraStep1(props: any) {
                     spacing={3}
                 >
                     <Grid xs={12} md={6}>
-                        <TextField
+                        {/* <TextField
                             fullWidth
                             name="ativo"
                             label="Ativo"
                             value={carteira?.ativo}
                             defaultValue={''}
                             onChange={(e) => { setCarteira({ ...carteira, ativo: e.target.value }) }}
-                        />
+                        /> */}
                     </Grid>
                     <Grid xs={12} md={6}/>
                     
@@ -30,7 +30,7 @@ export default function CarteiraStep1(props: any) {
                         xs={12}
                         md={6}
                     >
-                        <TextField
+                        {/* <TextField
                             fullWidth
                             name="quantidade"
                             label="quantidade"
@@ -38,13 +38,13 @@ export default function CarteiraStep1(props: any) {
                             defaultValue={1}
                             type="number"
                             onChange={(e) => { setCarteira({ ...carteira, quantidade: e.target.value }) }}
-                        />
+                        /> */}
                     </Grid>
                     <Grid
                         xs={12}
                         md={6}
                     >
-                        <TextField
+                        {/* <TextField
                             fullWidth
                             name="nota"
                             label="nota"
@@ -52,7 +52,7 @@ export default function CarteiraStep1(props: any) {
                             defaultValue={0}
                             type="number"
                             onChange={(e) => { setCarteira({ ...carteira, nota: e.target.value }) }}
-                        />
+                        /> */}
                     </Grid>
 
 
