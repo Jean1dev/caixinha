@@ -275,7 +275,7 @@ export async function publicarPost(payload: any) {
         return retornaComAtraso(true)
     }
 
-    return asyncFetch(`${COMMUNICATION_SERVICE}/social-feed`, 'POST', payload)
+    return asyncFetch(`https://${COMMUNICATION_SERVICE}/social-feed`, 'POST', payload)
 }
 
 export async function likePost(postId: string) {
@@ -283,7 +283,7 @@ export async function likePost(postId: string) {
         return retornaComAtraso(true)
     }
 
-    return asyncFetch(`${COMMUNICATION_SERVICE}/social-feed/like`, 'POST', {
+    return asyncFetch(`https://${COMMUNICATION_SERVICE}/social-feed/like`, 'POST', {
         postId,
         like: true,
         unlike: false
@@ -295,7 +295,7 @@ export async function unlikePost(postId: string) {
         return retornaComAtraso(true)
     }
 
-    return asyncFetch(`${COMMUNICATION_SERVICE}/social-feed/like`, 'POST', {
+    return asyncFetch(`https://${COMMUNICATION_SERVICE}/social-feed/like`, 'POST', {
         postId,
         like: false,
         unlike: true
@@ -307,5 +307,5 @@ export async function publicarComentario(payload: any) {
         return retornaComAtraso(true)
     }
 
-    return asyncFetch(`${COMMUNICATION_SERVICE}/social-feed/comment`, 'POST', payload)
+    return asyncFetch(`https://${COMMUNICATION_SERVICE}/social-feed/comment`, 'POST', payload)
 }
