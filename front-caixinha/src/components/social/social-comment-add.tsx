@@ -24,7 +24,8 @@ export const SocialCommentAdd = (props: any) => {
         publicarComentario({
             message: comment,
             postId: parentPostId,
-            authorName: user?.name
+            authorName: user?.name,
+            authorAvatar: user?.photoUrl
         }).then(() => {
             toast.success('Comentario publicado')
             setComment('')
