@@ -16,6 +16,7 @@ import { Favorite, HeartBroken, Schedule, Share } from '@mui/icons-material';
 import { SocialComment } from './social-comment';
 import { SocialCommentAdd } from './social-comment-add';
 import { likePost, unlikePost } from '@/pages/api/api.service';
+import toast from 'react-hot-toast';
 
 export const SocialPostCard = (props: any) => {
   const {
@@ -44,6 +45,17 @@ export const SocialPostCard = (props: any) => {
     setIsLiked(false);
     setLikes((prevLikes: any) => prevLikes - 1);
   }, [postId]);
+
+  const copyToClipboard = useCallback(() => {
+    const currentUrl = window.location.href
+    navigator.clipboard.writeText(`${currentUrl}/${postId}`)
+      .then(() => {
+        toast.success('Link copiado para a área de transferência');
+      })
+      .catch(() => {
+        toast.error('Erro ao copiar o Link para a área de transferência:');
+      })
+  }, [postId])
 
   return (
     <Card {...other}>
@@ -165,7 +177,7 @@ export const SocialPostCard = (props: any) => {
             </Stack>
           </div>
           <div>
-            <IconButton>
+            <IconButton onClick={copyToClipboard}>
               <SvgIcon>
                 <Share />
               </SvgIcon>
@@ -185,7 +197,7 @@ export const SocialPostCard = (props: any) => {
           ))}
         </Stack>
         <Divider sx={{ my: 3 }} />
-        <SocialCommentAdd parentPostId={postId}/>
+        <SocialCommentAdd parentPostId={postId} />
       </Box>
     </Card>
   );

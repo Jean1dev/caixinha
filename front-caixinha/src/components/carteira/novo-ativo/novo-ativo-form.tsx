@@ -16,6 +16,7 @@ import { useState, useCallback, useEffect } from "react"
 import { DisplayResumoNota } from "./display-resumo-nota";
 import toast from "react-hot-toast";
 import { useSession } from "next-auth/react";
+import { publicarPost } from "@/pages/api/api.service";
 
 export const NovoAtivoForm = () => {
     const [state, setState] = useState<any>({
@@ -56,7 +57,7 @@ export const NovoAtivoForm = () => {
     const handleSubmit = async (e: React.ChangeEvent<HTMLFormElement>) => {
         e.preventDefault()
         toast.loading('Enviando dados')
-        console.log(state.nome)
+        
         criarAtivo({
             tipoAtivo: state.tipoAtivo,
             nota: state.nota,
@@ -67,6 +68,13 @@ export const NovoAtivoForm = () => {
         })
             .then(() => {
                 toast.success('Ativo adicionado')
+                // if perfil.publicarAoInvestir = true
+                publicarPost({
+                    message: `Estou investindo em ${state.nome}`,
+                    authorName: user?.user?.name as string,
+                    authorAvatar: user?.user?.image as string
+                })
+
                 setState({
                     identificacaoCarteira: state.identificacaoCarteira,
                     tipoAtivo: ''

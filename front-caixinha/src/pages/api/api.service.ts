@@ -1,5 +1,6 @@
 import { CAIXINHA_SERVICE, COMMUNICATION_SERVICE, STORAGE_SERVICE } from '@/constants/ApiConts'
 import axios from 'axios'
+import * as postData from './feed/data'
 
 function isDev() {
     if (process.env.NEXT_PUBLIC_API_URL)
@@ -270,7 +271,22 @@ export async function sairDaCaixinha(body: any) {
     return asyncFetch(`${BASE_URL}/remover-membro`, 'POST', body)
 }
 
-export async function publicarPost(payload: any) {
+export async function getPostInfo(postId: string) {
+    if (dev) {
+        return retornaComAtraso(postData.default[0])
+    }
+
+    return asyncFetch(`https://${COMMUNICATION_SERVICE}/social-feed`, 'GET')
+}
+
+export interface IPostPayload {
+    authorName?: string
+    authorAvatar?: string
+    message: string
+    media?: string | null
+}
+
+export async function publicarPost(payload: IPostPayload) {
     if (dev) {
         return retornaComAtraso(true)
     }
