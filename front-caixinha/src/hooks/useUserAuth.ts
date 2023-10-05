@@ -20,7 +20,7 @@ function getUsernameAndMail(data: any) {
 }
 
 export function useUserAuth() {
-    const [user, setUser] = useState<IUser | null>({
+    const [user, setUser] = useState<IUser>({
         name: '',
         email: ''
     })

@@ -2,16 +2,15 @@ import {
     Avatar,
     Box,
     Button,
-    Card,
-    CardContent,
     Chip,
     Container,
-    Divider,
     FormControl,
-    Grid,
-    InputAdornment,
+    FormLabel,
+    Unstable_Grid2 as Grid,
+    Link,
+    OutlinedInput,
     Stack,
-    TextField,
+    SvgIcon,
     Typography,
 } from "@mui/material"
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
@@ -20,14 +19,16 @@ import { FormEvent, Key, useCallback, useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
 import { doDeposito, getChavesPix, uploadResource } from '../api/api.service'
 import Layout from '@/components/Layout'
-import { useSession } from 'next-auth/react'
 import { useCaixinhaSelect } from '@/hooks/useCaixinhaSelect';
 import CenteredCircularProgress from '@/components/CenteredCircularProgress';
 import toast from 'react-hot-toast';
 import { Seo } from '@/components/Seo';
+import { useUserAuth } from "@/hooks/useUserAuth";
+import { ArrowBackIos, Mail } from "@mui/icons-material";
+import { RouterLink } from "@/components/RouterLink";
 
 export default function Deposito() {
-    const { data, status } = useSession()
+    const { user } = useUserAuth()
     const { caixinha } = useCaixinhaSelect()
     const router = useRouter()
     const [isLoading, setLoading] = useState(false)
@@ -41,16 +42,12 @@ export default function Deposito() {
     })
 
     useEffect(() => {
-        if (status === 'authenticated') {
-            setSolicitacao({
-                ...solicitacao,
-                //@ts-ignore
-                memberName: data['user']['name'],
-                //@ts-ignore
-                email: data['user']['email']
-            })
-        }
-    }, [data, status])
+        setSolicitacao({
+            ...solicitacao,
+            memberName: user.name,
+            email: user.email
+        })
+    }, [user])
 
     useEffect(() => {
         if (!caixinha)
@@ -133,148 +130,315 @@ export default function Deposito() {
 
     return (
         <Layout>
-            <Seo title="Deposito"/>
-            <main>
-                <Container maxWidth="lg">
-                    <Stack spacing={3}>
-                        <div>
-                            <Typography variant="h6">
-                                Depositando em {caixinha?.name}
-                            </Typography>
-                        </div>
-                        <Grid
-                            container
-                            spacing={3}
+            <Seo title="Contact" />
+            <Box
+                component="main"
+                sx={{
+                    display: 'grid',
+                    gridTemplateColumns: {
+                        lg: 'repeat(2, 1fr)',
+                        xs: 'repeat(1, 1fr)'
+                    },
+                    flexGrow: 1
+                }}
+            >
+                <Box
+                    sx={{
+                        backgroundColor: (theme) => theme.palette.mode === 'dark'
+                            ? 'neutral.800'
+                            : 'neutral.50',
+                        py: 8
+                    }}
+                >
+                    <Container
+                        maxWidth="md"
+                        sx={{ pl: { lg: 15 } }}
+                    >
+                        <Stack spacing={3}>
+                            <div>
+                                <Link
+                                    color="text.primary"
+                                    component={RouterLink}
+                                    href={'/'}
+                                    sx={{
+                                        alignItems: 'center',
+                                        display: 'inline-flex'
+                                    }}
+                                    underline="hover"
+                                >
+                                    <SvgIcon sx={{ mr: 1 }}>
+                                        <ArrowBackIos />
+                                    </SvgIcon>
+                                    <Typography variant="subtitle2">
+                                        Home
+                                    </Typography>
+                                </Link>
+                            </div>
+
+                        </Stack>
+                        <Stack
+                            alignItems="center"
+                            direction="row"
+                            spacing={2}
+                            sx={{
+                                mb: 6,
+                                mt: 8
+                            }}
                         >
-                            <Grid
-                                xs={12}
-                                md={6}
-                                lg={4}
+                            <Avatar
+                                sx={{
+                                    backgroundColor: 'primary.main',
+                                    color: 'primary.contrastText'
+                                }}
+                                variant="rounded"
                             >
-                                <Box p={2}>
-
-                                    <form onSubmit={request}>
-                                        <Grid container spacing={3}>
-                                            <Grid item xs={12}>
-                                                <FormControl fullWidth>
-                                                    <TextField
-                                                        required
-                                                        name="memberName"
-                                                        label="nome"
-                                                        disabled={true}
-                                                        value={solicitacao.memberName}
-                                                        defaultValue={solicitacao.memberName}
-                                                        onChange={handleChange}
-                                                        inputProps={{ "data-testid": "name" }}
-                                                    />
-                                                </FormControl>
-                                            </Grid>
-
-                                            <Grid item xs={12}>
-                                                <FormControl fullWidth>
-                                                    <TextField
-                                                        required
-                                                        name="email"
-                                                        label="email"
-                                                        type='email'
-                                                        value={solicitacao.email}
-                                                        defaultValue={solicitacao.email}
-                                                        onChange={handleChange}
-                                                        inputProps={{ "data-testid": "name" }}
-                                                    />
-                                                </FormControl>
-                                            </Grid>
-
-                                            <Box p={2}>
-
-                                                <TextField
-                                                    label="Valor depositado"
-                                                    id="outlined-start-adornment"
-                                                    defaultValue={solicitacao.valor}
-                                                    value={solicitacao.valor}
-                                                    onChange={handleChange}
-                                                    name='valor'
-                                                    type='number'
-                                                    sx={{ m: 1, width: '25ch' }}
-                                                    InputProps={{
-                                                        startAdornment: <InputAdornment position="start">R$</InputAdornment>,
-                                                    }}
-                                                />
-
-                                            </Box>
-
-                                            <Grid item xs={12}>
-                                                <Box display="row" gap={2}>
-                                                    {arquivos.map((item: { name: string, index: Key }) =>
-                                                        getChipByItem(item)
-                                                    )}
-
-                                                </Box>
-                                                <Box display="flex" gap={2}>
-
-                                                    <Button
-                                                        onClick={addComprovante}
-                                                        variant="contained"
-                                                        color="secondary"
-                                                    >
-                                                        Adicionar Comprovante
-                                                    </Button>
-                                                </Box>
-                                            </Grid>
-
-                                            <Grid item xs={12}>
-                                                <Box display="flex" gap={2}>
-
-                                                    <Button
-                                                        type="submit"
-                                                        variant="contained"
-                                                        color="primary"
-                                                    >
-                                                        Enviar
-                                                    </Button>
-                                                </Box>
-                                            </Grid>
-                                        </Grid>
-                                    </form>
-                                </Box>
-                            </Grid>
+                                <SvgIcon>
+                                    <Mail />
+                                </SvgIcon>
+                            </Avatar>
+                            <Typography variant="overline">
+                                Contato com administrador
+                            </Typography>
+                        </Stack>
+                        <Typography
+                            sx={{ mb: 3 }}
+                            variant="body1"
+                        >
+                            Se tiver algum duvida sobre os objetivos dessa caixinha, voce pode entrar em contato com os membros
+                        </Typography>
+                        <Typography
+                            color="primary"
+                            sx={{ mb: 3 }}
+                            variant="h6"
+                        >
+                            Faca um deposito e se junto a nossa comunidade
+                        </Typography>
+                        <Avatar
+                            src={pix?.url}
+                            variant="square"
+                            sx={{
+                                height: 400,
+                                mb: 2,
+                                width: 400
+                            }}
+                        />
+                        <Typography
+                            color="text.secondary"
+                            variant="body2"
+                        >
+                            Chave pix {pix?.chave}
+                        </Typography>
+                        <Stack
+                            alignItems="center"
+                            direction="row"
+                            flexWrap="wrap"
+                            gap={4}
+                            sx={{
+                                color: 'text.primary',
+                                '& > *': {
+                                    flex: '0 0 auto'
+                                }
+                            }}
+                        >
+                            {/* <LogoSamsung />
+                <LogoVisma />
+                <LogoBolt />
+                <LogoAws />
+                <LogoAccenture />
+                <LogoAtt /> */}
+                        </Stack>
+                    </Container>
+                </Box>
+                <Box
+                    sx={{
+                        backgroundColor: 'background.paper',
+                        px: 6,
+                        py: 15
+                    }}
+                >
+                    <Container
+                        maxWidth="md"
+                        sx={{
+                            pr: {
+                                lg: 15
+                            }
+                        }}
+                    >
+                        <Typography
+                            sx={{ pb: 3 }}
+                            variant="h6"
+                        >
+                            Depositando em {caixinha?.name}
+                        </Typography>
+                        <form onSubmit={request}>
                             <Grid
-                                xs={12}
-                                md={6}
-                                lg={8}
+                                container
+                                spacing={3}
                             >
-                                <Card>
-                                    <CardContent>
-                                        <Box
+                                <Grid
+                                    xs={12}
+                                    sm={6}
+                                >
+                                    <FormControl fullWidth>
+                                        <FormLabel
                                             sx={{
-                                                alignItems: 'center',
-                                                display: 'flex',
-                                                flexDirection: 'column'
+                                                color: 'text.primary',
+                                                mb: 1
                                             }}
                                         >
-                                            <Avatar
-                                                src={pix?.url}
-                                                sx={{
-                                                    height: 400,
-                                                    mb: 2,
-                                                    width: 400
-                                                }}
-                                            />
-                                            <Typography
-                                                color="text.secondary"
-                                                variant="body2"
-                                            >
-                                                Chave pix {pix?.chave}
-                                            </Typography>
-                                        </Box>
-                                    </CardContent>
-                                    <Divider />
-                                </Card>
+                                            Nome
+                                        </FormLabel>
+                                        <OutlinedInput
+                                            required
+                                            name="memberName"
+                                            disabled
+                                            value={solicitacao.memberName}
+                                            defaultValue={solicitacao.memberName}
+                                            onChange={handleChange}
+                                            inputProps={{ "data-testid": "name" }}
+                                        />
+                                    </FormControl>
+                                </Grid>
+                                <Grid
+                                    xs={12}
+                                    sm={6}
+                                >
+                                    <FormControl fullWidth>
+                                        <FormLabel
+                                            sx={{
+                                                color: 'text.primary',
+                                                mb: 1
+                                            }}
+                                        >
+                                            Email
+                                        </FormLabel>
+                                        <OutlinedInput
+                                            required
+                                            name="email"
+                                            type='email'
+                                            disabled
+                                            value={solicitacao.email}
+                                            defaultValue={solicitacao.email}
+                                            onChange={handleChange}
+                                            inputProps={{ "data-testid": "name" }}
+                                        />
+                                    </FormControl>
+                                </Grid>
+
+                                <Grid
+                                    xs={12}
+                                    sm={6}
+                                >
+                                    <FormControl fullWidth>
+                                        <FormLabel
+                                            sx={{
+                                                color: 'text.primary',
+                                                mb: 1
+                                            }}
+                                        >
+                                            Valor *
+                                        </FormLabel>
+                                        <OutlinedInput
+                                            id="outlined-start-adornment"
+                                            defaultValue={solicitacao.valor}
+                                            value={solicitacao.valor}
+                                            onChange={handleChange}
+                                            name='valor'
+                                            type='number'
+                                            sx={{ m: 1, width: '25ch' }}
+                                        // InputProps={{
+                                        //     startAdornment: <InputAdornment position="start">R$</InputAdornment>,
+                                        // }}
+                                        />
+                                    </FormControl>
+                                </Grid>
+                                <Grid xs={12}>
+                                    <Box display="row" gap={2}>
+                                        {arquivos.map((item: { name: string, index: Key }) =>
+                                            getChipByItem(item)
+                                        )}
+
+                                    </Box>
+                                    <Box display="flex" gap={2}>
+
+                                        <Button
+                                            onClick={addComprovante}
+                                            variant="contained"
+                                            color="secondary"
+                                        >
+                                            Adicionar Comprovante
+                                        </Button>
+                                    </Box>
+                                </Grid>
+                                <Grid xs={12}>
+                                    <FormControl fullWidth>
+                                        <FormLabel
+                                            sx={{
+                                                color: 'text.primary',
+                                                mb: 1
+                                            }}
+                                        >
+                                            Mensagem
+                                        </FormLabel>
+                                        <OutlinedInput
+                                            fullWidth
+                                            name="message"
+                                            required
+                                            multiline
+                                            rows={6}
+                                        />
+                                    </FormControl>
+                                </Grid>
                             </Grid>
-                        </Grid>
-                    </Stack>
-                </Container>
-            </main>
+                            <Box
+                                sx={{
+                                    display: 'flex',
+                                    justifyContent: 'center',
+                                    mt: 3
+                                }}
+                            >
+                                <Button
+                                    fullWidth
+                                    size="large"
+                                    variant="contained"
+                                    type="submit"
+                                >
+                                    Depositar
+                                </Button>
+                            </Box>
+                            <Typography
+                                color="text.secondary"
+                                sx={{ mt: 3 }}
+                                variant="body2"
+                            >
+                                By submitting this, you agree to the
+                                {' '}
+                                <Link
+                                    color="text.primary"
+                                    href="#"
+                                    underline="always"
+                                    variant="subtitle2"
+                                >
+                                    Privacy Policy
+                                </Link>
+                                {' '}
+                                and
+                                {' '}
+                                <Link
+                                    color="text.primary"
+                                    href="#"
+                                    underline="always"
+                                    variant="subtitle2"
+                                >
+                                    Cookie Policy
+                                </Link>
+                                .
+                            </Typography>
+                        </form>
+                    </Container>
+                </Box>
+            </Box>
         </Layout>
+
     )
 }

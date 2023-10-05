@@ -51,7 +51,7 @@ export const CaixinhaCard = ({ caixinha }: { caixinha: Caixinha }) => {
                     gutterBottom
                     variant="h5"
                 >
-                    {caixinha.currentBalance.value}
+                    {caixinha.currentBalance.value.toFixed(2)}
                 </DisplayValorMonetario>
                 <Typography
                     align="center"

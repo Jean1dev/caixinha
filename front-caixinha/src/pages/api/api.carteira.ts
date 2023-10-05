@@ -120,9 +120,9 @@ export interface Pageable {
 }
 
 export interface MeusAtivosRequestFilter {
-    page: number, 
-    size: number, 
-    carteiras: string[], 
+    page: number,
+    size: number,
+    carteiras: string[],
     tipos: string[] | null
 }
 
@@ -247,7 +247,62 @@ export async function removerAtivo(ativoId: string) {
 
 export async function calcularAporte(carteira: string, valor: number): Promise<INovoAporte> {
     if (dev) {
-        return retornaComAtraso(null)
+        return retornaComAtraso({
+            "recomendacaoAporteList": [
+                {
+                    "recomendacao": -39.5,
+                    "ativo": {
+                        "tipoAtivo": "ACAO_NACIONAL",
+                        "localAlocado": "IRBR3",
+                        "percentualRecomendado": 0.0,
+                        "valorAtual": 39.5,
+                        "nota": 5,
+                        "percentualTotal": 97.5,
+                        "quantidade": 1.0,
+                        "ticker": "IRBR3"
+                    }
+                },
+                {
+                    "recomendacao": -1.02,
+                    "ativo": {
+                        "tipoAtivo": "ACAO_NACIONAL",
+                        "localAlocado": "OIBR3",
+                        "percentualRecomendado": 0.0,
+                        "valorAtual": 1.02,
+                        "nota": 7,
+                        "percentualTotal": 2.5,
+                        "quantidade": 1.0,
+                        "ticker": "OIBR3"
+                    }
+                }
+            ],
+            "metaComValorRecomendados": [
+                {
+                    "tipoAtivo": "FII",
+                    "valorRecomendado": 9.828000000000001
+                },
+                {
+                    "tipoAtivo": "ACAO_INTERNACIONAL",
+                    "valorRecomendado": 6.552000000000001
+                },
+                {
+                    "tipoAtivo": "RENDA_FIXA",
+                    "valorRecomendado": 32.760000000000005
+                },
+                {
+                    "tipoAtivo": "ACAO_NACIONAL",
+                    "valorRecomendado": -30.692
+                },
+                {
+                    "tipoAtivo": "CRYPTO",
+                    "valorRecomendado": 0.0
+                },
+                {
+                    "tipoAtivo": "REITs",
+                    "valorRecomendado": 6.552000000000001
+                }
+            ]
+        })
     }
 
     return asyncFetch('/carteira/novo-aporte/' + carteira, 'POST', { valor })

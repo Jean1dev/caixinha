@@ -17,20 +17,29 @@ import {
 } from "@mui/material"
 import Grid from '@mui/material/Unstable_Grid2';
 import { useState, useCallback, useEffect } from "react"
-import { useSession } from "next-auth/react";
 import toast from "react-hot-toast";
 import { Scrollbar } from "@/components/scrollbar";
+import { INovoAporte, MetaComValorRecomendado, RecomendacaoAporteList } from "@/types/types";
+import { useUserAuth } from "@/hooks/useUserAuth";
+
+interface INovoAporteState {
+    valor: number
+    carteira: string
+    aporte: INovoAporte | null
+}
 
 export const NovoAporteForm = () => {
-    const [state, setState] = useState<any>({ valor: 0 })
+    const [state, setState] = useState<INovoAporteState>({ valor: 0, carteira: '', aporte: null })
     const [carteiras, setCarteiras] = useState<any[] | null>(null)
-    const { data: user } = useSession()
+    const { user } = useUserAuth()
 
     useEffect(() => {
-        if (!user?.user)
+        const name = user.name
+        const email = user.email
+        if (!name)
             return
-        //@ts-ignore
-        getMinhasCarteiras(user?.user?.name, user?.user?.email)
+        
+        getMinhasCarteiras(name, email)
             .then(response => {
                 setCarteiras(response)
                 if (response.length > 0) {
@@ -55,9 +64,9 @@ export const NovoAporteForm = () => {
     const calcular = useCallback(() => {
         toast.loading('Calculando')
         calcularAporte(state.carteira, state.valor)
-            .then((response) => setState({ aporte: response, ...state }))
+            .then((aporte: INovoAporte) => setState({ ...state, aporte }))
     }, [state])
-
+    console.log(state)
     return (
         <Stack spacing={4}>
             {
@@ -148,47 +157,85 @@ export const NovoAporteForm = () => {
             </Card>
             {
                 state.aporte && (
-                    <Card>
-                        <CardHeader title="Diagrama" />
-                        <Divider />
-                        <Scrollbar>
-                            <Table sx={{ minWidth: 700 }}>
-                                <TableHead>
-                                    <TableRow>
-                                        <TableCell>
-                                            Ativo
-                                        </TableCell>
-                                        <TableCell>
-                                            Percentual atual
-                                        </TableCell>
-                                        <TableCell>
-                                            Sugestao
-                                        </TableCell>
-                                    </TableRow>
-                                </TableHead>
-                                <TableBody>
-                                    {state.aporte.recomendacaoAporteList.map((item: any, index: any) => {
+                    <>
+                        <Card>
+                            <CardHeader title="Sugestao de acordo com as metas" />
+                            <Divider />
+                            <Scrollbar>
+                                <Table sx={{ minWidth: 700 }}>
+                                    <TableHead>
+                                        <TableRow>
+                                            <TableCell>
+                                                Tipo Ativo
+                                            </TableCell>
+                                            <TableCell>
+                                                Percentual atual
+                                            </TableCell>
+                                        </TableRow>
+                                    </TableHead>
+                                    <TableBody>
+                                        {state.aporte.metaComValorRecomendados.map((item: MetaComValorRecomendado, index: any) => {
 
-                                        return (
-                                            <TableRow key={index}>
-                                                <TableCell>
-                                                    <Typography variant="subtitle2">
-                                                        {item.ativo.ticker}
-                                                    </Typography>
-                                                </TableCell>
-                                                <TableCell>
-                                                    {item.ativo.percentualTotal}
-                                                </TableCell>
-                                                <TableCell>
-                                                    {item.recomendacao}
-                                                </TableCell>
-                                            </TableRow>
-                                        );
-                                    })}
-                                </TableBody>
-                            </Table>
-                        </Scrollbar>
-                    </Card>
+                                            return (
+                                                <TableRow key={index}>
+                                                    <TableCell>
+                                                        <Typography variant="subtitle2">
+                                                            {item.tipoAtivo}
+                                                        </Typography>
+                                                    </TableCell>
+                                                    <TableCell>
+                                                        {item.valorRecomendado.toFixed(2)}
+                                                    </TableCell>
+                                                </TableRow>
+                                            );
+                                        })}
+                                    </TableBody>
+                                </Table>
+                            </Scrollbar>
+                        </Card>
+                        <Divider />
+                        <Card>
+                            <CardHeader title="Sugestao de ativos" />
+                            <Divider />
+                            <Scrollbar>
+                                <Table sx={{ minWidth: 700 }}>
+                                    <TableHead>
+                                        <TableRow>
+                                            <TableCell>
+                                                Ativo
+                                            </TableCell>
+                                            <TableCell>
+                                                Percentual atual
+                                            </TableCell>
+                                            <TableCell>
+                                                Sugestao
+                                            </TableCell>
+                                        </TableRow>
+                                    </TableHead>
+                                    <TableBody>
+                                        {state.aporte.recomendacaoAporteList.map((item: RecomendacaoAporteList, index: any) => {
+
+                                            return (
+                                                <TableRow key={index}>
+                                                    <TableCell>
+                                                        <Typography variant="subtitle2">
+                                                            {item.ativo.ticker}
+                                                        </Typography>
+                                                    </TableCell>
+                                                    <TableCell>
+                                                        {item.ativo.percentualTotal.toFixed(2)}
+                                                    </TableCell>
+                                                    <TableCell>
+                                                        {item.recomendacao.toFixed(2)}
+                                                    </TableCell>
+                                                </TableRow>
+                                            );
+                                        })}
+                                    </TableBody>
+                                </Table>
+                            </Scrollbar>
+                        </Card>
+                    </>
                 )
             }
 

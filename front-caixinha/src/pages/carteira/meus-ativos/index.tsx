@@ -4,6 +4,7 @@ import { RouterLink } from "@/components/RouterLink";
 import { Seo } from "@/components/Seo";
 import { AtivosTable } from "@/components/carteira/meus-ativos/ativos-table";
 import { MeusAtivosSearch } from "@/components/carteira/meus-ativos/meus-ativos-search";
+import { useUserAuth } from "@/hooks/useUserAuth";
 import { AtivoDto, MeusAtivosRequestFilter, SpringPage, getMeusAtivos, getMinhasCarteiras } from "@/pages/api/api.carteira";
 import { AtivoCarteira } from "@/types/types";
 import { PlusOneOutlined } from "@mui/icons-material";
@@ -18,7 +19,6 @@ import {
     Card
 } from "@mui/material";
 import Link from '@mui/material/Link';
-import { useSession } from "next-auth/react";
 import { useCallback, useEffect, useState } from "react";
 
 interface MeusAtivoStateType {
@@ -42,10 +42,10 @@ export default function MeusAtivos() {
         search: null,
         tipo: []
     })
-    const { data } = useSession()
+    const { user } = useUserAuth()
 
     useEffect(() => {
-        getMinhasCarteiras(data?.user?.name || '', data?.user?.email || '')
+        getMinhasCarteiras(user.name, user.email)
             .then((carteiras: any) => {
                 if (carteiras.length > 0) {
                     getMeusAtivos({ page: 0, size: 5, carteiras: [carteiras[0]['id']], tipos: null })
@@ -64,7 +64,7 @@ export default function MeusAtivos() {
                     setLoading(false)
                 }
             })
-    }, [data])
+    }, [user])
 
     const reloadData = useCallback((params: MeusAtivosRequestFilter) => {
         getMeusAtivos(params)
