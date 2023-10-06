@@ -1,5 +1,16 @@
 import Layout from "@/components/Layout";
-import { Box, Button, FormControl, Grid, Paper, TextField, Typography } from "@mui/material";
+import {
+    Box,
+    Button,
+    Card,
+    CardContent,
+    Container,
+    FormControl,
+    Grid,
+    Stack,
+    TextField,
+    Typography
+} from "@mui/material";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { joinABox } from "../api/api.service";
@@ -9,6 +20,7 @@ import CenteredCircularProgress from "@/components/CenteredCircularProgress";
 import { toast } from "react-hot-toast";
 import DisplayValorMonetario from "@/components/display-valor-monetario";
 import { getCaixinhas } from "../api/caixinhas";
+import { Seo } from "@/components/Seo";
 
 export default function Join() {
     const { status, data } = useSession()
@@ -22,7 +34,7 @@ export default function Join() {
         currentBalance: 0,
         deposits: [],
         loans: [],
-        id: ""
+        id: ''
     })
 
     const router = useRouter()
@@ -40,10 +52,8 @@ export default function Join() {
     useEffect(() => {
         if (status === 'authenticated') {
             setFormData({
-                //@ts-ignore
-                nick: data['user']['name'],
-                //@ts-ignore
-                email: data['user']['email']
+                nick: data.user?.name as string,
+                email: data.user?.email as string
             })
         }
     }, [status])
@@ -60,11 +70,10 @@ export default function Join() {
 
         setLoading(true)
         joinABox(payload).then(() => {
-            toast.success('Você é um membro dessa caixinha agora')
+            alert('Você é um membro dessa caixinha agora')
             router.back()
         }).catch(err => {
             toast.error(err.message)
-            console.log(err)
             setLoading(false)
         })
     }
@@ -81,68 +90,80 @@ export default function Join() {
 
     return (
         <Layout>
-            <Box>
-                <Paper>
-                    <Box p={2}>
-                        <Box mb={2}>
-                            <Typography variant="h4">Participar da caixinha</Typography>
-                        </Box>
-                    </Box>
+            <Seo title="Participar da caixinha" />
+            <Box
+                component="main"
+                sx={{
+                    flexGrow: 1,
+                    py: 8
+                }}
+            >
+                <Container maxWidth="xl">
+                    <Stack
+                        spacing={3}
+                        sx={{ mb: 3 }} >
+                        <Typography variant="h4">
+                            Participar da caixinha
+                        </Typography>
+                    </Stack>
 
-                    <Box p={2}>
+                    <Stack spacing={4}>
+                        <Card>
+                            <CardContent>
 
-
-                        <Grid item xs={12} md={6} sx={{ "& .MuiTextField-root": { my: 2 } }}>
-                            <Box mt={2} mb={2}>
-                                <p>Total de membros dessa caixinha {box.members.length}</p>
-                                <p>Valor atual
-                                    <DisplayValorMonetario>
-                                        {box.currentBalance.value}
-                                    </DisplayValorMonetario>
-                                </p>
-                            </Box>
-                        </Grid>
-
-                        <form onSubmit={handleSubmit}>
-                            <Grid container spacing={4}>
                                 <Grid item xs={12} md={6} sx={{ "& .MuiTextField-root": { my: 2 } }}>
-                                    <FormControl fullWidth>
-                                        <TextField
-                                            name="nick"
-                                            label="Nick"
-                                            value={formData.nick}
-                                            onChange={handleChange}
-                                        />
-                                    </FormControl>
-                                    <FormControl fullWidth>
-                                        <TextField
-                                            name="email"
-                                            label="Email"
-                                            type="email"
-                                            value={formData.email}
-                                            onChange={handleChange}
-                                        />
-                                    </FormControl>
+                                    <Box mt={2} mb={2}>
+                                        <p>Total de membros dessa caixinha {box.members.length}</p>
+                                        <p>Valor atual
+                                            <DisplayValorMonetario>
+                                                {box.currentBalance.value}
+                                            </DisplayValorMonetario>
+                                        </p>
+                                    </Box>
                                 </Grid>
-                            </Grid>
 
-                            <Box display="flex" sx={{ my: 2 }} gap={2}>
-                                <Button variant="contained" color="secondary" onClick={back}>
-                                    Voltar
-                                </Button>
+                                <form onSubmit={handleSubmit}>
+                                    <Grid container spacing={4}>
+                                        <Grid item xs={12} md={6} sx={{ "& .MuiTextField-root": { my: 2 } }}>
+                                            <FormControl fullWidth>
+                                                <TextField
+                                                    name="nick"
+                                                    label="Nick"
+                                                    value={formData.nick}
+                                                    onChange={handleChange}
+                                                />
+                                            </FormControl>
+                                            <FormControl fullWidth>
+                                                <TextField
+                                                    name="email"
+                                                    label="Email"
+                                                    type="email"
+                                                    value={formData.email}
+                                                    onChange={handleChange}
+                                                />
+                                            </FormControl>
+                                        </Grid>
+                                    </Grid>
 
-                                <Button
-                                    type="submit"
-                                    color="primary"
-                                    variant="contained"
-                                >
-                                    Entrar
-                                </Button>
-                            </Box>
-                        </form>
-                    </Box>
+                                    <Box display="flex" sx={{ my: 2 }} gap={2}>
+                                        <Button variant="contained" color="secondary" onClick={back}>
+                                            Voltar
+                                        </Button>
 
-                </Paper>
+                                        <Button
+                                            type="submit"
+                                            color="primary"
+                                            variant="contained"
+                                        >
+                                            Entrar
+                                        </Button>
+                                    </Box>
+                                </form>
+                            </CardContent>
+                        </Card>
+                    </Stack>
+                </Container>
+
             </Box>
         </Layout>
     )

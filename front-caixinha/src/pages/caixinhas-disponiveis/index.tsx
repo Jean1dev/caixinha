@@ -5,7 +5,7 @@ import {
   Pagination,
   Stack
 } from '@mui/material'
-import React, { useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import Layout from '@/components/Layout'
 import { Caixinha } from '@/types/types'
 import { CaixinhaSearch } from '@/components/caixinha/CaixinhaSearch'
@@ -27,6 +27,10 @@ export default function Home() {
     }).catch(() => {
       router.push('error')
     })
+  }, [])
+
+  const search = useCallback((query: string) => {
+    getCaixinhas({ query }).then(r => setData(r))
   }, [])
 
   if (loading) {
@@ -57,7 +61,7 @@ export default function Home() {
               </Stack>
 
             </Stack>
-            <CaixinhaSearch />
+            <CaixinhaSearch search={search} />
             <Grid
               container
               spacing={{

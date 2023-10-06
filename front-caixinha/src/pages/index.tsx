@@ -103,7 +103,7 @@ export default function Home() {
               md={7}
             >
 
-              {card("Pagar emprestimo", "Pagar meu ultimo emprestimo pendente", () => { router.push('error') })}
+              {card("Depositar", "Fazer um novo deposito na minha caixinha", () => { router.push('deposito') })}
 
             </Grid>
 

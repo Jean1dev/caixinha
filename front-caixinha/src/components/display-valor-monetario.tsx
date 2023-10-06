@@ -9,13 +9,13 @@ export default function DisplayValorMonetario(props: any) {
         <Typography {...rest}>
             {showValoresMonetarios && (
                 <>
-                    R${children}
+                    R$ {children}
                 </>
             )}
             {
                 !showValoresMonetarios && (
                     <>
-                        R$**,**
+                        R$ **,**
                     </>
                 )
             }

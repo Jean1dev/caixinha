@@ -5,7 +5,7 @@ const { resolveCircularStructureBSON } = require('../utils')
 const sendSMS = require('../utils/sendSMS')
 const dispatchEvent = require('../amqp/events')
 
-async function deposito(context, req) {
+async function deposito(_context, req) {
     const { caixinhaId, valor, name, email, comprovante } = req.body
     const collection = 'caixinhas'
 
@@ -27,7 +27,7 @@ async function deposito(context, req) {
     sendSMS(`Novo deposito do ${name}`)
     dispatchEvent({
         type: 'DEPOSITO',
-        data: deposit
+        data: { image: comprovante, ...deposit }
     })
 }
 

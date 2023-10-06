@@ -75,7 +75,7 @@ export default function AnaliseCaixinha() {
                                 difference={113}
                                 positive
                                 sx={{ height: '100%' }}
-                                value={state.data?.saldoTotal}
+                                value={state.data?.saldoTotal.toFixed(2)}
                             />
                         </Grid>
                         <Grid
@@ -87,7 +87,7 @@ export default function AnaliseCaixinha() {
                                 difference={90}
                                 positive={false}
                                 sx={{ height: '100%' }}
-                                value={state.data?.totalDepositos}
+                                value={state.data?.totalDepositos.toFixed(2)}
                             />
                         </Grid>
                         <Grid
