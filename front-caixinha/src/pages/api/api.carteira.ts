@@ -308,6 +308,12 @@ export async function calcularAporte(carteira: string, valor: number): Promise<I
     return asyncFetch('/carteira/novo-aporte/' + carteira, 'POST', { valor })
 }
 
+export async function aportarNoAtivo(params: any) {
+    if (dev) {
+        return retornaComAtraso(true)
+    }
+}
+
 export async function consolidar(carteira: string): Promise<void> {
     if (dev) {
         return retornaComAtraso({})

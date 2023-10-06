@@ -12,17 +12,16 @@ import {
 import { Scrollbar } from "../scrollbar";
 import { useCallback, useEffect, useState } from "react";
 import { getMinhasCaixinhas } from "@/pages/api/caixinhas-disponiveis";
-import { useSession } from "next-auth/react";
 import { sairDaCaixinha } from "@/pages/api/api.service";
 import toast from "react-hot-toast";
+import { useUserAuth } from "@/hooks/useUserAuth";
 
 export const InformacoesCaixinhas = () => {
     const [caixinhas, setCaixinhas] = useState([])
-    const { data: user } = useSession()
+    const { user } = useUserAuth()
 
     useEffect(() => {
-        //@ts-ignore
-        getMinhasCaixinhas(user?.user?.name, user?.user?.email)
+        getMinhasCaixinhas(user.name, user.email)
             .then((c) => setCaixinhas(c))
     }, [user])
 
@@ -31,8 +30,8 @@ export const InformacoesCaixinhas = () => {
         if (resposta) {
             sairDaCaixinha({
                 caixinhaID,
-                name: user?.user?.name,
-                email: user?.user?.email
+                name: user.name,
+                email: user.email
             }).then(() => {
                 alert('voce saiu dessa caixinha')
                 window.location.reload()
@@ -50,6 +49,7 @@ export const InformacoesCaixinhas = () => {
                             <TableCell>
                                 nome
                             </TableCell>
+                            <TableCell/>
                         </TableRow>
                     </TableHead>
                     <TableBody>

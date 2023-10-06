@@ -21,6 +21,7 @@ import toast from "react-hot-toast";
 import { Scrollbar } from "@/components/scrollbar";
 import { INovoAporte, MetaComValorRecomendado, RecomendacaoAporteList } from "@/types/types";
 import { useUserAuth } from "@/hooks/useUserAuth";
+import { AporteModal } from "./aporte-modal";
 
 interface INovoAporteState {
     valor: number
@@ -32,13 +33,15 @@ export const NovoAporteForm = () => {
     const [state, setState] = useState<INovoAporteState>({ valor: 0, carteira: '', aporte: null })
     const [carteiras, setCarteiras] = useState<any[] | null>(null)
     const { user } = useUserAuth()
+    const [openAporteModal, setOpenAporteModal] = useState(false)
+    const [ativoSelecionado, setativoSelecionado] = useState<any>({})
 
     useEffect(() => {
         const name = user.name
         const email = user.email
         if (!name)
             return
-        
+
         getMinhasCarteiras(name, email)
             .then(response => {
                 setCarteiras(response)
@@ -53,6 +56,9 @@ export const NovoAporteForm = () => {
 
     const handleChange = useCallback(
         (event: React.ChangeEvent<HTMLInputElement>) => {
+            if (event.target.name === 'carteira') {
+                setOpenAporteModal(false)
+            }
             setState((prevState: any) => ({
                 ...prevState,
                 [event.target.name]: event.target.value
@@ -66,7 +72,15 @@ export const NovoAporteForm = () => {
         calcularAporte(state.carteira, state.valor)
             .then((aporte: INovoAporte) => setState({ ...state, aporte }))
     }, [state])
-    console.log(state)
+
+    const aportar = useCallback((item: RecomendacaoAporteList) => {
+        setOpenAporteModal(true)
+        setativoSelecionado({
+            ...item,
+            text: `Aportando em ${item.ativo.ticker}`
+        })
+    }, [])
+
     return (
         <Stack spacing={4}>
             {
@@ -210,6 +224,7 @@ export const NovoAporteForm = () => {
                                             <TableCell>
                                                 Sugestao
                                             </TableCell>
+                                            <TableCell />
                                         </TableRow>
                                     </TableHead>
                                     <TableBody>
@@ -228,6 +243,12 @@ export const NovoAporteForm = () => {
                                                     <TableCell>
                                                         {item.recomendacao.toFixed(2)}
                                                     </TableCell>
+
+                                                    <TableCell align="right">
+                                                        <Button onClick={() => aportar(item)}>
+                                                            Aportar
+                                                        </Button>
+                                                    </TableCell>
                                                 </TableRow>
                                             );
                                         })}
@@ -238,7 +259,12 @@ export const NovoAporteForm = () => {
                     </>
                 )
             }
-
+            <AporteModal
+                onClose={() => setOpenAporteModal(false)}
+                open={openAporteModal}
+                to={ativoSelecionado.text}
+                ativoAportando={ativoSelecionado}
+            />
         </Stack>
     )
 }
