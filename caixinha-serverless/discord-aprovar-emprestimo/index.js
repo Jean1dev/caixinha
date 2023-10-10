@@ -10,12 +10,12 @@ async function handle(context, req) {
 
     const caixinha = Box.fromJson(await getByIdOrThrow(caixinhaId))
     const emprestimo = caixinha.getLoanByUUID(emprestimoUid)
-
-    context.log(`emprestimo encontrado ${emprestimo.UUID}`)
     
     if (emprestimo.isApproved)
         return
 
+
+    context.log(`emprestimo encontrado ${emprestimo.UUID}`)        
     caixinha['members']
         .map(member => Member.build({ name: member.name, email: member.email }))
         .forEach(member => {
@@ -43,6 +43,12 @@ async function handle(context, req) {
             caixinhaid: caixinhaId
         }
     })
+
+    context.res = {
+        body: {
+            emprestimo
+        }
+    }
 }
 
 module.exports = async (context, req) => await middleware(context, req, handle)
