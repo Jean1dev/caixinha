@@ -45,6 +45,7 @@ async function handle(context, req) {
         return true
     })
 
+    caixinha['loans'].pop()
     await replaceDocumentById(caixinhaId, 'caixinhas', resolveCircularStructureBSON(caixinha))
     await upsert('emprestimos', { approved: true }, { uid: emprestimo.UUID })
     dispatch({
