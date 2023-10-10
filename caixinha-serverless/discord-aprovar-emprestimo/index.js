@@ -11,6 +11,8 @@ async function handle(context, req) {
     const caixinha = Box.fromJson(await getByIdOrThrow(caixinhaId))
     const emprestimo = caixinha.getLoanByUUID(emprestimoUid)
 
+    context.log(`emprestimo encontrado ${emprestimo.UUID}`)
+    
     if (emprestimo.isApproved)
         return
 
