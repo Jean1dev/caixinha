@@ -5,17 +5,19 @@ const middleware = require('../utils/middleware')
 const dispatch = require('../amqp/events')
 
 async function handle(context, req) {
-    await connect()
+    context.log(`function run ${new Date().toString()}`)
     const { caixinhaId, emprestimoUid } = req.body
 
+    await connect()
+
+    context.log(`conectado no mongo`)
     const caixinha = Box.fromJson(await getByIdOrThrow(caixinhaId))
     const emprestimo = caixinha.getLoanByUUID(emprestimoUid)
-    
+
     if (emprestimo.isApproved)
         return
 
-
-    context.log(`emprestimo encontrado ${emprestimo.UUID}`)        
+    context.log(`emprestimo encontrado ${emprestimo.UUID}`)
     caixinha['members']
         .map(member => Member.build({ name: member.name, email: member.email }))
         .forEach(member => {
