@@ -12,10 +12,20 @@ async function handle(context, req) {
 
     context.log(`conectado no mongo`)
     const caixinha = Box.fromJson(await getByIdOrThrow(caixinhaId))
+    context.log(`caixinha com ${caixinha.totalMembers} membros encontrada`)
+
     const emprestimo = caixinha.getLoanByUUID(emprestimoUid)
 
-    if (emprestimo.isApproved)
+    if (emprestimo.isApproved) {
+        context.res = {
+            status: 400,
+            body: {
+                message: `emprestimo ja foi aprovado`
+            }
+        }
+
         return
+    }
 
     context.log(`emprestimo encontrado ${emprestimo.UUID}`)
     caixinha['members']
