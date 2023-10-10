@@ -1,6 +1,6 @@
 const { resolveCircularStructureBSON } = require('../utils')
 const { Box, Member } = require('caixinha-core/dist/src')
-const { connect, getByIdOrThrow, replaceDocumentById } = require('../v2/mongo-operations')
+const { connect, getByIdOrThrow, replaceDocumentById, upsert } = require('../v2/mongo-operations')
 const middleware = require('../utils/middleware')
 const dispatch = require('../amqp/events')
 
