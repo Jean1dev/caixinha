@@ -1,5 +1,6 @@
-import { Key, useCallback, useState } from 'react';
+import { Key, useCallback, useEffect, useState } from 'react';
 import {
+    Avatar,
     Box,
     Button,
     Card,
@@ -10,16 +11,17 @@ import {
     Divider,
     Unstable_Grid2 as Grid,
     InputAdornment,
-    TextField
+    TextField,
+    Typography
 } from '@mui/material';
 import { LoansForApprove } from '@/types/types';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import CheckIcon from '@mui/icons-material/Check';
 import { useCaixinhaSelect } from '@/hooks/useCaixinhaSelect';
-import { pagarEmprestimo, uploadResource } from '../../pages/api/api.service';
+import { gerarLinkDePagamento, getBuckets, getChavesPix, pagarEmprestimo, uploadResource } from '../../pages/api/api.service';
 import CenteredCircularProgress from '@/components/CenteredCircularProgress';
-import { useSession } from 'next-auth/react';
 import { toast } from 'react-hot-toast';
+import { useUserAuth } from '@/hooks/useUserAuth';
 
 interface IProps {
     emprestimo: LoansForApprove,
@@ -28,10 +30,27 @@ interface IProps {
 export const PagamentoEmprestimo = ({ data }: { data: IProps }) => {
     const { caixinha } = useCaixinhaSelect()
     const [loading, setLoading] = useState(false)
-    const { data: user } = useSession()
+    const { user } = useUserAuth()
     const [blockButtons, setBlockButtons] = useState(false)
     const [valor, setValor] = useState(data.emprestimo.valueRequested)
     const [arquivos, setArquivo] = useState<any>([])
+    const [pix, setPix] = useState<any>(null)
+
+    useEffect(() => {
+        if (!caixinha)
+            return
+
+        getBuckets()
+        toast.loading('Carregando informacoes da chave pix')
+        getChavesPix(caixinha.id).then(res => {
+            if (res) {
+                setPix({
+                    chave: res.keysPix[0],
+                    url: res.urlsQrCodePix[0]
+                })
+            }
+        })
+    }, [caixinha])
 
     const addComprovante = () => {
         let input = document.createElement('input');
@@ -51,8 +70,8 @@ export const PagamentoEmprestimo = ({ data }: { data: IProps }) => {
     const pagar = useCallback(() => {
         setLoading(true)
         pagarEmprestimo({
-            name: user?.user?.name,
-            email: user?.user?.email,
+            name: user.name,
+            email: user.email,
             caixinhaId: caixinha?.id,
             emprestimoUid: data.emprestimo.uid,
             valor: Number(valor),
@@ -79,15 +98,36 @@ export const PagamentoEmprestimo = ({ data }: { data: IProps }) => {
         }).catch(e => toast.error(e.message))
     }
 
+    const gerarCobrancaImediata = useCallback(() => {
+        toast.loading('Gerando link de pagamento')
+    
+        gerarLinkDePagamento({
+            name: user.name,
+            email: user.email,
+            pix: user.pix,
+            valor: data.emprestimo.totalValue
+        }).then(() => {
+            alert('Link gerado, no momento so possivel acessar via o chat da caixinha no discord')
+            setBlockButtons(true)
+            toast.success('Seu pagamento sera processado de forma automatica')
+        }).catch(() => {
+            alert('Atencao, o servidor retornou que estao faltando informacoes essencias como CPF e chave Pix, verifique seu perfil e atualize seu cadastro')
+        })
+    }, [user, data])
+
     const getChipByItem = (item: any) => {
         if (item.status === 'success') {
             return (
-                <Chip key={item.index} label={item?.name} onDelete={() => { alert('adicionado') }} deleteIcon={<CheckIcon />} />
+                <p>
+                    <Chip key={item.index} label={`Upload realizado ${item?.name}`} onDelete={() => { alert('adicionado') }} deleteIcon={<CheckIcon />} />
+                </p>
             )
         }
 
         return (
-            <Chip key={item.index} label={item?.name} variant="outlined" onDelete={() => { uploadItem(item) }} deleteIcon={<CloudUploadIcon />} />
+            <p>
+                <Chip key={item.index} label={item?.name} variant="outlined" onDelete={() => { uploadItem(item) }} deleteIcon={<CloudUploadIcon />} />
+            </p>
         )
     }
 
@@ -145,6 +185,33 @@ export const PagamentoEmprestimo = ({ data }: { data: IProps }) => {
 
                         </Grid>
 
+                        {
+                            pix?.chave && (
+                                <Grid
+                                    xs={12}
+                                    md={6}
+                                >
+
+
+                                    <Avatar
+                                        src={pix?.url}
+                                        variant="square"
+                                        sx={{
+                                            height: 200,
+                                            mb: 2,
+                                            width: 200
+                                        }}
+                                    />
+                                    <Typography
+                                        color="text.secondary"
+                                        variant="body2"
+                                    >
+                                        Chave pix {pix?.chave}
+                                    </Typography>
+                                </Grid>
+                            )
+                        }
+
                     </Grid>
                 </Box>
             </CardContent>
@@ -153,7 +220,11 @@ export const PagamentoEmprestimo = ({ data }: { data: IProps }) => {
                 <Button onClick={pagar} disabled={blockButtons} variant="contained">
                     Efetuar pagamento
                 </Button>
+                <Button onClick={gerarCobrancaImediata} disabled={blockButtons} variant="outlined">
+                    Gerar link de pagamento
+                </Button>
             </CardActions>
         </Card>
     );
 };
+

@@ -25,7 +25,7 @@ export function useUserAuth() {
         email: ''
     })
     const { data, status } = useSession()
-    const [storedUser, setStoredUser] = useLocalStorage<IUser | null>("caixinha-user-stored", null);
+    const [storedUser, setStoredUser] = useLocalStorage<IUser | null>("caixinha-user-stored-v2", null);
 
     const updateUser = (userAuth: IUser | null) => {
         setStoredUser(userAuth);

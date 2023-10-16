@@ -17,7 +17,7 @@ import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import CheckIcon from '@mui/icons-material/Check';
 import { FormEvent, Key, useCallback, useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
-import { doDeposito, getChavesPix, uploadResource } from '../api/api.service'
+import { doDeposito, getBuckets, getChavesPix, uploadResource } from '../api/api.service'
 import Layout from '@/components/Layout'
 import { useCaixinhaSelect } from '@/hooks/useCaixinhaSelect';
 import CenteredCircularProgress from '@/components/CenteredCircularProgress';
@@ -53,6 +53,8 @@ export default function Deposito() {
         if (!caixinha)
             return
 
+        getBuckets()
+        toast.loading('Carregando informacoes da chave pix')
         getChavesPix(caixinha.id).then(res => {
             if (res) {
                 setPix({
@@ -117,7 +119,11 @@ export default function Deposito() {
     const getChipByItem = (item: any) => {
         if (item.status === 'success') {
             return (
-                <Chip key={item.index} label={item?.name} onDelete={() => { alert('adicionado') }} deleteIcon={<CheckIcon />} />
+                <p>
+                    <Chip key={item.index} label={`Upload realizado ${item.name}`} onDelete={() => {
+                        window.open(solicitacao.fileUrl, "_blank")
+                    }} deleteIcon={<CheckIcon />} />
+                </p>
             )
         }
 
@@ -383,7 +389,6 @@ export default function Deposito() {
                                         <OutlinedInput
                                             fullWidth
                                             name="message"
-                                            required
                                             multiline
                                             rows={6}
                                         />

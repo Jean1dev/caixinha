@@ -43,6 +43,10 @@ const state = {
 export default state
 
 export function getBuckets() {
+    if (dev) {
+        return
+    }
+    
     http.get(`${URL_STORAGE_SERVER}/v1/s3/buckets`).then(({ data }) => {
         console.log(data)
     }).catch(() => {
@@ -69,11 +73,15 @@ export async function uploadResource(resourceFile: string | Blob) {
         data: form
     };
 
+    if (dev) {
+        return 'https://teletime.com.br/wp-content/uploads/2021/06/Itau_berrini_6-scaled.jpeg'
+    }
+
     const response = await axios.request(options)
 
-    if (dev) {
-        return response.data.storageLocaion
-    }
+    // if (dev) {
+    //     return response.data.storageLocaion
+    // }
 
     return response.data
 }
@@ -250,7 +258,7 @@ export async function getEmprestimo(uid: string) {
             "totalValue": 5.15,
             "approved": true,
             "uid": "044b0dd2-a21f-4b6f-b0f1-f93865e0ead0",
-            "memberName": "jean",
+            "memberName": "Jeanluca FP",
             "parcelas": 0,
             "billingDates": [
                 {
@@ -270,6 +278,21 @@ export async function sairDaCaixinha(body: any) {
     }
 
     return asyncFetch(`${BASE_URL}/remover-membro`, 'POST', body)
+}
+
+export interface IGerarLinkPagamentoBody {
+    name: string
+    email: string
+    valor?: number
+    pix?: string
+}
+
+export async function gerarLinkDePagamento(body: IGerarLinkPagamentoBody) {
+    if (dev) {
+        return retornaComAtraso(true)
+    }
+
+    return asyncFetch(`${BASE_URL}/gerar-link-pagamento`, 'POST', body)
 }
 
 export async function getPostInfo(postId: string) {

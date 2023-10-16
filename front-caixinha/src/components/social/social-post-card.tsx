@@ -83,7 +83,6 @@ export const SocialPostCard = (props: any) => {
             >
               {createdAt}
               {' '}
-              ago
             </Typography>
           </Stack>
         )}

@@ -3,12 +3,18 @@ const { MongoClient, ObjectId, ServerApiVersion } = require("mongodb");
 const uri = process.env.MONGO_CONNECTION || 'mongodb://localhost:27017/caixinha'
 const database = 'caixinha'
 
-const client = new MongoClient(uri, {
+let client = new MongoClient(uri, {
     serverApi: ServerApiVersion.v1
 });
 
 async function connect() {
     await client.connect()
+}
+
+async function makeNewClient(newUri) {
+    client = new MongoClient(newUri, {
+        serverApi: ServerApiVersion.v1
+    });
 }
 
 async function getDocumentById(id, collection = 'caixinhas') {
@@ -74,5 +80,6 @@ module.exports = {
     deleteAll,
     findWithLimit,
     upsert,
-    findOrderByDesc
+    findOrderByDesc,
+    makeNewClient
 }

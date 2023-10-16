@@ -15,7 +15,6 @@ import { FormEvent, useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
 import { doEmprestimo, getValorParcelas } from '../api/api.service'
 import Layout from '@/components/Layout'
-import { useSession } from 'next-auth/react'
 import { useCaixinhaSelect } from '@/hooks/useCaixinhaSelect'
 import CenteredCircularProgress from '@/components/CenteredCircularProgress'
 import toast from 'react-hot-toast'
@@ -23,9 +22,10 @@ import { RouterLink } from '@/components/RouterLink'
 import { Seo } from '@/components/Seo'
 import { ArrowBackIos, ArrowRight, Lock } from '@mui/icons-material'
 import { EmprestimoResumo } from '@/components/emprestimos/emprestimo-resumo'
+import { useUserAuth } from "@/hooks/useUserAuth";
 
 export default function Emprestimo() {
-    const { data, status } = useSession()
+    const { user } = useUserAuth()
     const router = useRouter()
     const { caixinha } = useCaixinhaSelect()
     const [isLoading, setLoading] = useState(false)
@@ -43,16 +43,12 @@ export default function Emprestimo() {
     })
 
     useEffect(() => {
-        if (status === 'authenticated') {
-            setSolicitacao({
-                ...solicitacao,
-                //@ts-ignore
-                name: data['user']['name'],
-                //@ts-ignore
-                email: data['user']['email']
-            })
-        }
-    }, [data, status])
+        setSolicitacao({
+            ...solicitacao,
+            name: user.name,
+            email: user.email
+        })
+    }, [user])
 
     useEffect(() => {
         if (!solicitacao.parcela) {

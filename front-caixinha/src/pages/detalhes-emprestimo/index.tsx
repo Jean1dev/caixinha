@@ -10,7 +10,6 @@ import {
     SvgIcon, 
     Typography 
 } from "@mui/material";
-import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 import { GestaoEmprestimo } from "../../components/emprestimos/gestao-emprestimo";
 import { PagamentoEmprestimo } from "../../components/emprestimos/pagamento-emprestimo";
@@ -25,20 +24,21 @@ import { getEmprestimo } from "../api/api.service";
 import { useRouter } from "next/router";
 import CenteredCircularProgress from "@/components/CenteredCircularProgress";
 import { getInitials } from "@/utils/utils";
+import { useUserAuth } from "@/hooks/useUserAuth";
 
 export default function DetalhesEmprestimo() {
     const [emprestimo, setEmprestimo] = useState<LoansForApprove | null>(null)
     const [isMeuEmprestimo, setMeuEmprestimo] = useState(false)
-    const { data } = useSession()
+    const { user } = useUserAuth()
     const router = useRouter()
 
     useEffect(() => {
-        if (data?.user?.name === emprestimo?.memberName) {
+        if (user.name === emprestimo?.memberName) {
             setMeuEmprestimo(true)
         } else {
             setMeuEmprestimo(false)
         }
-    }, [data, emprestimo])
+    }, [user, emprestimo])
 
     useEffect(() => {
         const { uid } = router.query
@@ -86,7 +86,7 @@ export default function DetalhesEmprestimo() {
                                             <ArrowBackIos />
                                         </SvgIcon>
                                         <Typography variant="subtitle2">
-                                            {isMeuEmprestimo ? 'Detalhes do seu emprestimo' : `Detalhes do emprestimo do ${emprestimo.memberName}`}
+                                            Seus emprestimos
                                         </Typography>
                                     </Link>
                                 </div>

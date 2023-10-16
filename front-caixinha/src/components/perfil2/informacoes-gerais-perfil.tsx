@@ -31,9 +31,9 @@ export const InformacoesGeraisPerfil = () => {
             user: {
                 phone: values.phone,
                 photoUrl: user?.photoUrl,
-                accounts: [{
+                accounts: {
                     keyPix: values.pix
-                }]
+                }
             }
         }).then(() => {
             updateUser({
