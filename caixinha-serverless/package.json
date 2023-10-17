@@ -5,6 +5,7 @@
   "scripts": {
     "start": "func start",
     "test": "jest",
+    "jest-detect-open-handles": "jest --forceExit --detectOpenHandles",
     "coverage": "jest --coverage"
   },
   "dependencies": {

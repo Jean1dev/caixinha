@@ -13,9 +13,15 @@ function getContext() {
 const collectionName = 'membros'
 
 describe('deve testar a funcao de update profile', () => {
+    let mongod
+
     beforeAll(async () => {
-        const mongod = await MongoMemoryServer.create()
+        mongod = await MongoMemoryServer.create()
         await makeNewClient(mongod.getUri())
+    })
+
+    afterAll(async () => {
+        await mongod.stop()
     })
 
     it('deve criar um usuario novo completo com sucesso', async () => {

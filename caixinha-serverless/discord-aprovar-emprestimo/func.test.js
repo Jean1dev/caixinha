@@ -12,10 +12,15 @@ function getContext() {
 }
 
 describe('discord aprovar emprestimo function test', () => {
+    let mongod
 
     beforeAll(async () => {
-        const mongod = await MongoMemoryServer.create()
+        mongod = await MongoMemoryServer.create()
         await makeNewClient(mongod.getUri())
+    })
+
+    afterAll(async () => {
+        await mongod.stop()
     })
 
     it('deve lancar execao pq o passou um emprestimo inexistente', async () => {
