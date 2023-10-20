@@ -13,6 +13,7 @@ import { useSession } from "next-auth/react";
 import { MinhasCarteirasList } from "@/components/carteira/minhas-carteiras-list";
 import { ResumoMercado } from "@/components/carteira/resumo-mercado";
 import toast from "react-hot-toast";
+import { InfiteSlideDisplayAcoes } from "@/components/carteira/infinite-slide";
 
 export default function Carteira() {
     const settings = useSettings();
@@ -39,6 +40,7 @@ export default function Carteira() {
     return (
         <Layout>
             <Seo title="Carteira dashboard" />
+            <InfiteSlideDisplayAcoes/>
             <Box
                 component="main"
                 sx={{
