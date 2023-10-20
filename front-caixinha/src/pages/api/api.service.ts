@@ -300,7 +300,7 @@ export async function getPostInfo(postId: string) {
         return retornaComAtraso(postData.default[0])
     }
 
-    return asyncFetch(`https://${COMMUNICATION_SERVICE}/social-feed`, 'GET')
+    return asyncFetch(`https://${COMMUNICATION_SERVICE}/social-feed/${postId}`, 'GET')
 }
 
 export interface IPostPayload {
