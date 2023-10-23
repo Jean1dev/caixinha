@@ -333,50 +333,29 @@ export async function getListaSugestao(query: string): Promise<string[]> {
 }
 
 export async function getSlideAcoes(): Promise<any[]> {
-    return retornaComAtraso([{
-        ticker: 'PETR4',
-        type: '-',
-        variation: 2.34
-    }, {
-        ticker: 'ABCB4',
-        type: '+',
-        variation: 0.15
-    }, {
-        ticker: 'ALUP11',
-        type: '+',
-        variation: 5.34
-    }, {
-        ticker: 'AAPL',
-        type: '-',
-        variation: 2.34
-    }, {
-        ticker: 'TOTS3',
-        type: '+',
-        variation: 1
-    }])
-    // if (dev) {
-    //     return retornaComAtraso([{
-    //         ticker: 'PETR4',
-    //         type: '-',
-    //         variation: 2.34
-    //     }, {
-    //         ticker: 'ABCB4',
-    //         type: '+',
-    //         variation: 0.15
-    //     }, {
-    //         ticker: 'ALUP11',
-    //         type: '+',
-    //         variation: 5.34
-    //     }, {
-    //         ticker: 'AAPL',
-    //         type: '-',
-    //         variation: 2.34
-    //     }, {
-    //         ticker: 'TOTS3',
-    //         type: '+',
-    //         variation: 1
-    //     }])
-    // }
+    if (dev) {
+        return retornaComAtraso([{
+            ticker: 'PETR4',
+            type: '-',
+            variation: 2.34
+        }, {
+            ticker: 'ABCB4',
+            type: '+',
+            variation: 0.15
+        }, {
+            ticker: 'ALUP11',
+            type: '+',
+            variation: 5.34
+        }, {
+            ticker: 'AAPL',
+            type: '-',
+            variation: 2.34
+        }, {
+            ticker: 'TOTS3',
+            type: '+',
+            variation: 1
+        }])
+    }
 
-    // return asyncFetch('/ativo/sugestao?query=', 'GET')
+    return asyncFetch('/quote', 'GET')
 }
