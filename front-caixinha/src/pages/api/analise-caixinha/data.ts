@@ -1,6 +1,8 @@
 export default {
     saldoTotal: 102,
     totalDepositos: 1600,
+    totalEmprestimos: 1100,
+    totalJuros: 35.2,
     movimentacoes: [{
         id: 'f69f88012978187a6c12897f',
         tipo: 'DEPOSITO',

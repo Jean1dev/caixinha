@@ -24,6 +24,26 @@ function calcularPorcentagemDoTotal(valor, total) {
     return parseFloat(porcentagemArredondada);
 }
 
+function calcularTotalJuros(boxEntity) {
+    let total = 0
+    if (boxEntity.performance) {
+        total = boxEntity.performance
+            .map(it => (it.value.value))
+            .reduce((acumulator, value) => acumulator + value, 0)
+    }
+
+    const totalJurosEmprestado = boxEntity.loans
+        .filter(it => it.approved)
+        .map(it => {
+            const valueRequested = it.valueRequested.value
+            const totalValue = it.totalValue.value
+            return totalValue - valueRequested
+        })
+        .reduce((acumulator, value) => acumulator + value, 0)
+
+    return total + totalJurosEmprestado
+}
+
 async function dadosAnalise(context, req) {
     const caixinhaId = req.query.caixinhaId
 
@@ -55,6 +75,12 @@ async function dadosAnalise(context, req) {
     }
 
     const totalDepositos = depositos.map(it => (it.value.value)).reduce((acumulator, value) => acumulator + value, 0)
+    const totalEmprestimos = boxEntity.loans
+        .filter(it => it.approved)
+        .map(it => (it.valueRequested.value))
+        .reduce((acumulator, value) => acumulator + value, 0)
+
+    const totalJuros = calcularTotalJuros(boxEntity)
     const percentuais = {
         series: [],
         labels: []
@@ -83,6 +109,8 @@ async function dadosAnalise(context, req) {
     const result = {
         saldoTotal: boxEntity.currentBalance.value,
         totalDepositos,
+        totalJuros,
+        totalEmprestimos,
         movimentacoes,
         percentuais,
         evolucaoPatrimonial,

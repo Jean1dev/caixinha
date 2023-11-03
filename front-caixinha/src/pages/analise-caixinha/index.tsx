@@ -1,6 +1,5 @@
 import { Box, Button, Card, CardContent, Container, Unstable_Grid2 as Grid, Typography } from '@mui/material';
-import { SaldoTotal } from '../../components/analise-caixinha/saldo-total';
-import { TotalDepositos } from '../../components/analise-caixinha/total-depositos';
+import { CardTotal } from '../../components/analise-caixinha/card-total';
 import { GraficoPizzaMembros } from '../../components/analise-caixinha/grafico-pizza-membros';
 import { UltimasMovimentacoes } from '@/components/analise-caixinha/ultimas-movimentacoes';
 import Layout from '@/components/Layout';
@@ -10,6 +9,7 @@ import CenteredCircularProgress from '@/components/CenteredCircularProgress';
 import { EvolucaoPatrimonial } from '@/components/analise-caixinha/evolucao-patrimonial';
 import { Participantes } from '@/components/analise-caixinha/participantes';
 import { getDadosAnaliseCaixinha } from '../api/analise-caixinha';
+import { VerifiedUserSharp, SavingsRounded, AccountBalance, AccountBalanceWallet } from '@mui/icons-material';
 
 export default function AnaliseCaixinha() {
     const router = useRouter()
@@ -71,11 +71,14 @@ export default function AnaliseCaixinha() {
                             sm={6}
                             lg={3}
                         >
-                            <SaldoTotal
+                            <CardTotal
                                 difference={113}
                                 positive
                                 sx={{ height: '100%' }}
                                 value={state.data?.saldoTotal.toFixed(2)}
+                                displayText="Saldo total"
+                                displayText2="CDI"
+                                icon={(<SavingsRounded />)}
                             />
                         </Grid>
                         <Grid
@@ -83,11 +86,14 @@ export default function AnaliseCaixinha() {
                             sm={6}
                             lg={3}
                         >
-                            <TotalDepositos
+                            <CardTotal
                                 difference={90}
                                 positive={false}
                                 sx={{ height: '100%' }}
                                 value={state.data?.totalDepositos.toFixed(2)}
+                                displayText="Total depositos"
+                                displayText2="comparação ao mes passado"
+                                icon={(<VerifiedUserSharp />)}
                             />
                         </Grid>
                         <Grid
@@ -95,20 +101,29 @@ export default function AnaliseCaixinha() {
                             sm={6}
                             lg={3}
                         >
-                            {/* <OverviewTasksProgress
+                            <CardTotal
+                                difference={40}
+                                positive={true}
                                 sx={{ height: '100%' }}
-                                value={75.5}
-                            /> */}
+                                value={state.data?.totalEmprestimos.toFixed(2)}
+                                displayText="Valor total ja emprestado"
+                                icon={(<AccountBalance />)}
+                            />
                         </Grid>
                         <Grid
                             xs={12}
                             sm={6}
                             lg={3}
                         >
-                            {/* <OverviewTotalProfit
+                            <CardTotal
+                                difference={1.15}
+                                positive={true}
                                 sx={{ height: '100%' }}
-                                value="$15k"
-                            /> */}
+                                value={state.data?.totalJuros.toFixed(2)}
+                                displayText="Total de juros recebido"
+                                displayText2="Juros de emprestimos + rendimento sob capital"
+                                icon={(<AccountBalanceWallet />)}
+                            />
                         </Grid>
                         <Grid
                             xs={12}

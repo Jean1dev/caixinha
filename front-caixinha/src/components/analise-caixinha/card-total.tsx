@@ -2,8 +2,16 @@ import { ArrowDownward, ArrowUpward, SavingsRounded } from '@mui/icons-material'
 import { Avatar, Card, CardContent, Stack, SvgIcon, Typography } from '@mui/material';
 import DisplayValorMonetario from '../display-valor-monetario';
 
-export const SaldoTotal = (props: any) => {
-  const { difference, positive = false, sx, value } = props;
+export const CardTotal = (props: any) => {
+  const { 
+    difference, 
+    positive = false, 
+    sx, 
+    value,
+    displayText = '',
+    displayText2 = '',
+    icon = (<SavingsRounded />)
+} = props;
 
   return (
     <Card sx={sx}>
@@ -19,7 +27,7 @@ export const SaldoTotal = (props: any) => {
               color="text.secondary"
               variant="overline"
             >
-              Saldo total
+              {displayText}
             </Typography>
             <DisplayValorMonetario
               variant="h4">
@@ -28,13 +36,13 @@ export const SaldoTotal = (props: any) => {
           </Stack>
           <Avatar
             sx={{
-              backgroundColor: 'error.main',
+              backgroundColor: (theme) => theme.palette.primary.main,
               height: 56,
               width: 56
             }}
           >
             <SvgIcon>
-              <SavingsRounded />
+              {icon}
             </SvgIcon>
           </Avatar>
         </Stack>
@@ -67,7 +75,7 @@ export const SaldoTotal = (props: any) => {
               color="text.secondary"
               variant="caption"
             >
-              CDI
+              {displayText2}
             </Typography>
           </Stack>
         )}
