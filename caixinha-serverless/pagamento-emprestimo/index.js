@@ -1,7 +1,7 @@
 const middleware = require('../utils/middleware')
 const { resolveCircularStructureBSON } = require('../utils/')
 const { Box, Member, Payment } = require('caixinha-core/dist/src')
-const { connect, getByIdOrThrow, replaceDocumentById } = require('../v2/mongo-operations')
+const { connect, getByIdOrThrow, replaceDocumentById, upsert } = require('../v2/mongo-operations')
 const dispatchEvent = require('../amqp/events')
 
 async function pagamentoEmprestimo(_context, req) {
@@ -20,6 +20,10 @@ async function pagamentoEmprestimo(_context, req) {
     emprestimo.addPayment(payment)
 
     await replaceDocumentById(caixinhaId, collectionName, resolveCircularStructureBSON(domain))
+
+    if (emprestimo._isPaidOff) {
+        await upsert('emprestimos', { isPaidOff: true, comprovante }, { uid: emprestimo.UUID })
+    }
 
     const mensagemEmprestimo = emprestimo._isPaidOff
         ? `${name} quitou seu emprestimo com o pagamento de R$${valor}`
