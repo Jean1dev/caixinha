@@ -22,6 +22,7 @@ import { Scrollbar } from "@/components/scrollbar";
 import { INovoAporte, MetaComValorRecomendado, RecomendacaoAporteList } from "@/types/types";
 import { useUserAuth } from "@/hooks/useUserAuth";
 import { AporteModal } from "./aporte-modal";
+import { DisplayTipoAtivo } from '../display-tipo-ativo';
 
 interface INovoAporteState {
     valor: number
@@ -194,7 +195,7 @@ export const NovoAporteForm = () => {
                                                 <TableRow key={index}>
                                                     <TableCell>
                                                         <Typography variant="subtitle2">
-                                                            {item.tipoAtivo}
+                                                            <DisplayTipoAtivo tipo={item.tipoAtivo} />
                                                         </Typography>
                                                     </TableCell>
                                                     <TableCell>

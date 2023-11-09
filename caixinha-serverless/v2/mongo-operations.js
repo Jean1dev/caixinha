@@ -49,7 +49,7 @@ async function findOrderByDesc(projection, collection = 'caixinhas') {
         .toArray()
 }
 
-async function find(collection, projection) {
+async function find(collection, projection = {}) {
     const collectionName = client.db(database).collection(collection)
     return collectionName.find(projection).toArray()
 }

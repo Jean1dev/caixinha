@@ -28,6 +28,11 @@ module.exports = async function (context, _myTimer) {
     const hoje = moment()
 
     results.forEach(emprestimo => {
+        if (emprestimo.isPaidOff) {
+            context.log('emprestimo ja foi pago ', emprestimo._id)
+            return
+        }
+
         if (emprestimo['installments'] == 0) {
             const vencimentoEmprestimo = moment(emprestimo['billingDates'][0])
             if (hoje.isSameOrAfter(vencimentoEmprestimo))
