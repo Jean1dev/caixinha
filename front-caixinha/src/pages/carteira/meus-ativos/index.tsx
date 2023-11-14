@@ -84,9 +84,9 @@ export default function MeusAtivos() {
         reloadData({ page: state.page, size: state.rowsPerPage, carteiras: filters.carteira, tipos: filters.tipo })
     }, [state])
 
-    const onPageChange = (params: any) => {
-        alert('onPageChange')
-        console.log('onPageChange', params)
+    const onPageChange = (_, pageNumber: any) => {
+        console.log('onPageChange', pageNumber)
+        reloadData({ page: pageNumber, size: state.rows, carteiras: userFilters.carteira, tipos: userFilters.tipo })
     }
 
     const onRowsPerPageChange = (params: any) => {

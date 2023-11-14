@@ -184,9 +184,9 @@ export async function getMeusAtivos(params: MeusAtivosRequestFilter): Promise<Sp
                 "unpaged": false
             },
             "totalPages": 1,
-            "totalElements": 3,
+            "totalElements": 5,
             "last": true,
-            "size": 5,
+            "size": 3,
             "number": 0,
             "sort": {
                 "empty": true,
