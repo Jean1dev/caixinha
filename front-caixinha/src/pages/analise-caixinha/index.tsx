@@ -72,7 +72,7 @@ export default function AnaliseCaixinha() {
                             lg={3}
                         >
                             <CardTotal
-                                difference={113}
+                                difference={state.data?.info.cdbTaxes.toFixed(2)}
                                 positive
                                 sx={{ height: '100%' }}
                                 value={state.data?.saldoTotal.toFixed(2)}
@@ -87,8 +87,8 @@ export default function AnaliseCaixinha() {
                             lg={3}
                         >
                             <CardTotal
-                                difference={90}
-                                positive={false}
+                                difference={state.data?.info.evolucaoDepositos.toFixed(2)}
+                                positive={state.data?.info.evolucaoJuros > 0}
                                 sx={{ height: '100%' }}
                                 value={state.data?.totalDepositos.toFixed(2)}
                                 displayText="Total depositos"
@@ -102,8 +102,8 @@ export default function AnaliseCaixinha() {
                             lg={3}
                         >
                             <CardTotal
-                                difference={40}
-                                positive={true}
+                                difference={state.data?.info.evolucaoEmprestimos.toFixed(2)}
+                                positive={state.data?.info.evolucaoEmprestimos > 0}
                                 sx={{ height: '100%' }}
                                 value={state.data?.totalEmprestimos.toFixed(2)}
                                 displayText="Valor total ja emprestado"
@@ -116,8 +116,8 @@ export default function AnaliseCaixinha() {
                             lg={3}
                         >
                             <CardTotal
-                                difference={1.15}
-                                positive={true}
+                                difference={state.data?.info.evolucaoJuros.toFixed(2)}
+                                positive={state.data?.info.evolucaoJuros > 0}
                                 sx={{ height: '100%' }}
                                 value={state.data?.totalJuros.toFixed(2)}
                                 displayText="Total de juros recebido"
