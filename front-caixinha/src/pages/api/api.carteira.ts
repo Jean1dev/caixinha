@@ -124,6 +124,7 @@ export interface MeusAtivosRequestFilter {
     size: number,
     carteiras: string[],
     tipos: string[] | null
+    terms?: string | null
 }
 
 export async function getMeusAtivos(params: MeusAtivosRequestFilter): Promise<SpringPage<AtivoDto>> {
@@ -203,7 +204,8 @@ export async function getMeusAtivos(params: MeusAtivosRequestFilter): Promise<Sp
         page: params.page,
         size: params.size,
         carteiras: params.carteiras.join(','),
-        tipos: params.tipos ? params.tipos.join(',') : null
+        tipos: params.tipos ? params.tipos.join(',') : null,
+        terms: params.terms
     })
 }
 

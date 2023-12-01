@@ -1,4 +1,10 @@
 export default {
+    info: {
+        cdbTaxes: 113,
+        evolucaoDepositos: 25,
+        evolucaoEmprestimos: 12,
+        evolucaoJuros: 2
+    },
     saldoTotal: 102,
     totalDepositos: 1600,
     totalEmprestimos: 1100,

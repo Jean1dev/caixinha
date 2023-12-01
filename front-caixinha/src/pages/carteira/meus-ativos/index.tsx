@@ -40,7 +40,8 @@ export default function MeusAtivos() {
     const [userFilters, setUserFilters] = useState({
         carteira: [],
         search: null,
-        tipo: []
+        tipo: [],
+        terms: null
     })
     const { user } = useUserAuth()
 
@@ -73,25 +74,30 @@ export default function MeusAtivos() {
                     ativos: page.content,
                     page: page.pageable.pageNumber,
                     count: page.totalElements,
-                    rowsPerPage: page.size
+                    rowsPerPage: page.size,
                 })
             })
     }, [])
 
     const onFiltersChange = useCallback((filters: any) => {
         console.log(filters, new Date().toString())
+        //filters.search eh o termos da busca
+        if (filters.search && filters.search !== '') {
+            filters.terms = filters.search
+        }
+
         setUserFilters(filters)
-        reloadData({ page: state.page, size: state.rowsPerPage, carteiras: filters.carteira, tipos: filters.tipo })
+        reloadData({ page: 0, size: 10, carteiras: filters.carteira, tipos: filters.tipo, terms: filters.terms })
     }, [state])
 
     const onPageChange = (_: any, pageNumber: any) => {
         console.log('onPageChange', pageNumber)
-        reloadData({ page: pageNumber, size: state.rowsPerPage, carteiras: userFilters.carteira, tipos: userFilters.tipo })
+        reloadData({ page: pageNumber, size: state.rowsPerPage, carteiras: userFilters.carteira, tipos: userFilters.tipo, terms: userFilters.terms })
     }
 
     const onRowsPerPageChange = (params: any) => {
         const rows = params.target.value
-        reloadData({ page: state.page, size: rows, carteiras: userFilters.carteira, tipos: userFilters.tipo })
+        reloadData({ page: state.page, size: rows, carteiras: userFilters.carteira, tipos: userFilters.tipo, terms: userFilters.terms })
     }
 
     if (loading) {

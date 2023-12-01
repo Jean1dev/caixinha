@@ -1,3 +1,5 @@
+const { Box } = require('caixinha-core/dist/src/index')
+const { CalculatePercentDevlopment } = require('caixinha-core/dist/src/useCase')
 const middleware = require('../utils/middleware')
 const { ObjectId } = require('mongodb')
 const moment = require('moment')
@@ -46,9 +48,11 @@ function calcularTotalJuros(boxEntity) {
 
 async function dadosAnalise(context, req) {
     const caixinhaId = req.query.caixinhaId
+    const CDB = 113
 
     await connect()
     const boxEntity = await getByIdOrThrow(caixinhaId, 'caixinhas')
+    const calculoPercentuais = CalculatePercentDevlopment(Box.fromJson(boxEntity))
     const depositos = await findOrderByDesc({ idCaixinha: new ObjectId(caixinhaId) }, 'depositos')
     const patrimonio = await find('evolucaoPatrimonial', { idCaixinha: new ObjectId(caixinhaId) })
     const evolucaoPatrimonial = [
@@ -114,7 +118,13 @@ async function dadosAnalise(context, req) {
         movimentacoes,
         percentuais,
         evolucaoPatrimonial,
-        membros
+        membros,
+        info: {
+            cdbTaxes: CDB,
+            evolucaoDepositos: calculoPercentuais.totalDepositsPercent,
+            evolucaoEmprestimos: calculoPercentuais.totalLoanCompletedPercent,
+            evolucaoJuros: calculoPercentuais.totalInterestPercent
+        }
     }
 
     context.res = {
