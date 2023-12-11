@@ -1,3 +1,4 @@
+const moment = require('moment');
 const middleware = require('../utils/middleware')
 const { connect, find } = require('../v2/mongo-operations')
 
@@ -34,6 +35,7 @@ async function handle(context, req) {
     }
 
     const atual = elementoMaisRecente(results)
+    atual.date = moment(atual.date).format('DD/MM/YYYY')
 
     context.res = {
         body: {

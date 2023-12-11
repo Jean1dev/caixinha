@@ -42,7 +42,7 @@ const Ok = () => (
 
 export const AtalhoEmprestimo = (props: any) => {
     const { emprestimo } = props
-    const [valorPago, setValorPago] = useState(emprestimo?.totalValue)
+    const [valorPago, setValorPago] = useState(emprestimo?.totalValue.value)
     const [ok, setOk] = useState(false)
     const { user } = useUserAuth()
     const { caixinha } = useCaixinhaSelect()
@@ -126,7 +126,7 @@ export const AtalhoEmprestimo = (props: any) => {
                     sx={{ mt: 2 }}
                     variant="body2"
                 >
-                    Total = (ValorSolicitado: {emprestimo.valueRequested} + Taxas: {emprestimo.fees}) *  Juros: {emprestimo.interest}
+                    Total = (ValorSolicitado: {emprestimo.valueRequested.value} + Taxas: {emprestimo.fees.value}) *  Juros: {emprestimo.interest.value}
                 </Typography>
                 <Button
                     onClick={handleClick}
