@@ -1,12 +1,16 @@
 import Layout from "@/components/Layout";
 import { BannerNovidades } from "@/components/bem-vindo/banner-novidades";
 import { Dicas } from "@/components/bem-vindo/dicas";
+import { AtalhoEmprestimo} from "@/components/bem-vindo/atalho-emprestimo";
 import { useSettings } from "@/hooks/useSettings";
 import { Box, Card, CardContent, Container, Typography } from "@mui/material";
 import { useRouter } from "next/router";
 import Grid from '@mui/material/Unstable_Grid2';
 import { Seo } from "@/components/Seo";
 import { getAleatorio } from "@/utils/utils";
+import { useEffect, useState } from "react";
+import { getUltimoEmprestimoPendente } from "./api/api.service";
+import { useUserAuth } from "@/hooks/useUserAuth";
 
 const corAleatoriaCombinada = () => {
   const cores = [
@@ -51,10 +55,25 @@ const card = (title: string, description: string, action: any) => {
 export default function Home() {
   const router = useRouter()
   const settings = useSettings()
+  const [ultimoEmprestimoAtalho, setUltimoEmprestimoAtalho] = useState<any | null>(null)
+  const { user } = useUserAuth()
+
+  useEffect(() => {
+    if (user.name === '' || !user) {
+      return
+    }
+
+    getUltimoEmprestimoPendente(user.name, user.email)
+      .then((response) => {
+        if (response.exists) {
+          setUltimoEmprestimoAtalho(response)
+        }
+      })
+  }, [user])
 
   return (
     <Layout>
-      <Seo title="Caixinha informações"/>
+      <Seo title="Caixinha informações" />
       <Box component="main"
         sx={{
           flexGrow: 1,
@@ -79,15 +98,26 @@ export default function Home() {
               xs={12}
               md={5}
             >
-              <Dicas
-                sx={{ height: '100%' }}
-                tips={[
-                  {
-                    title: 'Comece participando de uma caixnha.',
-                    content: 'Depois só selecione ali na box ali em cima e esta tudo pronto'
-                  }
-                ]}
-              />
+              {
+                ultimoEmprestimoAtalho?.exists
+                  ? (
+                    <>
+                      <AtalhoEmprestimo emprestimo={ultimoEmprestimoAtalho.data} />
+                    </>
+                  )
+
+                  : (
+                    <Dicas
+                      sx={{ height: '100%' }}
+                      tips={[
+                        {
+                          title: 'Comece participando de uma caixnha.',
+                          content: 'Depois só selecione ali na box ali em cima e esta tudo pronto'
+                        }
+                      ]}
+                    />
+                  )
+              }
 
             </Grid>
 

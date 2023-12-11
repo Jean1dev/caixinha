@@ -272,6 +272,37 @@ export async function getEmprestimo(uid: string) {
     return asyncGetWithParamethers(`${BASE_URL}/get-emprestimo`, { uid })
 }
 
+export async function getUltimoEmprestimoPendente(name: string, email: string) {
+    if (dev) {
+        const exists = new Date().getMinutes() % 2 === 0 ? true : false
+        return retornaComAtraso({
+            exists,
+            data: {
+                "requiredNumberOfApprovals": 1,
+                "description": "sera que foi mesmo?",
+                "approvals": 1,
+                "interest": 3,
+                "fees": 0,
+                "valueRequested": 5,
+                "date": "17/07/2023",
+                "totalValue": 5.15,
+                "approved": true,
+                "uid": "044b0dd2-a21f-4b6f-b0f1-f93865e0ead0",
+                "memberName": "Jeanluca FP",
+                "parcelas": 0,
+                "billingDates": [
+                    {
+                        "valor": null,
+                        "data": "16/08/2023"
+                    }
+                ]
+            }
+        })
+    }
+
+    return asyncGetWithParamethers(`${BASE_URL}/get-ultimo-emprestimo-pendente`, { name, email })
+}
+
 export async function sairDaCaixinha(body: any) {
     if (dev) {
         return retornaComAtraso(true)

@@ -21,7 +21,7 @@ export default function useSocket(eventName: string, callback: (...arg0: any[]) 
         }
 
         return new WebSocket(`wss://${COMMUNICATION_SERVICE}/ws?otp=${user?.user?.email}`)
-    }, [user])
+    }, [user, dev])
 
     useEffect(() => {
         if (!socket)

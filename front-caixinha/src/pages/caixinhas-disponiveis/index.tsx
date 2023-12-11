@@ -27,7 +27,7 @@ export default function Home() {
     }).catch(() => {
       router.push('error')
     })
-  }, [])
+  }, [router])
 
   const search = useCallback((query: string) => {
     getCaixinhas({ query }).then(r => setData(r))

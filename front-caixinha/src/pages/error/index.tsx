@@ -2,6 +2,7 @@ import Head from 'next/head';
 import NextLink from 'next/link';
 import { Box, Button, Container, SvgIcon, Typography } from '@mui/material';
 import { ArrowLeftOutlined } from '@mui/icons-material';
+import Image from 'next/image';
 
 export default function ErrorPage() {
     return (
@@ -34,7 +35,7 @@ export default function ErrorPage() {
                                 textAlign: 'center'
                             }}
                         >
-                            <img
+                            <Image
                                 alt="Under development"
                                 src="/assets/error-404.png"
                                 style={{

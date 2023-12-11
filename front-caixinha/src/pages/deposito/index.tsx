@@ -86,7 +86,7 @@ export default function Deposito() {
             setLoading(false)
             toast.error(err.message)
         })
-    }, [caixinha, solicitacao])
+    }, [caixinha, solicitacao, router])
 
     const addComprovante = () => {
         let input = document.createElement('input');

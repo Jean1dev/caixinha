@@ -31,7 +31,7 @@ export const NOvaCarteiraForm = (props: any) => {
             .then(() => router.push('/sucesso'))
             .catch(() => toast.error('Ocorreu um erro para criar sua carteira'))
 
-    }, [carteira])
+    }, [carteira, router])
 
     const changeMeta = (data: any) => {
         setCarteira({ ...carteira, metaDefinida: data })

@@ -98,7 +98,7 @@ export const SocialPostAdd = (props: any) => {
                                 >
                                     <IconButton onClick={uploadPhoto}>
                                         <SvgIcon>
-                                            <Image />
+                                            <Image/>
                                         </SvgIcon>
                                     </IconButton>
                                     <IconButton>

@@ -72,7 +72,7 @@ export function useUserAuth() {
                 })
         }
 
-    }, [storedUser, data, status]);
+    }, [storedUser, data, status, updateUser]);
 
     return { user, updateUser };
 }

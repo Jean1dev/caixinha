@@ -43,7 +43,7 @@ export const AporteModal = (props: any) => {
             setLoading(false)
             onClose()
         })
-    }, [state])
+    }, [state, onClose])
 
     if (!open) {
         return null;
