@@ -10,7 +10,7 @@ import { useUserAuth } from '@/hooks/useUserAuth';
 import { useCaixinhaSelect } from '@/hooks/useCaixinhaSelect';
 import { pagarEmprestimo } from '@/pages/api/api.service';
 import toast from 'react-hot-toast';
-import { Stack } from '@mui/material';
+import { Link, Stack } from '@mui/material';
 import Image from 'next/image';
 
 const Ok = () => (
@@ -67,7 +67,7 @@ export const AtalhoEmprestimo = (props: any) => {
     }, [valorPago, user, caixinha]);
 
     if (ok) {
-        return <Ok/>
+        return <Ok />
     }
 
     return (
@@ -128,6 +128,13 @@ export const AtalhoEmprestimo = (props: any) => {
                 >
                     Total = (ValorSolicitado: {emprestimo.valueRequested.value} + Taxas: {emprestimo.fees.value}) *  Juros: {emprestimo.interest.value}
                 </Typography>
+                <Link
+                    href={`https://caixinha-gilt.vercel.app/detalhes-emprestimo?uid=${emprestimo.uid}`}
+                    underline="always"
+                    variant="body2"
+                >
+                    Ver detalhes (Chave pix....)
+                </Link>
                 <Button
                     onClick={handleClick}
                     fullWidth
