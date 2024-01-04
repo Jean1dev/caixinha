@@ -75,8 +75,8 @@ export default function AnaliseCaixinha() {
                                 difference={state.data?.info.cdbTaxes.toFixed(2)}
                                 positive
                                 sx={{ height: '100%' }}
-                                value={state.data?.saldoTotal.toFixed(2)}
-                                displayText="Saldo total"
+                                value={state.data?.totalDisponivel.toFixed(2)}
+                                displayText="Saldo Disponivel Agora"
                                 displayText2="CDI"
                                 icon={(<SavingsRounded />)}
                             />

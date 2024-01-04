@@ -32,7 +32,7 @@ export const PagamentoEmprestimo = ({ data }: { data: IProps }) => {
     const [loading, setLoading] = useState(false)
     const { user } = useUserAuth()
     const [blockButtons, setBlockButtons] = useState(false)
-    const [valor, setValor] = useState(data.emprestimo.valueRequested)
+    const [valor, setValor] = useState(data.emprestimo.valueRequested + data.emprestimo.interest + data.emprestimo.fees)
     const [arquivos, setArquivo] = useState<any>([])
     const [pix, setPix] = useState<any>(null)
 
