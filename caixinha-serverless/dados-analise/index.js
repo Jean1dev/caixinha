@@ -111,7 +111,7 @@ async function dadosAnalise(context, req) {
     }
 
     const result = {
-        saldoTotal: boxEntity.currentBalance.value,
+        totalDisponivel: boxEntity.currentBalance.value,
         totalDepositos,
         totalJuros,
         totalEmprestimos,

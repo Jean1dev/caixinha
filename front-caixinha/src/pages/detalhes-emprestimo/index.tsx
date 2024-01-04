@@ -45,7 +45,9 @@ export default function DetalhesEmprestimo() {
         if (!uid)
             return
         
-        getEmprestimo(uid as string).then(res => setEmprestimo(res))
+        getEmprestimo(uid as string)
+            .then(res => setEmprestimo(res))
+            .catch(() => router.push('error'))
     }, [router])
 
     if (!emprestimo){
