@@ -9,3 +9,4 @@ destino="/home/jeanluca_pereira/Documents/GitHub/quem-me-segue/caixinha-serverle
 
 # Faz a cópia dos arquivos, substituindo os existentes
 cp -r -f $origem/. $destino/
+echo "Arquivos copiados com sucesso!"

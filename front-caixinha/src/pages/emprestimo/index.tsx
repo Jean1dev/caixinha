@@ -36,6 +36,7 @@ export default function Emprestimo() {
         motivo: "",
         name: "",
         email: '',
+        fees: 1.90
     })
     const [stateParcelas, setStateParcelas] = useState({
         data: [],
@@ -84,7 +85,6 @@ export default function Emprestimo() {
         setLoading(true)
         doEmprestimo({ ...solicitacao, caixinhaID: caixinha?.id }).then(() => router.push('/sucesso'))
             .catch(err => {
-                console.log(err)
                 setLoading(false)
                 toast.error(err.message)
             })
