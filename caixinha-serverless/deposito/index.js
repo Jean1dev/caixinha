@@ -24,7 +24,7 @@ async function deposito(_context, req) {
     box.deposit(deposit)
     await replaceDocumentById(caixinhaId, collection, resolveCircularStructureBSON(box))
     await insertDocument('depositos', { idCaixinha: boxEntity._id, ...deposit })
-    sendSMS(`Novo deposito do ${name}`)
+    sendSMS(`Novo deposito do ${name} - valor ${valor}`)
     dispatchEvent({
         type: 'DEPOSITO',
         data: { image: comprovante, ...deposit }

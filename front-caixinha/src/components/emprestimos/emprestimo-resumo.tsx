@@ -12,7 +12,7 @@ export const EmprestimoResumo = (props: any) => {
 
     const formattedShippingTax = `${solicitacao.juros}%`
     const formattedSubtotal = `R$${solicitacao.valor}`
-    const total = Number(solicitacao.valor) + (Number(solicitacao.valor) * (Number(solicitacao.juros) / 100))
+    const total = Number(solicitacao.fees) + (Number(solicitacao.valor) * (Number(solicitacao.juros) / 100))
     const formattedTotal = `R$${total}`
 
     return (
@@ -117,10 +117,24 @@ export const EmprestimoResumo = (props: any) => {
                 }}
             >
                 <Typography variant="subtitle2">
-                    Taxas/Impostos
+                    Taxas
                 </Typography>
                 <Typography variant="subtitle2">
                     {formattedShippingTax}
+                </Typography>
+            </Box>
+            <Box
+                sx={{
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    mt: 2
+                }}
+            >
+                <Typography variant="subtitle2">
+                    Impostos
+                </Typography>
+                <Typography variant="subtitle2">
+                    {solicitacao.fees}
                 </Typography>
             </Box>
             <Divider sx={{ my: 2 }} />

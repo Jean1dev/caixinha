@@ -7,7 +7,7 @@ const dispatchEvent = require('../amqp/events')
 
 async function emprestimo(context, req) {
 
-    const { valor, juros, parcela, motivo, name, email, caixinhaID } = req.body
+    const { valor, juros, parcela, motivo, name, email, caixinhaID, fees } = req.body
 
     await connect()
     const member = Member.build({ name, email })
@@ -19,7 +19,7 @@ async function emprestimo(context, req) {
         member,
         valueRequested: Number(valor),
         interest: Number(juros),
-        fees: 0,
+        fees: fees || 0,
         description: motivo,
         installments: parcela
     })

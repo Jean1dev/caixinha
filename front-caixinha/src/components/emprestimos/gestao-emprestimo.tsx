@@ -282,6 +282,7 @@ export const GestaoEmprestimo = ({ data }: { data: IGestaoInput }) => {
                             </Typography>
                         </TableCell>
                     </TableRow>
+
                     <TableRow>
                         <TableCell
                             colSpan={3}
@@ -289,7 +290,7 @@ export const GestaoEmprestimo = ({ data }: { data: IGestaoInput }) => {
                         />
                         <TableCell sx={{ borderBottom: 'none' }}>
                             <Typography variant="subtitle1">
-                                Impostos e taxas
+                                Impostos
                             </Typography>
                         </TableCell>
                         <TableCell
@@ -301,6 +302,27 @@ export const GestaoEmprestimo = ({ data }: { data: IGestaoInput }) => {
                             </Typography>
                         </TableCell>
                     </TableRow>
+
+                    <TableRow>
+                        <TableCell
+                            colSpan={3}
+                            sx={{ borderBottom: 'none' }}
+                        />
+                        <TableCell sx={{ borderBottom: 'none' }}>
+                            <Typography variant="subtitle1">
+                                Taxas
+                            </Typography>
+                        </TableCell>
+                        <TableCell
+                            align="right"
+                            sx={{ borderBottom: 'none' }}
+                        >
+                            <Typography variant="subtitle2">
+                                R$ {data.emprestimo.fees}
+                            </Typography>
+                        </TableCell>
+                    </TableRow>
+                    
                     <TableRow>
                         <TableCell
                             colSpan={3}

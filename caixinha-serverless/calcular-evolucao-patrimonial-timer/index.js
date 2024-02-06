@@ -1,6 +1,7 @@
 const { Box } = require("caixinha-core/dist/src/boxes/Box");
 const { connect, insertDocument, find, deleteAll } = require("../v2/mongo-operations");
-const { CalculateAssetDevlopment } = require('caixinha-core/dist/src/useCase')
+const { CalculateAssetDevlopment } = require('caixinha-core/dist/src/useCase');
+const { asyncAPM } = require("../utils/apm");
 
 module.exports = async function (_context, _myTimer) {
     _context.log('Calculando balanço patrimonial')
@@ -21,8 +22,12 @@ module.exports = async function (_context, _myTimer) {
         })
 
     for (const iterator of boxes) {
-        const result = CalculateAssetDevlopment(iterator, new Date().getMonth() + 1)
-        await insertDocument('evolucaoPatrimonial', { idCaixinha: iterator.id, ...result })
+        try {
+            const result = CalculateAssetDevlopment(iterator, new Date().getMonth() + 1)
+            await insertDocument('evolucaoPatrimonial', { idCaixinha: iterator.id, ...result })   
+        } catch (error) {
+            asyncAPM(error)
+        }
     }
 
 };

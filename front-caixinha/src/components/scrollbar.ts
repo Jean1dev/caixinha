@@ -1,7 +1,5 @@
+import 'simplebar-react/dist/simplebar.min.css';
+import SimpleBar from 'simplebar-react';
+import { styled } from '@mui/material/styles';
 
-export const Scrollbar = (props: any) => {
-    const { children } = props
-    return children;
-};
-
-//styled(SimpleBar)``;
+export const Scrollbar = styled(SimpleBar)``;

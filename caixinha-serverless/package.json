@@ -10,7 +10,7 @@
   "dependencies": {
     "@sentry/node": "^7.54.0",
     "amqplib": "^0.10.3",
-    "caixinha-core": "1.0.9",
+    "caixinha-core": "1.1.0",
     "moment": "^2.29.4",
     "mongodb": "^5.4.0"
   },

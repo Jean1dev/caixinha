@@ -32,7 +32,14 @@ export const PagamentoEmprestimo = ({ data }: { data: IProps }) => {
     const [loading, setLoading] = useState(false)
     const { user } = useUserAuth()
     const [blockButtons, setBlockButtons] = useState(false)
-    const [valor, setValor] = useState(data.emprestimo.valueRequested + data.emprestimo.interest + data.emprestimo.fees)
+
+    const [valor, setValor] = useState(() => {
+        if (data.emprestimo.totalValue) {
+            return data.emprestimo.totalValue
+        }
+
+        return (data.emprestimo.valueRequested * (data.emprestimo.interest / 100)) + data.emprestimo.fees
+    })
     const [arquivos, setArquivo] = useState<any>([])
     const [pix, setPix] = useState<any>(null)
 
@@ -100,7 +107,7 @@ export const PagamentoEmprestimo = ({ data }: { data: IProps }) => {
 
     const gerarCobrancaImediata = useCallback(() => {
         toast.loading('Gerando link de pagamento')
-    
+
         gerarLinkDePagamento({
             name: user.name,
             email: user.email,
