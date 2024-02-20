@@ -7,12 +7,16 @@ import ListItemAvatar from '@mui/material/ListItemAvatar';
 import ListItemText from '@mui/material/ListItemText';
 import Typography from '@mui/material/Typography';
 
+function calcularTotal(solicitacao: any) {
+    return Number(solicitacao.fees) + Number(solicitacao.valor) + (Number(solicitacao.valor) * (Number(solicitacao.juros) / 100))
+}
+
 export const EmprestimoResumo = (props: any) => {
     const { solicitacao, stateParcelas } = props;
 
     const formattedShippingTax = `${solicitacao.juros}%`
     const formattedSubtotal = `R$${solicitacao.valor}`
-    const total = Number(solicitacao.fees) + (Number(solicitacao.valor) * (Number(solicitacao.juros) / 100))
+    const total = calcularTotal(solicitacao)
     const formattedTotal = `R$${total}`
 
     return (
@@ -61,7 +65,7 @@ export const EmprestimoResumo = (props: any) => {
                                         sx={{ fontWeight: 'fontWeightBold' }}
                                         variant="subtitle2"
                                     >
-                                        parcela {index +1}
+                                        parcela {index + 1}
                                     </Typography>
                                 )}
                                 secondary={(
