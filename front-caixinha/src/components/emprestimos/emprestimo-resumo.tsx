@@ -8,7 +8,11 @@ import ListItemText from '@mui/material/ListItemText';
 import Typography from '@mui/material/Typography';
 
 function calcularTotal(solicitacao: any) {
-    return Number(solicitacao.fees) + Number(solicitacao.valor) + (Number(solicitacao.valor) * (Number(solicitacao.juros) / 100))
+    const valorEmprestimo = Number(solicitacao.valor);
+    const juros = Number(solicitacao.juros);
+    const taxa = Number(solicitacao.fees);
+    const total = valorEmprestimo + (valorEmprestimo * (juros / 100)) + taxa;
+    return total;
 }
 
 export const EmprestimoResumo = (props: any) => {
