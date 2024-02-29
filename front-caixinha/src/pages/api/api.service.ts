@@ -399,3 +399,11 @@ export async function publicarComentario(payload: any) {
 
     return asyncFetch(`https://${COMMUNICATION_SERVICE}/social-feed/comment`, 'POST', payload)
 }
+
+export async function marcarNotificactionsComoLida(payload: any) {
+    if (dev) {
+        return retornaComAtraso(true)
+    }
+
+    return asyncFetch(`https://${COMMUNICATION_SERVICE}/notificacao/mark-as-read`, 'POST', payload)
+}
