@@ -15,7 +15,7 @@ async function addRendimento(context, req) {
         dispatchEvent({
             type: 'RENDIMENTO',
             data: `Adicionado juros sob capital proprio no valor de R$${iterator.valor} na caixinha: ${caixinha['name']}`
-        })
+        }, iterator.id)
     }
 
 }

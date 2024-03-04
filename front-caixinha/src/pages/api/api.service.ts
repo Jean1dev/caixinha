@@ -179,6 +179,16 @@ export async function pagarEmprestimo(params: any) {
         params)
 }
 
+export async function recusarEmprestimo(payload: any) {
+    if (dev) {
+        return retornaComAtraso(true)
+    }
+
+    return asyncFetch(`${BASE_URL}/recusar-emprestimo`,
+        'POST',
+        payload)
+}
+
 export async function getValorParcelas(params: any) {
     if (dev) {
         return retornaComAtraso([

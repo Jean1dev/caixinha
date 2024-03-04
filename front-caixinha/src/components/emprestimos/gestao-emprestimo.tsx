@@ -17,10 +17,10 @@ import {
 } from '@mui/material';
 import { LoansForApprove } from '@/types/types';
 import { useCaixinhaSelect } from '@/hooks/useCaixinhaSelect';
-import { aprovarEmprestimo } from '../../pages/api/api.service';
+import { aprovarEmprestimo, recusarEmprestimo } from '../../pages/api/api.service';
 import CenteredCircularProgress from '@/components/CenteredCircularProgress';
-import { useSession } from 'next-auth/react';
 import { toast } from 'react-hot-toast';
+import { useUserAuth } from '@/hooks/useUserAuth';
 
 interface IGestaoInput {
     emprestimo: LoansForApprove,
@@ -31,7 +31,7 @@ export const GestaoEmprestimo = ({ data }: { data: IGestaoInput }) => {
     const { caixinha } = useCaixinhaSelect()
     const [loading, setLoading] = useState(false)
     const [blockButtons, setBlockButtons] = useState(false)
-    const { data: user } = useSession()
+    const { user } = useUserAuth()
 
     const items = [{
         quantidade: 1,
@@ -44,9 +44,33 @@ export const GestaoEmprestimo = ({ data }: { data: IGestaoInput }) => {
     const aprovar = useCallback(() => {
         setLoading(true)
         aprovarEmprestimo({
-            memberName: user?.user?.name,
+            memberName: user.name,
             caixinhaid: caixinha?.id,
             emprestimoId: data.emprestimo.uid
+        }).then(() => {
+            setLoading(false)
+            setBlockButtons(true)
+            toast.success('Aprovação enviada')
+        }).catch(e => {
+            setLoading(false)
+            toast.error(e.message)
+        })
+    }, [caixinha, data, user])
+
+    const reprovar = useCallback(() => {
+        let motivo = prompt('Escreva o motivo da rejeicao');
+        let confirmacao = confirm('Voce confirma essa operacao');
+
+        if (!confirmacao)
+            return;
+
+        setLoading(true)
+        recusarEmprestimo({
+            name: user.name,
+            email: user.email,
+            caixinhaid: caixinha?.id,
+            emprestimoId: data.emprestimo.uid,
+            reason: motivo
         }).then(() => {
             setLoading(false)
             setBlockButtons(true)
@@ -369,7 +393,7 @@ export const GestaoEmprestimo = ({ data }: { data: IGestaoInput }) => {
                             <Button onClick={aprovar} disabled={blockButtons} variant="contained">
                                 Aprovar
                             </Button>
-                            <Button disabled={blockButtons} variant="contained" color='error'>
+                            <Button onClick={reprovar} disabled={blockButtons} variant="contained" color='error'>
                                 Reprovar
                             </Button>
                         </>

@@ -41,7 +41,7 @@ async function pagamentoEmprestimo(_context, req) {
                 remetentes: [email]
             }
         }
-    ])
+    ], caixinhaId)
 }
 
 module.exports = async (context, req) => await middleware(context, req, pagamentoEmprestimo)

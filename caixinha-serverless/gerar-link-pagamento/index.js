@@ -30,7 +30,7 @@ async function handle(_context, req) {
                 cpf: '05833251907'
             }
         }
-    ])
+    ], 'default-all')
 }
 
 module.exports = async (context, req) => await middleware(context, req, handle)

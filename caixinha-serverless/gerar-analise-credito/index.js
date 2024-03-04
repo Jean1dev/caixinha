@@ -4,7 +4,7 @@ const { Box } = require('caixinha-core/dist/src')
 const { GenerateCreditRisk } = require('caixinha-core/dist/src/useCase')
 const dispatchEvent = require('../amqp/events')
 
-async function notificarMembers(result) {
+async function notificarMembers(result, caixinhaId) {
     const messagesToDispatch = []
 
     for (let i = 0; i < result.length; i++) {
@@ -27,7 +27,7 @@ async function notificarMembers(result) {
         return
     }
     
-    dispatchEvent(messagesToDispatch)   
+    dispatchEvent(messagesToDispatch, caixinhaId)   
 }
 
 async function handle(context, req) {
@@ -37,7 +37,7 @@ async function handle(context, req) {
     const result = GenerateCreditRisk(box._loans, box['members'])
 
     if (notify) {
-        notificarMembers(result)
+        notificarMembers(result, id)
     }
 
     context.res = {
