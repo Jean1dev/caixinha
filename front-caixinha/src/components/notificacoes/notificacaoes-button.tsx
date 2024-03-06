@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useMemo, useState, useEffect } from 'react';
 import Badge from '@mui/material/Badge';
 import IconButton from '@mui/material/IconButton';
 import SvgIcon from '@mui/material/SvgIcon';
@@ -7,20 +7,42 @@ import { usePopover } from '@/hooks/usePopover';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import { NotificationsPopover } from './notificacoes-popover';
 import useSocket from '@/hooks/useSocket';
+import { useUserAuth } from '@/hooks/useUserAuth';
+import { marcarNotificactionsComoLida } from '@/pages/api/api.service';
 
 interface NotificationType {
   id: string
   createdAt: string
   description: string
   read: boolean
-  type: 'new_feature' | 'job_add'
+  type: 'new_feature' | 'user_info'
+  user: string
 }
 
 const useNotifications = () => {
+  const { user } = useUserAuth()
   const [notifications, setNotifications] = useState<NotificationType[]>([]);
-  const socket = useSocket('my_notifications', () => {
-    console.log('my_notifications')
+  const { socket, connected } = useSocket('my_notifications', (data) => {
+
+    if (data.type && data.type === 'MyNotificationsResponse') {
+      if (data.payload) {
+        setNotifications(data.payload)
+      }
+    }
+
   })
+
+  useEffect(() => {
+    console.log('connected', connected, 'socket.readyState', socket.readyState)
+    if (connected && socket.readyState > 0) {
+
+      socket.send(JSON.stringify({
+        type: 'my_notifications',
+        payload: {}
+      }))
+    }
+
+  }, [socket, connected])
 
   const unread = useMemo(() => {
     return notifications.reduce((acc, notification) => acc + (notification.read ? 0 : 1), 0);
@@ -30,20 +52,27 @@ const useNotifications = () => {
     setNotifications((prevState) => {
       return prevState.filter((notification) => notification.id !== notificationId);
     });
-  }, []);
+
+    marcarNotificactionsComoLida({
+      all: false,
+      ids: [notificationId],
+      user: user.email
+    }).then(() => { console.log('marcarNotificactionsComoLida', 'ok') })
+  }, [user.email]);
 
   const handleMarkAllAsRead = useCallback(() => {
-    socket.send(JSON.stringify({
-      type: 'simple_message',
-      payload: ['isso', 'e', 'um', 'teste']
-    }))
     setNotifications((prevState) => {
       return prevState.map((notification) => ({
         ...notification,
         read: true
       }));
     });
-  }, [socket]);
+
+    marcarNotificactionsComoLida({
+      all: true,
+      user: user.email
+    }).then(() => { console.log('marcarNotificactionsComoLida', 'ok') })
+  }, [user.email]);
 
   return {
     handleMarkAllAsRead,

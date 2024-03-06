@@ -15,7 +15,7 @@ function enviarEvento({ name, email, dia }) {
                 remetentes: [email]
             }
         }
-    ])
+    ], 'default-all')
 }
 
 module.exports = async function (context, _myTimer) {

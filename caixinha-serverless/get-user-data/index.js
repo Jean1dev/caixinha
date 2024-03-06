@@ -5,7 +5,12 @@ async function getUserData(context, req) {
     const collectionName = 'membros'
     await connect()
     const { memberName, email } = req.query
-    const data = await findWithLimit(collectionName, { name: memberName, email }, 1)
+    const query = memberName ? 
+        { name: memberName, email } 
+        : 
+        { email }
+
+    const data = await findWithLimit(collectionName, query, 1)
     context.res = {
         body: data.length
             ? data[0]

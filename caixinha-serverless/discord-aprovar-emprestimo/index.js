@@ -26,6 +26,16 @@ async function handle(context, req) {
 
         return
     }
+    if (emprestimo['refusedReason']) {
+        context.res = {
+            status: 400,
+            body: {
+                message: `esse emprestimo foi rejeitado`
+            }
+        }
+
+        return
+    }
 
     context.log(`emprestimo encontrado ${emprestimo.UUID}`)
     caixinha['members']

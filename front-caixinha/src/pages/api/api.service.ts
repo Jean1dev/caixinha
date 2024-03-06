@@ -179,6 +179,16 @@ export async function pagarEmprestimo(params: any) {
         params)
 }
 
+export async function recusarEmprestimo(payload: any) {
+    if (dev) {
+        return retornaComAtraso(true)
+    }
+
+    return asyncFetch(`${BASE_URL}/recusar-emprestimo`,
+        'POST',
+        payload)
+}
+
 export async function getValorParcelas(params: any) {
     if (dev) {
         return retornaComAtraso([
@@ -398,4 +408,12 @@ export async function publicarComentario(payload: any) {
     }
 
     return asyncFetch(`https://${COMMUNICATION_SERVICE}/social-feed/comment`, 'POST', payload)
+}
+
+export async function marcarNotificactionsComoLida(payload: any) {
+    if (dev) {
+        return retornaComAtraso(true)
+    }
+
+    return asyncFetch(`https://${COMMUNICATION_SERVICE}/notificacao/mark-as-read`, 'POST', payload)
 }

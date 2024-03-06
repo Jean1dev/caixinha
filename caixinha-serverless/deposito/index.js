@@ -28,7 +28,7 @@ async function deposito(_context, req) {
     dispatchEvent({
         type: 'DEPOSITO',
         data: { image: comprovante, ...deposit }
-    })
+    }, caixinhaId)
 }
 
 module.exports = async (context, req) => await middleware(context, req, deposito)

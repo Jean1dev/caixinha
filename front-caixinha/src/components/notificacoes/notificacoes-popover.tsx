@@ -16,7 +16,7 @@ import { Scrollbar } from '../scrollbar';
 
 const renderContent = (notification: any) => {
     switch (notification.type) {
-        case 'job_add': {
+        case 'user_info': {
             const createdAt = new Date().toISOString();
 
             return (
@@ -41,7 +41,7 @@ const renderContent = (notification: any) => {
                                     sx={{ mr: 0.5 }}
                                     variant="subtitle2"
                                 >
-                                    {notification.author}
+                                    {notification.user}
                                 </Typography>
                                 <Typography
                                     sx={{ mr: 0.5 }}
@@ -54,7 +54,7 @@ const renderContent = (notification: any) => {
                                     underline="always"
                                     variant="body2"
                                 >
-                                    {notification.job}
+                                    {notification.description}
                                 </Link>
                             </Box>
                         )}
@@ -133,7 +133,7 @@ export const NotificationsPopover = (props: any) => {
     } = props;
 
     const isEmpty = notifications.length === 0;
-
+ 
     return (
         <Popover
             anchorEl={anchorEl}

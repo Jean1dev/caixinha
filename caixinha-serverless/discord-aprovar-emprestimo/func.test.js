@@ -101,4 +101,29 @@ describe('discord aprovar emprestimo function test', () => {
         const caixinhaSalvaNoDb = await getDocumentById(caixinha.id)
         expect(caixinhaSalvaNoDb.loans).toHaveLength(1)
     }, 30000)
+
+    it('deve retornar 400 pq o emprestimo foi rejeitado', async () => {
+        let caixinha = createFullCaixinhaJson()
+        caixinha.loans[0]['approved'] = false
+        caixinha.loans[0]['refusedReason'] = {
+            reason: 'fake',
+            member: {
+                name: 'teste'
+            }
+        }
+        caixinha = await saveAndReturnCaixinhaIds(caixinha)
+        const context = getContext()
+        const emprestimoId = caixinha.caixinha.loans[0].uid
+        const req = {
+            body: {
+                caixinhaId: caixinha.id,
+                emprestimoUid: emprestimoId
+            }
+        }
+
+        await func(context, req)
+        expect(typeof context.res).toBe('object')
+        expect(context.res.status).toBe(400)
+        expect(context.res.body.message).toBe('esse emprestimo foi rejeitado')
+    })
 })
