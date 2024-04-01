@@ -44,7 +44,7 @@ async function handle(_context, req) {
             favorecido: emprestimo._member.memberName,
             pix: pix
         }
-    })
+    }, caixinhaId)
 
     await insertDocument(collectionName, {
         caixinhaId,
