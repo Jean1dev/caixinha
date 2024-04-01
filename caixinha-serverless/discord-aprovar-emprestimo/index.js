@@ -65,7 +65,7 @@ async function handle(context, req) {
             emprestimoId: emprestimoUid,
             caixinhaid: caixinhaId
         }
-    })
+    }, caixinhaId)
 
     context.res = {
         body: {
