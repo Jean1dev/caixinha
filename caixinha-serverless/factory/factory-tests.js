@@ -1,3 +1,4 @@
+const { resolveCircularStructureBSON } = require('../utils')
 const { connect, insertDocument } = require('../v2/mongo-operations')
 
 function createFullCaixinhaJson() {
@@ -139,7 +140,7 @@ async function saveAndReturnCaixinhaIds(caixinha) {
         caixinha = createFullCaixinhaJson()
     }
 
-    const result = await insertDocument('caixinhas', caixinha)
+    const result = await insertDocument('caixinhas', resolveCircularStructureBSON(caixinha))
     return { id: result.insertedId, caixinha }
 }
 
