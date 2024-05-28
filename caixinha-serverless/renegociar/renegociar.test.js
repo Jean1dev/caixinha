@@ -1,11 +1,11 @@
 const { MongoMemoryServer } = require("mongodb-memory-server")
-const { getByIdOrThrow, makeNewClient } = require("../v2/mongo-operations")
+const { getByIdOrThrow, makeNewClient, insertDocument, find } = require("../v2/mongo-operations")
 const Func = require('./index')
 const { saveAndReturnCaixinhaIds } = require("../factory/factory-tests")
 const { Member, Box, Loan } = require("caixinha-core/dist/src")
 const { getDataMenosXDias } = require("../utils")
 
-describe('solicitação de renegociacao test', () => {
+describe('Renegociacao teste test', () => {
     let mongod
 
     beforeAll(async () => {
@@ -17,7 +17,7 @@ describe('solicitação de renegociacao test', () => {
         await mongod.stop()
     })
 
-    it('Deve solicitar uma renegociacao com sucesso', async () => {
+    it('Deve renegociar com sucesso', async () => {
         const member = new Member('joao')
         const box = new Box()
         box.joinMember(member)
@@ -44,10 +44,21 @@ describe('solicitação de renegociacao test', () => {
         box['loans'] = [Loan.fromBox(input)]
         const { id } = await saveAndReturnCaixinhaIds(box)
 
+        delete box['loans'][0]['box']
+        await insertDocument('emprestimos', box['loans'][0])
+        const { insertedId: renegociacaoId } = await insertDocument('renegociacoes', {
+            oldLoan: box['loans'][0],
+            status: 'PENDING',
+            delayedDays: 62,
+            createdAt: new Date(),
+            boxId: id
+        })
+
         const req = {
             body: {
-                caixinhaId: id,
-                emprestimoUid: input.uid
+                renegociacaoId,
+                valorProposta: 25,
+                parcelas: 2
             }
         }
 
@@ -57,11 +68,21 @@ describe('solicitação de renegociacao test', () => {
 
         await Func(context, req)
 
-        expect(context.res.body).not.toBeNull()
-        expect(context.res.body.renegId).not.toBeNull()
-        expect(context.res.body.sugestao).not.toBeNull()
-
-        const reneg = await getByIdOrThrow(context.res.body.renegId, 'renegociacoes')
+        const reneg = await getByIdOrThrow(renegociacaoId, 'renegociacoes')
         expect(reneg).not.toBeNull()
+        expect(reneg.status).toBe('FINISHED')
+        expect(reneg.newLoan).not.toBe(null)    
+        expect(reneg.finishedAt).not.toBe(null)
+        expect(reneg.newLoan.installments).toBe(2)
+
+        const emprestimosRegistrados = await find('emprestimos')
+        expect(emprestimosRegistrados.length).toBe(1)
+        expect(emprestimosRegistrados[0].installments).toBe(2)
+        expect(emprestimosRegistrados[0].uid).toBe(reneg.newLoan.uid)
+
+        const caixinhaAtualizada = await getByIdOrThrow(id, 'caixinhas')
+        expect(caixinhaAtualizada.loans.length).toBe(1)
+        expect(caixinhaAtualizada.loans[0].installments).toBe(2)
+        expect(caixinhaAtualizada.loans[0].uid).toBe(reneg.newLoan.uid)
     }, 30000)
 })

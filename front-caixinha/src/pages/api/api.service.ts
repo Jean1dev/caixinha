@@ -355,6 +355,31 @@ export async function gerarLinkDePagamento(body: IGerarLinkPagamentoBody) {
     return asyncFetch(`${BASE_URL}/gerar-link-pagamento`, 'POST', body)
 }
 
+export async function solicitarRenegociacao(body: any) {
+    if (dev) {
+        return retornaComAtraso({
+            sugestao: {
+                installmentOptions: [1, 2, 3, 4, 5],
+                newInterestRate: 3.2,
+                reason: `string`,
+                newTotalValue: 25,
+                id: `string`
+            },
+            renegId: 'id-renegociacao'
+        })
+    }
+
+    return asyncFetch(`${BASE_URL}/solicitar-renegociacao`, 'POST', body)
+}
+
+export async function aceitarRenegociacao(body: any) {
+    if (dev) {
+        return retornaComAtraso(true)
+    }
+
+    return asyncFetch(`${BASE_URL}/renegociar`, 'POST', body)
+}
+
 export async function getPostInfo(postId: string) {
     if (dev) {
         return retornaComAtraso(postData.default[0])
