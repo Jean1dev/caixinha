@@ -7,6 +7,14 @@ function resolveCircularStructureBSON(box) {
     return box
 }
 
+function getDataMenosXDias(x) {
+    var dataAtual = new Date();
+    var novaData = new Date(dataAtual.getTime() - x * 24 * 60 * 60 * 1000);
+
+    return novaData;
+}
+
 module.exports = {
-    resolveCircularStructureBSON
+    resolveCircularStructureBSON,
+    getDataMenosXDias
 }

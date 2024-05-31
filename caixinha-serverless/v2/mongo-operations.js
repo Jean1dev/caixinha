@@ -63,6 +63,10 @@ async function deleteAll(collection) {
     return client.db(database).collection(collection).deleteMany()
 }
 
+async function deleteByProjection(projection, collection) {
+    return client.db(database).collection(collection).deleteMany(projection)
+}
+
 async function upsert(collection, document, filter) {
     const collectionName = client.db(database).collection(collection)
     const options = { upsert: true }
@@ -81,5 +85,6 @@ module.exports = {
     findWithLimit,
     upsert,
     findOrderByDesc,
-    makeNewClient
+    makeNewClient,
+    deleteByProjection
 }
