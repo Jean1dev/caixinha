@@ -1,6 +1,6 @@
 const { MongoClient, ObjectId, ServerApiVersion } = require("mongodb");
 
-const uri = process.env.MONGO_CONNECTION || 'mongodb://localhost:27017/caixinha'
+const uri = process.env.MONGO_CONNECTION || 'mongodb+srv://admin:admin@cluster0-e7nlh.mongodb.net/'
 const database = 'caixinha'
 
 let client = new MongoClient(uri, {

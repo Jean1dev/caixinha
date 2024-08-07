@@ -1,10 +1,10 @@
 #!/bin/bash
 
-cd /home/jeanluca_pereira/Documents/GitHub/forks/caixinha-core
+cd /home/jeanluca_pereira/Documents/GitHub/caixinha-core
 npm run build
 
 # Define as pastas de origem e destino
-origem="/home/jeanluca_pereira/Documents/GitHub/forks/caixinha-core/dist"
+origem="/home/jeanluca_pereira/Documents/GitHub/caixinha-core/dist"
 destino="/home/jeanluca_pereira/Documents/GitHub/caixinha/caixinha-serverless/node_modules/caixinha-core/dist"
 
 # Faz a cópia dos arquivos, substituindo os existentes
