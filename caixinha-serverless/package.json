@@ -5,7 +5,8 @@
   "scripts": {
     "start": "func start",
     "test": "jest --forceExit --detectOpenHandles",
-    "coverage": "jest --coverage"
+    "coverage": "jest --coverage",
+    "scripts": "node ./scripts/recalcular-saldo-caixinha.js"
   },
   "dependencies": {
     "@sentry/node": "^7.54.0",
