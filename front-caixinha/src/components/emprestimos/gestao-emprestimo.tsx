@@ -84,7 +84,7 @@ export const GestaoEmprestimo = ({ data }: { data: IGestaoInput }) => {
     if (loading) {
         return <CenteredCircularProgress />
     }
-    console.log(data.emprestimo.billingDates)
+
     return (
         <Card sx={{ p: 6 }}>
             <Stack
@@ -228,20 +228,53 @@ export const GestaoEmprestimo = ({ data }: { data: IGestaoInput }) => {
                 </Grid>
             </Box>
             <Box sx={{ mt: 4 }}>
-                <Typography
-                    gutterBottom
-                    variant="subtitle2"
+                <Grid
+                    container
+                    justifyContent="space-between"
                 >
-                    Favorecido
-                </Typography>
-                <Typography variant="body2">
-                    {data.emprestimo.memberName}
-                    <br />
-                    endereço não fornecido
-                    <br />
-                    Juros {data.emprestimo.interest}%
-                </Typography>
+                    <Grid
+                        xs={12}
+                        md={4}
+                    >
+                        <Typography
+                            gutterBottom
+                            variant="subtitle2"
+                        >
+                            Favorecido
+                        </Typography>
+                        <Typography variant="body2">
+                            {data.emprestimo.memberName}
+                            <br />
+                            endereço não fornecido
+                            <br />
+                            Juros {data.emprestimo.interest}%
+                        </Typography>
+                    </Grid>
+                    <Grid
+                        xs={12}
+                        md={4}
+                    >
+                        {
+                            data.emprestimo.billingDates.length > 1 && (
+                                <>
+                                    <Typography
+                                        gutterBottom
+                                        variant="subtitle2"
+                                    >
+                                        Emprestimo parcelado em {data.emprestimo.billingDates.length}x
+                                    </Typography>
+                                    <Typography variant="body2">
+                                        valor da parcela R$ {data.emprestimo.billingDates[0].valor}
+                                    </Typography>
+                                </>
+                            )
+                        }
+
+                    </Grid>
+                </Grid>
+
             </Box>
+
             <Table sx={{ mt: 4 }}>
                 <TableHead>
                     <TableRow>
@@ -346,7 +379,7 @@ export const GestaoEmprestimo = ({ data }: { data: IGestaoInput }) => {
                             </Typography>
                         </TableCell>
                     </TableRow>
-                    
+
                     <TableRow>
                         <TableCell
                             colSpan={3}

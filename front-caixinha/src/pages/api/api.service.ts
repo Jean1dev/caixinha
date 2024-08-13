@@ -272,7 +272,11 @@ export async function getEmprestimo(uid: string) {
             "parcelas": 0,
             "billingDates": [
                 {
-                    "valor": null,
+                    "valor": 14.80,
+                    "data": "16/08/2023"
+                },
+                {
+                    "valor": 14.80,
                     "data": "16/08/2023"
                 }
             ]
