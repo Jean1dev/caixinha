@@ -65,7 +65,14 @@ async function emprestimo(context, req) {
             type: 'EMAIL',
             data: {
                 message: `Novo emprestimo do ${member.memberName} - valor ${valor}, verifique e aprove no discord`,
-                remetentes
+                remetentes,
+                templateCode: 1,
+                customBodyProps: {
+                    username: member.memberName,
+                    operation: 'EMPRESTIMO',
+                    amount: valor,
+                    totalAmount: valor
+                }
             }
         }
     ], caixinhaID)

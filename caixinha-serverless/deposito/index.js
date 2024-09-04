@@ -30,7 +30,14 @@ async function deposito(_context, req) {
             type: 'EMAIL',
             data: {
                 message: `Seu Deposito de R$${valor} foi processado na caixinha ${name}`,
-                remetentes: [email]
+                remetentes: [email],
+                templateCode: 1,
+                customBodyProps: {
+                    username: name,
+                    operation: 'DEPOSITO',
+                    amount: valor,
+                    totalAmount: valor
+                }
             }
         },
         {
