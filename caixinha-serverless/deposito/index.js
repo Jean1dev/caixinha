@@ -25,10 +25,20 @@ async function deposito(_context, req) {
     await replaceDocumentById(caixinhaId, collection, resolveCircularStructureBSON(box))
     await insertDocument('depositos', { idCaixinha: boxEntity._id, ...deposit })
     sendSMS(`Novo deposito do ${name} - valor ${valor}`)
-    dispatchEvent({
-        type: 'DEPOSITO',
-        data: { image: comprovante, ...deposit }
-    }, caixinhaId)
+    const events = [
+        {
+            type: 'EMAIL',
+            data: {
+                message: `Seu Deposito de R$${valor} foi processado na caixinha ${name}`,
+                remetentes: [email]
+            }
+        },
+        {
+            type: 'DEPOSITO',
+            data: { image: comprovante, ...deposit }
+        }
+    ]
+    dispatchEvent(events, caixinhaId)
 }
 
 module.exports = async (context, req) => await middleware(context, req, deposito)

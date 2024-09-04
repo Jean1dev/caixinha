@@ -5,6 +5,10 @@ const { connect, replaceDocumentById, insertDocument, getByIdOrThrow } = require
 const sendSMS = require('../utils/sendSMS')
 const dispatchEvent = require('../amqp/events')
 
+function getTodosRemetentesDaCaixinha(caixinha) {
+    return caixinha._members.map(member => member._email)
+}
+
 async function emprestimo(context, req) {
 
     const { valor, juros, parcela, motivo, name, email, caixinhaID, fees } = req.body
@@ -43,6 +47,8 @@ async function emprestimo(context, req) {
         body: emprestimo.UUID
     }
 
+    const remetentes = getTodosRemetentesDaCaixinha(box).filter(remetente => remetente !== email)
+
     sendSMS(`Novo emprestimo do ${member.memberName} - valor ${valor}`)
     dispatchEvent([
         {
@@ -52,7 +58,14 @@ async function emprestimo(context, req) {
             type: 'EMAIL',
             data: {
                 message: `VocÊ abriu um novo emprestimo, protocolo ${emprestimo.UUID}`,
-                remetentes: ['jeanlucafp@gmail.com', member._email]
+                remetentes: [member._email]
+            }
+        },
+        {
+            type: 'EMAIL',
+            data: {
+                message: `Novo emprestimo do ${member.memberName} - valor ${valor}, verifique e aprove no discord`,
+                remetentes
             }
         }
     ], caixinhaID)
