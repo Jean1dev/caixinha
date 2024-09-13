@@ -8,12 +8,13 @@ const dispatchEvent = require('../amqp/events')
 async function deposito(_context, req) {
     const { caixinhaId, valor, name, email, comprovante } = req.body
     const collection = 'caixinhas'
+    const valorNumber = Number(valor)
 
     await connect()
     const boxEntity = await getByIdOrThrow(caixinhaId, collection)
     const box = Box.fromJson(boxEntity)
     const deposit = new Deposit({
-        value: Number(valor),
+        value: valorNumber,
         member: Member.build({ name, email })
     })
 
@@ -24,19 +25,19 @@ async function deposito(_context, req) {
     box.deposit(deposit)
     await replaceDocumentById(caixinhaId, collection, resolveCircularStructureBSON(box))
     await insertDocument('depositos', { idCaixinha: boxEntity._id, ...deposit })
-    sendSMS(`Novo deposito do ${name} - valor ${valor}`)
+    sendSMS(`Novo deposito do ${name} - valor ${valorNumber}`)
     const events = [
         {
             type: 'EMAIL',
             data: {
-                message: `Seu Deposito de R$${valor} foi processado na caixinha ${name}`,
+                message: `Seu Deposito de R$${valorNumber} foi processado na caixinha ${name}`,
                 remetentes: [email],
                 templateCode: 1,
                 customBodyProps: {
                     username: name,
                     operation: 'DEPOSITO',
-                    amount: valor,
-                    totalAmount: valor
+                    amount: valorNumber,
+                    totalAmount: valorNumber
                 }
             }
         },

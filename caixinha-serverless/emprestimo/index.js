@@ -12,6 +12,8 @@ function getTodosRemetentesDaCaixinha(caixinha) {
 async function emprestimo(context, req) {
 
     const { valor, juros, parcela, motivo, name, email, caixinhaID, fees } = req.body
+    const valueRequested = Number(valor)
+    const interest = Number(juros)
 
     await connect()
     const member = Member.build({ name, email })
@@ -21,8 +23,8 @@ async function emprestimo(context, req) {
     const emprestimo = new Loan({
         box,
         member,
-        valueRequested: Number(valor),
-        interest: Number(juros),
+        valueRequested,
+        interest,
         fees: fees || 0,
         description: motivo,
         installments: parcela
@@ -49,7 +51,7 @@ async function emprestimo(context, req) {
 
     const remetentes = getTodosRemetentesDaCaixinha(box).filter(remetente => remetente !== email)
 
-    sendSMS(`Novo emprestimo do ${member.memberName} - valor ${valor}`)
+    sendSMS(`Novo emprestimo do ${member.memberName} - valor ${valueRequested}`)
     dispatchEvent([
         {
             type: 'EMPRESTIMO',
@@ -64,14 +66,14 @@ async function emprestimo(context, req) {
         {
             type: 'EMAIL',
             data: {
-                message: `Novo emprestimo do ${member.memberName} - valor ${valor}, verifique e aprove no discord`,
+                message: `Novo emprestimo do ${member.memberName} - valor ${valueRequested}, verifique e aprove no discord`,
                 remetentes,
                 templateCode: 1,
                 customBodyProps: {
                     username: member.memberName,
                     operation: 'EMPRESTIMO',
-                    amount: valor,
-                    totalAmount: valor
+                    amount: valueRequested,
+                    totalAmount: valueRequested
                 }
             }
         }
