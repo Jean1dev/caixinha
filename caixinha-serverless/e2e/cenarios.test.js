@@ -63,6 +63,7 @@ describe('Teste end to end', () => {
             },
             "deposits": [],
             "loans": [],
+            "loockedForNewMembers": false,
             "name": "e2e-test",
             "_id": "646e588a78404a6458745770"
         }).toStrictEqual(JSON.parse(result))
@@ -103,6 +104,7 @@ describe('Teste end to end', () => {
             },
             "deposits": [],
             "loans": [],
+            "loockedForNewMembers": false,
             "name": "e2e-test"
         }).toStrictEqual(JSON.parse(result))
 
@@ -147,6 +149,7 @@ describe('Teste end to end', () => {
                 }
             ],
             "loans": [],
+            "loockedForNewMembers": false,
             "name": "e2e-test"
         }).toStrictEqual(result)
 
@@ -234,6 +237,7 @@ describe('Teste end to end', () => {
                     ]
                 }
             ],
+            "loockedForNewMembers": false,
             "name": "e2e-test"
         }).toStrictEqual(result)
 
@@ -326,6 +330,7 @@ describe('Teste end to end', () => {
                     }
                 }
             ],
+            "loockedForNewMembers": false,
             "name": "e2e-test"
         }).toStrictEqual(result)
 
@@ -430,6 +435,7 @@ describe('Teste end to end', () => {
                     }
                 }
             ],
+            "loockedForNewMembers": false,
             "name": "e2e-test"
         }).toStrictEqual(result)
     })
