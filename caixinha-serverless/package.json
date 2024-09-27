@@ -6,7 +6,7 @@
     "start": "func start",
     "test": "jest --forceExit --detectOpenHandles",
     "coverage": "jest --coverage",
-    "scripts": "node ./scripts/recalcular-saldo-caixinha.js"
+    "scripts": "node ./scripts/enviar-extrato-por-email.js"
   },
   "dependencies": {
     "@sentry/node": "^7.54.0",
@@ -17,6 +17,8 @@
   },
   "devDependencies": {
     "jest": "^29.5.0",
-    "mongodb-memory-server": "^9.0.1"
+    "mongodb-memory-server": "^9.0.1",
+    "pdfkit": "^0.15.0",
+    "axios": "^1.7.7"
   }
 }
