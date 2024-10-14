@@ -165,7 +165,8 @@ async function run() {
     const listFiles = await gerarRelatorios(extratos)
     const linkAnexos = await uploadRelatorios(listFiles)
     await enviarEmail(linkAnexos)
-    process.exit(0)
 }
 
-run()
+module.exports = {
+    enviarExtrato: run
+}
