@@ -2,7 +2,6 @@ const { resolveCircularStructureBSON } = require('../utils')
 const middleware = require('../utils/middleware')
 const { Member, Box, Loan } = require('caixinha-core/dist/src')
 const { connect, replaceDocumentById, insertDocument, getByIdOrThrow } = require('../v2/mongo-operations')
-const sendSMS = require('../utils/sendSMS')
 const dispatchEvent = require('../amqp/events')
 
 function getTodosRemetentesDaCaixinha(caixinha) {
@@ -51,7 +50,6 @@ async function emprestimo(context, req) {
 
     const remetentes = getTodosRemetentesDaCaixinha(box).filter(remetente => remetente !== email)
 
-    sendSMS(`Novo emprestimo do ${member.memberName} - valor ${valueRequested}`)
     dispatchEvent([
         {
             type: 'EMPRESTIMO',
@@ -76,6 +74,10 @@ async function emprestimo(context, req) {
                     totalAmount: valueRequested
                 }
             }
+        },
+        {
+            type: 'SMS',
+            data: { message: `Novo emprestimo do ${member.memberName} - valor ${valueRequested}` }
         }
     ], caixinhaID)
 }
