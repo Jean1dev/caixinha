@@ -2,7 +2,6 @@ const middleware = require('../utils/middleware')
 const { Box, Member } = require('caixinha-core/dist/src')
 const { connect, getByIdOrThrow, replaceDocumentById, upsert } = require('../v2/mongo-operations')
 const { resolveCircularStructureBSON } = require('../utils')
-const sendSMS = require('../utils/sendSMS')
 const dispatch = require('../amqp/events')
 
 async function aprovarEmprestimo(context, req) {
@@ -18,11 +17,17 @@ async function aprovarEmprestimo(context, req) {
 
     emprestimo.addApprove(new Member(memberName))
     if (emprestimo.isApproved) {
-        sendSMS(`Emprestimo aprovado ${emprestimo._member.memberName}`)
-        dispatch({
-            type: 'EMPRESTIMO_APROVADO',
-            data: { memberName, emprestimoId, caixinhaid }
-        })
+        dispatch([
+            {
+                type: 'EMPRESTIMO_APROVADO',
+                data: { memberName, emprestimoId, caixinhaid }
+            },
+            {
+                type: 'SMS',
+                data: { message: `Emprestimo aprovado ${emprestimo._member.memberName}` }
+            }
+        ], caixinhaid)
+
         const uuidAdicionados = []
         domain['loans'] = domain['loans'].filter(iterator => {
             if (uuidAdicionados.includes(iterator.uid)) {
