@@ -111,6 +111,14 @@ export default function Home() {
                       sx={{ height: '100%' }}
                       tips={[
                         {
+                          title: 'Caixinha Coin (CapiCoin) Saindo do forno.',
+                          content: 'Seja um dos primeiros a começar a usar a nova moeda digital',
+                          link: {
+                            href: '/token-market',
+                            label: 'Saiba mais'
+                          }
+                        },
+                        {
                           title: 'Comece participando de uma caixnha.',
                           content: 'Depois só selecione ali na box ali em cima e esta tudo pronto'
                         }

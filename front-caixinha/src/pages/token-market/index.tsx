@@ -124,7 +124,7 @@ export default function TokenMarket() {
                             <div className="media-icon">
                                 <img
                                     alt="Rocket"
-                                    src={"assets/crypto/images/rocket.svg"}
+                                    src={"assets/crypto/images/capicoin.png"}
                                     width={500}
                                     height={500}
                                 />
