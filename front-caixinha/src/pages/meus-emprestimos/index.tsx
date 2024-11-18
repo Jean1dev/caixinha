@@ -139,10 +139,6 @@ export default function MeusEmprestimos() {
                                 count={0}
                                 group={group}
                                 items={items}
-                                onPageChange={() => {}}
-                                onRowsPerPageChange={() => {}}
-                                page={1}
-                                rowsPerPage={10}
                             />
                         </Stack>
                     </MeusEmprestmosListContainer>
