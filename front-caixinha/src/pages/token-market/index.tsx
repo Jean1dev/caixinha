@@ -5,6 +5,7 @@ import { Seo } from "@/components/Seo";
 import { useSettings } from "@/hooks/useSettings";
 import { Box, Button, Container, Rating, Stack, SvgIcon, Typography } from "@mui/material";
 import Grid from "@mui/material/Unstable_Grid2";
+import { LocalConvenienceStore } from '@mui/icons-material';
 
 export default function TokenMarket() {
     const settings = useSettings()
@@ -112,6 +113,18 @@ export default function TokenMarket() {
                                         variant="contained"
                                     >
                                         Create Wallet
+                                    </Button>
+                                    <Button
+                                        color="inherit"
+                                        component={RouterLink}
+                                        href={'site aqui'}
+                                        startIcon={(
+                                            <SvgIcon fontSize="small">
+                                                <LocalConvenienceStore />
+                                            </SvgIcon>
+                                        )}
+                                    >
+                                        Site institucional
                                     </Button>
                                 </Stack>
                             </Box>

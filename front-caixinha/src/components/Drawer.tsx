@@ -20,7 +20,8 @@ import {
     Reddit,
     AssuredWorkload,
     FiberNew,
-    Savings
+    Savings,
+    AccountBalanceWallet
 } from '@mui/icons-material';
 import { Chip, Link } from '@mui/material';
 
@@ -111,12 +112,18 @@ const carteiraRoutes = [
     {
         text: 'Meus ativos',
         path: 'carteira/meus-ativos',
-        icon: <CurrencyBitcoin />
+        icon: <AccountBalanceWallet />
     },
     {
         text: 'Novo aporte',
         path: 'carteira/aporte',
         icon: <SavingsOutlined />,
+        newFeature: true
+    },
+    {
+        text: 'Alt-Coins',
+        path: '/token-market',
+        icon: <CurrencyBitcoin />,
         newFeature: true
     }
 ]
