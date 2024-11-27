@@ -20,7 +20,7 @@ export const Dicas = (props: any) => {
   return (
     <Slider {...sliderSettings}>
       {tips.map((tip: any, index: number) => (
-        <Card sx={sx}>
+        <Card key={index} sx={sx}>
           <CardContent
             sx={{
               display: 'flex',

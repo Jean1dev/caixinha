@@ -1,7 +1,6 @@
+import { Chart } from '@/components/chart';
 import { Box } from '@mui/material';
 import React, { useEffect, useState } from 'react';
-
-import ReactApexChart from 'react-apexcharts';
 
 interface ISeries {
     series: any;
@@ -285,7 +284,7 @@ const TradeMapping = () => {
             </div>
             <div className='box-content box-content-height-nobutton'>
                 {state && (
-                    <ReactApexChart
+                    <Chart
                         options={state.options}
                         series={state.series}
                         type='candlestick'
