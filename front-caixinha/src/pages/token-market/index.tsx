@@ -3,12 +3,69 @@ import Layout from "@/components/Layout";
 import { RouterLink } from "@/components/RouterLink";
 import { Seo } from "@/components/Seo";
 import { useSettings } from "@/hooks/useSettings";
-import { Box, Button, Container, Rating, Stack, SvgIcon, Typography } from "@mui/material";
+import { 
+    Box, 
+    Button, 
+    Container, 
+    Rating, 
+    Stack, 
+    SvgIcon, 
+    Typography 
+} from "@mui/material";
 import Grid from "@mui/material/Unstable_Grid2";
 import { LocalConvenienceStore } from '@mui/icons-material';
+import { genereateSolanaKeyPair } from 'web3-client-lib/dist/src/solana/index';
+import { useCallback, useState } from 'react';
+import useWeb3Wallet from '@/hooks/useWeb3Wallet';
+import toast from 'react-hot-toast';
+import { useRouter } from 'next/router';
 
 export default function TokenMarket() {
     const settings = useSettings()
+    const [loading, setLoading] = useState(false);
+    const { web3Wallet, saveData } = useWeb3Wallet();
+    const router = useRouter();
+
+    const createWallet = useCallback(() => {
+        if (web3Wallet?.publicKey) {
+            toast('Carteira já criada');
+            toast.loading('Redirecionando em 2 segundos')
+            setTimeout(() => {
+                router.push('/defi-market');
+            }, 2000);
+
+            return;
+        }
+
+        setLoading(true);
+        genereateSolanaKeyPair().then((solanaResponse) => {
+            if (solanaResponse.error) {
+                toast.error(solanaResponse.errorDetails?.message || 'Erro ao criar carteira');
+                return
+            }
+
+            const { privKey, pubKey } = solanaResponse;
+            const walletData = {
+                privateKey: privKey,
+                publicKey: pubKey
+            };
+            const blob = new Blob([JSON.stringify(walletData, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'wallet.json';
+            a.click();
+            URL.revokeObjectURL(url);
+
+            alert('Carteira criada. Cuide bem da sua chave privada, pois ela é irrecuperável!');
+
+            saveData(pubKey || '');
+            router.push('/defi-market');
+
+        }).finally(() => {
+            setLoading(false);
+        });
+    }, [web3Wallet]); 
 
     return (
         <Layout>
@@ -88,8 +145,8 @@ export default function TokenMarket() {
                                     spacing={2}
                                 >
                                     <Button
-                                        component={RouterLink}
-                                        href={"/"}
+                                        onClick={createWallet}
+                                        disabled={loading}
                                         startIcon={(
                                             <SvgIcon fontSize="small">
                                                 <WalletIcon />
@@ -112,12 +169,12 @@ export default function TokenMarket() {
                                             }}
                                         variant="contained"
                                     >
-                                        Create Wallet
+                                        {loading ? 'Creating wallet...' : 'Create wallet'}
                                     </Button>
                                     <Button
                                         color="inherit"
                                         component={RouterLink}
-                                        href={'site aqui'}
+                                        href={'https://capicoin-web3.vercel.app'}
                                         startIcon={(
                                             <SvgIcon fontSize="small">
                                                 <LocalConvenienceStore />
