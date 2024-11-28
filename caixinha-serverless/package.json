@@ -6,7 +6,7 @@
     "start": "func start",
     "test": "jest --forceExit --detectOpenHandles",
     "coverage": "jest --coverage",
-    "scripts": "node ./scripts/atualizar-foto-usuarios-gravatar.js"
+    "scripts": "node ./scripts/enviar-extrato-por-email.js"
   },
   "dependencies": {
     "@sentry/node": "^7.54.0",

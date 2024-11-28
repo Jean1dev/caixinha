@@ -6,7 +6,6 @@ import SvgIcon from '@mui/material/SvgIcon';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
-import TablePagination from '@mui/material/TablePagination';
 import TableRow from '@mui/material/TableRow';
 import Typography from '@mui/material/Typography';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
@@ -122,11 +121,6 @@ export const MeuEmprestimosListTable = (props: any) => {
     const {
         group = false,
         items = [],
-        count = 0,
-        onPageChange = () => { },
-        onRowsPerPageChange,
-        page = 0,
-        rowsPerPage = 0
     } = props;
     const router = useRouter()
 
@@ -217,15 +211,6 @@ export const MeuEmprestimosListTable = (props: any) => {
     return (
         <Stack spacing={4}>
             {content}
-            <TablePagination
-                component="div"
-                count={count}
-                onPageChange={onPageChange}
-                onRowsPerPageChange={onRowsPerPageChange}
-                page={page}
-                rowsPerPage={rowsPerPage}
-                rowsPerPageOptions={[5, 10, 25]}
-            />
         </Stack>
     );
 };
