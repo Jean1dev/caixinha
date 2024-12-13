@@ -1,0 +1,98 @@
+{
+    "home": {
+        "seo": "Caixinha informações"
+    },
+    "dicas": [
+        {
+            "title": "Caixinha Coin (CapiCoin) Saindo do forno.",
+            "content": "Seja um dos primeiros a começar a usar a nova moeda digital",
+            "link_label": "Saiba mais"
+        },
+        {
+            "title": "Comece participando de uma caixnha.",
+            "content": "Depois só selecione ali na box ali em cima e esta tudo pronto",
+            "link_label": "Saiba mais"
+        }
+    ],
+    "listar_caixinha_disponiveis": "listar todas as caixinhas disponiveis",
+    "depositar": "Fazer um novo deposito na minha caixinha",
+    "ver_meu_extrato": "ver todas minhas movimentações",
+    "banner_novidades": {
+        "title": "Release 1 liberada",
+        "content": "Mais transparencia, segurança e praticidade",
+        "content2": "A caixinha agora é um aplicativo que vai te oferecer ainda mais coisas",
+        "btn_click": "Abrir configurações"
+    },
+    "pagamento_efetuado": "Pagamento efetuado com sucesso",
+    "ultimo_emprestimo": "Seu Ultimo Emprestimo",
+    "origem": "Origem",
+    "valor_a_ser_pago": "Valor a ser pago",
+    "ver_detalhes": "Ver detalhes (Chave pix....)",
+    "pagar": "Pagar",
+    "emprestimo_quitado": "Emprestimo quitado com sucesso",
+    "not_found": "Ops, Parece que tivemos um problema por aqui!",
+    "not_found_404": "404: Essa pagina não existe ou esta com algum problema",
+    "erro_rota": "Você tentou alguma rota desconhecido ou veio aqui por engano.Seja qual for, tente usar a navegação",
+    "voltar": "Voltar à página inicial",
+    "sucesso": "Sucesso",
+    "notificaremos": "Notificaremos os outros membros",
+    "renegociacao": {
+        "solicitando_renegociacao": "Solicitando Renegociação",
+        "title": "Renegociação",
+        "ultimo_emprestimo": "Seu Ultimo Emprestimo",
+        "proposta_personalizada": "Para um proposta personalizada contato o administrador da caixinha",
+        "proposta": "Proposta",
+        "resumo": "Resumo",
+        "parcelamento": "Parcelamento disponivel",
+        "aceitar": "Aceitar proposta",
+        "ultima_data_pagamento": "A ultima data de pagamento esperado era",
+        "proposta_p_voce": "Temos uma proposta personalizada para  você.",
+        "ver_proposta": "Ver proposta"
+    },
+    "valor_solicitado": "Valor solicitado",
+    "perfil": {
+        "seo": "Informacoes do Perfil",
+        "detalhes": "Detalhes da conta",
+        "atualizado": "Perfil atualizado",
+        "detalhes_basicos": "Detalhes basicos",
+        "configuracoes": "Configurações do pefil publico",
+        "publicar": "Publicar ao investir",
+        "publicar_descricao": "Sempre que um ativo for adicionado a sua carteira publica automaticamente um detalhe sobre.",
+        "permitir_amigos": "Permitir convites de amizade",
+        "permitir_amigos_descricao": "Permite que outros usuarios encontrem e enviei solicitação de amizade pra você.",
+        "deletar_conta": "Deletar conta",
+        "deletar_conta_descricao": "Deletar sua conta ira remover todos os seus dados e não poderá ser desfeito.",
+    },
+    "upload_sucesso": "Upload feito com sucesso",
+    "realizando_uploao": "Realizando upload",
+    "alterar": "Alterar",
+    "nome": "Nome",
+    "email": "Email",
+    "telefone": "Telefone",
+    "salvar": "Salvar",
+    "sair": "Sair",
+    "extrato": "Extrato",
+    "filtros": "Filtros",
+    "operacao": "Operação",
+    "membro": "Membro",
+    "data": "Data",
+    "status": "Status",
+    "value": "Valor",
+    "extrato_filtros": {
+        "todo_mundo": "De todo mundo",
+        "somente_meu": "Somente meu",
+        "remover_depositos": "Remover depositos",
+        "incluir_depositos": "Incluir depositos",
+        "publicando": "Publicando seu conteudo",
+        "placeholder": "O que voce esta pensando?"
+    },
+    "feed": {
+        "seo": "Feed",
+        "title": "Feed",
+        "link_copiado": "Link copiado para a área de transferência",
+        "erro_copiar_link": "Erro ao copiar o Link para a área de transferência:",
+        "att_status": "Atualize seu status"
+    },
+    "operacao_irreversivel": "Essa operacao e irreversivel voce tem certeza que deseja continuar?",
+    "saiu_caixinha": "Você saiu da caixinha"
+}

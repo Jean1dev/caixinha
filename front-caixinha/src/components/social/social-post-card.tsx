@@ -29,6 +29,7 @@ export const SocialPostCard = (props: any) => {
     likes: likesProp,
     media,
     message,
+    translation,
     ...other
   } = props;
   const [isLiked, setIsLiked] = useState(isLikedProp);
@@ -50,10 +51,10 @@ export const SocialPostCard = (props: any) => {
     const currentUrl = window.location.href
     navigator.clipboard.writeText(`${currentUrl}/${postId}`)
       .then(() => {
-        toast.success('Link copiado para a área de transferência');
+        toast.success(translation.feed.link_copiado);
       })
       .catch(() => {
-        toast.error('Erro ao copiar o Link para a área de transferência:');
+        toast.error(translation.feed.erro_copiar_link);
       })
   }, [postId])
 
@@ -101,7 +102,7 @@ export const SocialPostCard = (props: any) => {
               {authorName}
             </Link>
             <Typography variant="body2">
-              updated her status
+              {translation.feed.att_status}
             </Typography>
           </Stack>
         )}

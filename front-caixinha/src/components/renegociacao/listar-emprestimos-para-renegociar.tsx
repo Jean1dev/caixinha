@@ -1,3 +1,4 @@
+import { useTranslations } from "@/hooks/useTranlations"
 import { useUserAuth } from "@/hooks/useUserAuth"
 import { getUltimoEmprestimoPendente } from "@/pages/api/api.service"
 import {
@@ -24,6 +25,7 @@ function extractData(data: string[] | null) {
 export const ListarEmprestimosParaRenegociar = ({ verProposta }: any) => {
     const [ultimoEmprestimoAtalho, setUltimoEmprestimoAtalho] = useState<any | null>(null)
     const { user } = useUserAuth()
+    const { t } = useTranslations()
 
     useEffect(() => {
         if (user.name === '' || !user) {
@@ -74,7 +76,7 @@ export const ListarEmprestimosParaRenegociar = ({ verProposta }: any) => {
                                         color="text.secondary"
                                         variant="body2"
                                     >
-                                        Valor solicitado R$ {ultimoEmprestimoAtalho?.data?.valueRequested.value}
+                                        {t.valor_solicitado} R$ {ultimoEmprestimoAtalho?.data?.valueRequested.value}
                                     </Typography>
                                 </Stack>
                             </Stack>
@@ -86,13 +88,13 @@ export const ListarEmprestimosParaRenegociar = ({ verProposta }: any) => {
                             >
                                 <Stack spacing={1}>
                                     <Typography variant="subtitle1">
-                                        A ultima data de pagamento esperado era {extractData(ultimoEmprestimoAtalho?.data?.billingDates)}
+                                        {t.renegociacao.ultima_data_pagamento} {extractData(ultimoEmprestimoAtalho?.data?.billingDates)}
                                     </Typography>
                                     <Typography
                                         color="text.secondary"
                                         variant="body2"
                                     >
-                                        Temos uma proposta personalizada para  você.
+                                        {t.renegociacao.proposta_p_voce}
                                     </Typography>
                                 </Stack>
                                 <Button
@@ -100,7 +102,7 @@ export const ListarEmprestimosParaRenegociar = ({ verProposta }: any) => {
                                     variant="outlined"
                                     onClick={() => verProposta(ultimoEmprestimoAtalho?.data?.uid)}
                                 >
-                                    Ver proposta
+                                    {t.ver_proposta}
                                 </Button>
                             </Stack>
                         </Stack>
