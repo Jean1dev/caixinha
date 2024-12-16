@@ -102,7 +102,7 @@ export const ListarEmprestimosParaRenegociar = ({ verProposta }: any) => {
                                     variant="outlined"
                                     onClick={() => verProposta(ultimoEmprestimoAtalho?.data?.uid)}
                                 >
-                                    {t.ver_proposta}
+                                    {t.renegociacao.ver_proposta}
                                 </Button>
                             </Stack>
                         </Stack>

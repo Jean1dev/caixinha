@@ -324,14 +324,17 @@ export async function consolidar(carteira: string): Promise<void> {
     return asyncFetch('/carteira/consolidar/' + carteira, 'POST')
 }
 
-export async function getListaSugestao(query: string): Promise<string[]> {
+interface searchQuery {
+    query: string
+    crypto: boolean
+}
+
+export async function getListaSugestao(query: searchQuery): Promise<string[]> {
     if (dev) {
         return retornaComAtraso(['PETR4', 'ABCB4', 'ALUP11'])
     }
 
-
-
-    return asyncFetch('/ativo/sugestao?query=' + query, 'GET')
+    return asyncFetch(`/ativo/sugestao?query=${query.query}&onlyCrypto=${query.crypto}`, 'GET')
 }
 
 export async function getSlideAcoes(): Promise<any[]> {

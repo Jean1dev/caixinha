@@ -61,7 +61,7 @@
         "permitir_amigos": "Permitir convites de amizade",
         "permitir_amigos_descricao": "Permite que outros usuarios encontrem e enviei solicitação de amizade pra você.",
         "deletar_conta": "Deletar conta",
-        "deletar_conta_descricao": "Deletar sua conta ira remover todos os seus dados e não poderá ser desfeito.",
+        "deletar_conta_descricao": "Deletar sua conta ira remover todos os seus dados e não poderá ser desfeito."
     },
     "upload_sucesso": "Upload feito com sucesso",
     "realizando_uploao": "Realizando upload",
@@ -94,5 +94,19 @@
         "att_status": "Atualize seu status"
     },
     "operacao_irreversivel": "Essa operacao e irreversivel voce tem certeza que deseja continuar?",
-    "saiu_caixinha": "Você saiu da caixinha"
+    "saiu_caixinha": "Você saiu da caixinha",
+    "alterou_idioma": "Idioma alterado com sucesso",
+    "loading": "Carregando...",
+    "carteira": {
+        "ativo_add": "Ativo adicionado com sucesso",
+        "carteira": "Carteira",
+        "tipo_ativo": "Tipo de ativo",
+        "info": "Informações",
+        "postar_automaticamente": "Postar automaticamente que estou investindo nesse ativo",
+        "diagrama": "Diagrama",
+        "nota": "Nota"
+    },
+    "quantidade": "Quantidade",
+    "valor_atual": "Valor atual",
+    "cancelar": "Cancelar"
 }

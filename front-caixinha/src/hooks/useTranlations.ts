@@ -1,5 +1,5 @@
 import { useRouter } from "next/router"
-import { useEffect, useState } from "react"
+import { useCallback, useEffect, useState } from "react"
 import ptLang from "@/locales/pt-BR.json"
 import enLang from "@/locales/en-US.json"
 
@@ -12,10 +12,16 @@ function getTranslations(locale: string | undefined) {
 export function useTranslations() {
   const { locale } = useRouter()
   const [t, setT] = useState(() => getTranslations(locale))
-  
+  const [currentLocale, setCurrentLocale] = useState<string>(locale || "pt-BR")
+
   useEffect(() => {
     setT(getTranslations(locale))
   }, [locale])
 
-  return { t }
+  const set = useCallback((newLocale: string) => {
+    setT(getTranslations(newLocale))
+    setCurrentLocale(newLocale)
+  }, [])
+
+  return { t, set, currentLocale }
 }
