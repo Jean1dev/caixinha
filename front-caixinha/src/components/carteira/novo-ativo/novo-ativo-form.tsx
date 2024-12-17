@@ -1,8 +1,8 @@
-import { 
-    criarAtivo, 
-    getListaSugestao, 
-    getMinhasCarteiras, 
-    getTipoAtivos 
+import {
+    criarAtivo,
+    getListaSugestao,
+    getMinhasCarteiras,
+    getTipoAtivos
 } from "@/pages/api/api.carteira";
 import {
     Button,
@@ -29,7 +29,7 @@ export const NovoAtivoForm = () => {
         tipoAtivo: ''
     })
     const { t } = useTranslations()
-    
+
     const [sugestaoList, setSugestaoList] = useState<string[]>([])
     const [categoryOptions, setOptions] = useState<any[]>([])
     const [carteiras, setCarteiras] = useState<any[] | null>(null)
@@ -64,7 +64,7 @@ export const NovoAtivoForm = () => {
     const handleSubmit = async (e: React.ChangeEvent<HTMLFormElement>) => {
         e.preventDefault()
         toast.loading(t.loading)
-        
+
         criarAtivo({
             tipoAtivo: state.tipoAtivo,
             nota: state.nota,
@@ -99,28 +99,25 @@ export const NovoAtivoForm = () => {
         })
     }
 
-    const updateSugestaoList = (query: string) => {
-        const payload = {
+    const updateSugestaoList = useCallback((query: string) => {
+        getListaSugestao({
             query,
-            crypto: false
-        }
-
-        if (state.tipoAtivo === 'CRYPTO') {
-            payload.crypto = true
-        
-        }
-        getListaSugestao(payload).then(data => setSugestaoList(data))
-    }
+            crypto: state.tipoAtivo === 'CRYPTO'
+        })
+            .then(data => setSugestaoList(data))
+    }, [state.tipoAtivo])
 
     const handleChange = useCallback(
         (event: React.ChangeEvent<HTMLInputElement>) => {
-            if (event.target.name === 'nome')
-                updateSugestaoList(event.target.value)
+            setState((prevState: any) => {
+                if (event.target.name === 'nome')
+                    updateSugestaoList(event.target.value)
 
-            setState((prevState: any) => ({
-                ...prevState,
-                [event.target.name]: event.target.value
-            }));
+                return {
+                    ...prevState,
+                    [event.target.name]: event.target.value
+                }
+            });
         },
         []
     );
@@ -242,7 +239,7 @@ export const NovoAtivoForm = () => {
                                                 <Autocomplete
                                                     freeSolo={true}
                                                     options={sugestaoList.map((i: string) => (i))}
-                                                    onChange={(_, value) => setState({...state, nome: value})}
+                                                    onChange={(_, value) => setState({ ...state, nome: value })}
                                                     renderInput={(params: any) => (
                                                         <TextField
                                                             {...params}

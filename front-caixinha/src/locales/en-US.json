@@ -64,7 +64,7 @@
         "deletar_conta_descricao": "Deletar sua conta ira remover todos os seus dados e não poderá ser desfeito."
     },
     "upload_sucesso": "Upload feito com sucesso",
-    "realizando_uploao": "Realizando upload",
+    "realizando_upload": "Realizando upload",
     "alterar": "Alterar",
     "nome": "Nome",
     "email": "Email",
@@ -82,16 +82,16 @@
         "todo_mundo": "De todo mundo",
         "somente_meu": "Somente meu",
         "remover_depositos": "Remover depositos",
-        "incluir_depositos": "Incluir depositos",
-        "publicando": "Publicando seu conteudo",
-        "placeholder": "O que voce esta pensando?"
+        "incluir_depositos": "Incluir depositos"
     },
     "feed": {
         "seo": "Feed",
         "title": "Feed",
         "link_copiado": "Link copiado para a área de transferência",
         "erro_copiar_link": "Erro ao copiar o Link para a área de transferência:",
-        "att_status": "Atualize seu status"
+        "att_status": "Atualize seu status",
+        "publicando": "Publicando seu conteudo",
+        "placeholder": "O que voce esta pensando?"
     },
     "operacao_irreversivel": "Essa operacao e irreversivel voce tem certeza que deseja continuar?",
     "saiu_caixinha": "Você saiu da caixinha",
@@ -108,5 +108,11 @@
     },
     "quantidade": "Quantidade",
     "valor_atual": "Valor atual",
-    "cancelar": "Cancelar"
+    "cancelar": "Cancelar",
+    "total": "Total",
+    "pago": "Pago",
+    "emprestimo": {
+        "referente_ultimos": "Referente aos ultimos",
+        "pendente_aprovacao": "Pendente de aprovação"
+    }
 }

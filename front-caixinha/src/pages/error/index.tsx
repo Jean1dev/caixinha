@@ -53,7 +53,7 @@ export default function ErrorPage() {
                             sx={{ mb: 3 }}
                             variant="h3"
                         >
-                            {t.not_fount_404}
+                            {t.not_found_404}
                         </Typography>
                         <Typography
                             align="center"

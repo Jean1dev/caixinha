@@ -6,7 +6,7 @@ export default function NotFoundPage() {
 
     return (
         <div>
-            <h1>{t.not_fount}</h1>
+            <h1>{t.not_found}</h1>
             <img
                 alt="Under development"
                 src="/assets/error-404.png"
