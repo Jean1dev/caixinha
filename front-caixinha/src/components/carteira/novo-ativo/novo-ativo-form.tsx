@@ -1,4 +1,9 @@
-import { criarAtivo, getListaSugestao, getMinhasCarteiras, getTipoAtivos } from "@/pages/api/api.carteira";
+import {
+    criarAtivo,
+    getListaSugestao,
+    getMinhasCarteiras,
+    getTipoAtivos
+} from "@/pages/api/api.carteira";
 import {
     Button,
     Card,
@@ -17,12 +22,14 @@ import { DisplayResumoNota } from "./display-resumo-nota";
 import toast from "react-hot-toast";
 import { useSession } from "next-auth/react";
 import { publicarPost } from "@/pages/api/api.service";
+import { useTranslations } from "@/hooks/useTranlations";
 
 export const NovoAtivoForm = () => {
     const [state, setState] = useState<any>({
         tipoAtivo: ''
     })
-    
+    const { t } = useTranslations()
+
     const [sugestaoList, setSugestaoList] = useState<string[]>([])
     const [categoryOptions, setOptions] = useState<any[]>([])
     const [carteiras, setCarteiras] = useState<any[] | null>(null)
@@ -56,8 +63,8 @@ export const NovoAtivoForm = () => {
 
     const handleSubmit = async (e: React.ChangeEvent<HTMLFormElement>) => {
         e.preventDefault()
-        toast.loading('Enviando dados')
-        
+        toast.loading(t.loading)
+
         criarAtivo({
             tipoAtivo: state.tipoAtivo,
             nota: state.nota,
@@ -67,7 +74,7 @@ export const NovoAtivoForm = () => {
             valorAtual: state.valorAtual
         })
             .then(() => {
-                toast.success('Ativo adicionado')
+                toast.success(t.carteira.ativo_add)
                 // if perfil.publicarAoInvestir = true
                 publicarPost({
                     message: `Estou investindo em ${state.nome}`,
@@ -92,19 +99,25 @@ export const NovoAtivoForm = () => {
         })
     }
 
-    const updateSugestaoList = (query: string) => {
-        getListaSugestao(query).then(data => setSugestaoList(data))
-    }
+    const updateSugestaoList = useCallback((query: string) => {
+        getListaSugestao({
+            query,
+            crypto: state.tipoAtivo === 'CRYPTO'
+        })
+            .then(data => setSugestaoList(data))
+    }, [state.tipoAtivo])
 
     const handleChange = useCallback(
         (event: React.ChangeEvent<HTMLInputElement>) => {
-            if (event.target.name === 'nome')
-                updateSugestaoList(event.target.value)
+            setState((prevState: any) => {
+                if (event.target.name === 'nome')
+                    updateSugestaoList(event.target.value)
 
-            setState((prevState: any) => ({
-                ...prevState,
-                [event.target.name]: event.target.value
-            }));
+                return {
+                    ...prevState,
+                    [event.target.name]: event.target.value
+                }
+            });
         },
         []
     );
@@ -126,7 +139,7 @@ export const NovoAtivoForm = () => {
                                         md={4}
                                     >
                                         <Typography variant="h6">
-                                            Carteira
+                                            {t.carteira.carteira}
                                         </Typography>
                                     </Grid>
                                     <Grid
@@ -136,7 +149,7 @@ export const NovoAtivoForm = () => {
                                         <Stack spacing={3}>
                                             <TextField
                                                 fullWidth
-                                                label="Carteira"
+                                                label={t.carteira.carteira}
                                                 name="identificacaoCarteira"
                                                 onChange={handleChange}
                                                 select
@@ -171,7 +184,7 @@ export const NovoAtivoForm = () => {
                                 md={4}
                             >
                                 <Typography variant="h6">
-                                    Classificação do ativo
+                                    {t.carteira.tipo_ativo}
                                 </Typography>
                             </Grid>
                             <Grid
@@ -181,7 +194,7 @@ export const NovoAtivoForm = () => {
                                 <Stack spacing={3}>
                                     <TextField
                                         fullWidth
-                                        label="Tipo"
+                                        label={t.carteira.tipo_ativo}
                                         name="tipoAtivo"
                                         onChange={handleChange}
                                         select
@@ -215,7 +228,7 @@ export const NovoAtivoForm = () => {
                                             md={4}
                                         >
                                             <Typography variant="h6">
-                                                Informações
+                                                {t.carteira.info}
                                             </Typography>
                                         </Grid>
                                         <Grid
@@ -226,12 +239,12 @@ export const NovoAtivoForm = () => {
                                                 <Autocomplete
                                                     freeSolo={true}
                                                     options={sugestaoList.map((i: string) => (i))}
-                                                    onChange={(_, value) => setState({...state, nome: value})}
+                                                    onChange={(_, value) => setState({ ...state, nome: value })}
                                                     renderInput={(params: any) => (
                                                         <TextField
                                                             {...params}
                                                             fullWidth
-                                                            label="Nome"
+                                                            label={t.nome}
                                                             name="nome"
                                                             onChange={handleChange}
                                                             value={state.nome}
@@ -240,7 +253,7 @@ export const NovoAtivoForm = () => {
                                                 />
                                                 <TextField
                                                     fullWidth
-                                                    label="Quantidade"
+                                                    label={t.quantidade}
                                                     name="quantidade"
                                                     onChange={handleChange}
                                                     type="number"
@@ -249,7 +262,7 @@ export const NovoAtivoForm = () => {
                                                 {state.tipoAtivo === 'RENDA_FIXA' && (
                                                     <TextField
                                                         fullWidth
-                                                        label="Valor atual"
+                                                        label={t.valor_atual}
                                                         name="valorAtual"
                                                         onChange={handleChange}
                                                         type="number"
@@ -259,7 +272,7 @@ export const NovoAtivoForm = () => {
                                                 <div>
                                                     <FormControlLabel
                                                         control={<Switch defaultChecked />}
-                                                        label="Postar automaticamente que estou investindo nesse ativo"
+                                                        label={t.carteira.postar_automaticamente}
                                                     />
                                                 </div>
                                             </Stack>
@@ -278,7 +291,7 @@ export const NovoAtivoForm = () => {
                                             md={4}
                                         >
                                             <Typography variant="h6">
-                                                Diagrama
+                                                {t.carteira.diagrama}
                                             </Typography>
                                         </Grid>
                                         <Grid
@@ -288,7 +301,7 @@ export const NovoAtivoForm = () => {
                                             <Stack spacing={3}>
                                                 <TextField
                                                     fullWidth
-                                                    label="Nota"
+                                                    label={t.carteira.nota}
                                                     name="nota"
                                                     onChange={handleChange}
                                                     type="number"
@@ -307,13 +320,13 @@ export const NovoAtivoForm = () => {
                                 spacing={1}
                             >
                                 <Button color="inherit" onClick={cancel}>
-                                    Cancel
+                                    {t.cancelar}
                                 </Button>
                                 <Button
                                     type="submit"
                                     variant="contained"
                                 >
-                                    Create
+                                    {t.salvar}
                                 </Button>
                             </Stack>
                         </>

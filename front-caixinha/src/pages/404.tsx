@@ -1,8 +1,12 @@
+import { useTranslations } from '@/hooks/useTranlations';
 import Link from 'next/link';
+
 export default function NotFoundPage() {
+    const { t } = useTranslations();
+
     return (
         <div>
-            <h1>Ops, Parece que tivemos um problema por aqui!</h1>
+            <h1>{t.not_found}</h1>
             <img
                 alt="Under development"
                 src="/assets/error-404.png"
@@ -12,7 +16,7 @@ export default function NotFoundPage() {
                     width: 250
                 }}
             />
-            <Link href="/">Voltar à página inicial</Link>
+            <Link href="/">{t.voltar}</Link>
         </div>
     );
 };

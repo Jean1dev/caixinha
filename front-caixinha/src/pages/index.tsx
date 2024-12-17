@@ -11,6 +11,7 @@ import { getAleatorio } from "@/utils/utils";
 import { useEffect, useState } from "react";
 import { getUltimoEmprestimoPendente } from "./api/api.service";
 import { useUserAuth } from "@/hooks/useUserAuth";
+import { useTranslations } from "@/hooks/useTranlations";
 
 const corAleatoriaCombinada = () => {
   const cores = [
@@ -55,6 +56,8 @@ const card = (title: string, description: string, action: any) => {
 export default function Home() {
   const router = useRouter()
   const settings = useSettings()
+  const { t } = useTranslations()
+  
   const [ultimoEmprestimoAtalho, setUltimoEmprestimoAtalho] = useState<any | null>(null)
   const { user } = useUserAuth()
 
@@ -73,7 +76,7 @@ export default function Home() {
 
   return (
     <Layout>
-      <Seo title="Caixinha informações" />
+      <Seo title={t.home.seo} />
       <Box component="main"
         sx={{
           flexGrow: 1,
@@ -111,16 +114,16 @@ export default function Home() {
                       sx={{ height: '100%' }}
                       tips={[
                         {
-                          title: 'Caixinha Coin (CapiCoin) Saindo do forno.',
-                          content: 'Seja um dos primeiros a começar a usar a nova moeda digital',
+                          title: t.dicas[0].title,
+                          content: t.dicas[0].content,
                           link: {
                             href: '/token-market',
-                            label: 'Saiba mais'
+                            label: t.dicas[0].link_label
                           }
                         },
                         {
-                          title: 'Comece participando de uma caixnha.',
-                          content: 'Depois só selecione ali na box ali em cima e esta tudo pronto'
+                          title: t.dicas[0].title,
+                          content: t.dicas[0].content
                         }
                       ]}
                     />
@@ -133,7 +136,7 @@ export default function Home() {
               xs={12}
               md={7}
             >
-              {card("Caixinhas", "listar todas as caixinhas disponiveis", () => { router.push('caixinhas-disponiveis') })}
+              {card("Caixinhas", t.listar_caixinha_disponiveis, () => { router.push('caixinhas-disponiveis') })}
             </Grid>
 
             <Grid
@@ -141,7 +144,7 @@ export default function Home() {
               md={7}
             >
 
-              {card("Depositar", "Fazer um novo deposito na minha caixinha", () => { router.push('deposito') })}
+              {card("Depositar", t.depositar, () => { router.push('deposito') })}
 
             </Grid>
 
@@ -149,7 +152,7 @@ export default function Home() {
               xs={12}
               md={7}
             >
-              {card("Meu Extrato", "ver todas minhas movimentações", () => { router.push('extrato') })}
+              {card("Meu Extrato", t.ver_meu_extrato, () => { router.push('extrato') })}
             </Grid>
 
           </Grid>

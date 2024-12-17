@@ -5,10 +5,8 @@ import {
     Container,
     Stack,
     Typography,
-    Unstable_Grid2 as Grid,
     Pagination,
     Card,
-    Divider,
     Table,
     TableBody,
     TableCell,
@@ -24,6 +22,7 @@ import FilterAltIcon from '@mui/icons-material/FilterAlt';
 import FilterAltOffIcon from '@mui/icons-material/FilterAltOff';
 import CenteredCircularProgress from "@/components/CenteredCircularProgress";
 import DisplayValorMonetario from "@/components/display-valor-monetario";
+import { useTranslations } from "@/hooks/useTranlations";
 
 export default function Extrato() {
     const [data, setData] = useState([])
@@ -33,6 +32,7 @@ export default function Extrato() {
     const [emprestimosFiltro, setEmprestimosFiltro] = useState(true)
     const router = useRouter()
     const { data: user } = useSession()
+    const { t } = useTranslations()
 
     useEffect(() => {
         setLoading(true)
@@ -78,23 +78,23 @@ export default function Extrato() {
                         >
                             <Stack spacing={1}>
                                 <Typography variant="h4">
-                                    Extrato
+                                    {t.extrato}
                                 </Typography>
 
                             </Stack>
 
                         </Stack>
                         <Card sx={{ p: 2, width: '100%' }}>
-                            <Typography> Filtros</Typography>
+                            <Typography> {t.filtros}</Typography>
                             <Chip
-                                label={somenteMeuFiltro ? 'De todo mundo' : 'Somente meus'}
+                                label={somenteMeuFiltro ? t.extrato_filtros.todo_mundo : t.extrato_filtros.somente_meu }
                                 variant={somenteMeuFiltro ? 'filled' : 'outlined'}
                                 color={somenteMeuFiltro ? 'success' : 'default'}
                                 onClick={() => { setSomenteMeuFiltro(!somenteMeuFiltro) }}
                                 onDelete={() => { setEmprestimosFiltro(!emprestimosFiltro) }}
                                 deleteIcon={somenteMeuFiltro ? <FilterAltOffIcon /> : <FilterAltIcon />} />
                             <Chip
-                                label={depositosFiltro ? 'Remover depositos' : 'Incluir depositos'}
+                                label={depositosFiltro ? t.extrato_filtros.remover_depositos : t.extrato_filtros.incluir_depositos }
                                 variant={depositosFiltro ? 'filled' : 'outlined'}
                                 color={depositosFiltro ? 'success' : 'default'}
                                 onClick={() => { setDepositosFiltro(!depositosFiltro) }}
@@ -119,19 +119,19 @@ export default function Extrato() {
                                             <TableHead>
                                                 <TableRow>
                                                     <TableCell>
-                                                        Operação
+                                                        {t.operacao}
                                                     </TableCell>
                                                     <TableCell>
-                                                        membro
+                                                        {t.membro}
                                                     </TableCell>
                                                     <TableCell>
-                                                        Valor
+                                                        {t.value}
                                                     </TableCell>
                                                     <TableCell sortDirection="desc">
-                                                        Data
+                                                        {t.data}
                                                     </TableCell>
                                                     <TableCell>
-                                                        Status
+                                                        {t.status}
                                                     </TableCell>
                                                 </TableRow>
                                             </TableHead>
