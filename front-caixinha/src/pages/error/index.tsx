@@ -3,8 +3,11 @@ import NextLink from 'next/link';
 import { Box, Button, Container, SvgIcon, Typography } from '@mui/material';
 import { ArrowLeftOutlined } from '@mui/icons-material';
 import Image from 'next/image';
+import { useTranslations } from '@/hooks/useTranlations';
 
 export default function ErrorPage() {
+    const { t } = useTranslations()
+
     return (
         <>
             <Head>
@@ -50,15 +53,14 @@ export default function ErrorPage() {
                             sx={{ mb: 3 }}
                             variant="h3"
                         >
-                            404: Essa pagina não existe ou esta com algum problema
+                            {t.not_found_404}
                         </Typography>
                         <Typography
                             align="center"
                             color="text.secondary"
                             variant="body1"
                         >
-                            Você tentou alguma rota desconhecido ou veio aqui por engano.
-                            Seja qual for, tente usar a navegação
+                            {t.erro_rota}
                         </Typography>
                         <Button
                             component={NextLink}
@@ -71,7 +73,7 @@ export default function ErrorPage() {
                             sx={{ mt: 3 }}
                             variant="contained"
                         >
-                            Voltar
+                            {t.voltar}
                         </Button>
                     </Box>
                 </Container>

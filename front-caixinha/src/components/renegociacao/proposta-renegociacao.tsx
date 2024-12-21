@@ -21,12 +21,14 @@ import CenteredCircularProgress from "../CenteredCircularProgress"
 import { useCallback, useMemo, useState } from "react"
 import { aceitarRenegociacao } from "@/pages/api/api.service"
 import { useRouter } from "next/router"
+import { useTranslations } from "@/hooks/useTranlations"
 
 export const PropostaRenegociacao = (props: any) => {
     const { renegociacao } = props
     const [parcelamento, setParcelamento] = useState(1)
     const [loading, setLoading] = useState(false)
     const router = useRouter()
+    const { t } = useTranslations()
 
     const formattedTotalAmount = useMemo(() => {
         return `R$ ${renegociacao.sugestao.newTotalValue.toFixed(2)}`
@@ -57,7 +59,7 @@ export const PropostaRenegociacao = (props: any) => {
     }, [parcelamento, renegociacao])
 
     const propostaPersonalizada = useCallback(() => {
-        alert('Para um proposta personalizada contato o administrador da caixinha')
+        alert(t.renegociacao.proposta_personalizada)
     }, [])
 
     if (loading) {
@@ -87,7 +89,7 @@ export const PropostaRenegociacao = (props: any) => {
                                 color="text.secondary"
                                 variant="overline"
                             >
-                                Proposta
+                                {t.renegociacao.proposta}
                             </Typography>
                         )}
                     />
@@ -97,7 +99,7 @@ export const PropostaRenegociacao = (props: any) => {
                             color="text.secondary"
                             variant="overline"
                         >
-                            Detalhamento
+                            {t.renegociacao.resumo}
                         </Typography>
                         <List
                             disablePadding
@@ -159,7 +161,7 @@ export const PropostaRenegociacao = (props: any) => {
                             color="text.secondary"
                             variant="overline"
                         >
-                            Parcelamento disponivel
+                            {t.renegociacao.parcelamento}
                         </Typography>
                         <div>
                             <RadioGroup
@@ -197,7 +199,7 @@ export const PropostaRenegociacao = (props: any) => {
                                     </SvgIcon>
                                 )}
                             >
-                                Aceitar proposta
+                                {t.renegociacao.aceitar}
                             </Button>
                             <Button
                                 color="inherit"
@@ -208,7 +210,7 @@ export const PropostaRenegociacao = (props: any) => {
                                     </SvgIcon>
                                 )}
                             >
-                                Proposta personalizada
+                                {t.renegociacao.proposta_personalizada}
                             </Button>
                         </Stack>
                     </CardContent>

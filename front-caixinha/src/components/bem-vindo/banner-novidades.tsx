@@ -1,4 +1,5 @@
 import { useSettings } from '@/hooks/useSettings';
+import { useTranslations } from '@/hooks/useTranlations';
 import { SettingsApplications } from '@mui/icons-material';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
@@ -8,6 +9,7 @@ import Typography from '@mui/material/Typography';
 
 export const BannerNovidades = (props: any) => {
   const { handleDrawerOpen } = useSettings();
+  const { t } = useTranslations();
 
   return (
     <Stack
@@ -40,21 +42,21 @@ export const BannerNovidades = (props: any) => {
           color="primary.main"
           variant="overline"
         >
-          Release 1 liberada
+          {t.banner_novidades.title}
         </Typography>
         <Typography
           color="text.primary"
           sx={{ mt: 2 }}
           variant="h6"
         >
-          Mais transparencia, segurança e praticidade
+          {t.banner_novidades.content}
         </Typography>
         <Typography
           color="text.primary"
           sx={{ mt: 1 }}
           variant="body1"
         >
-          A caixinha agora é um aplicativo que vai te oferecer ainda mais coisas
+          {t.banner_novidades.content2}
         </Typography>
         <Box sx={{ mt: 2 }}>
           <Button
@@ -67,7 +69,7 @@ export const BannerNovidades = (props: any) => {
             )}
             variant="contained"
           >
-            Abrir configurações
+            {t.banner_novidades.btn_click}
           </Button>
         </Box>
       </Box>

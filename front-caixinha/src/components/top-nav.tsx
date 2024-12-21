@@ -19,6 +19,7 @@ import ApplicationSelectCaixinha from './application-select.caixinha';
 import { useUserAuth } from '@/hooks/useUserAuth';
 import { NotificationsButton } from './notificacoes/notificacaoes-button';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
+import { LanguageSwitch } from './language-switch';
 
 const SIDE_NAV_WIDTH = 280;
 const TOP_NAV_HEIGHT = 64;
@@ -93,6 +94,7 @@ export const TopNav = ({ settings }: { settings: any }) => {
                             spacing={2}
                         >
                             <ApplicationSelectCaixinha />
+                            <LanguageSwitch />
                             <NotificationsButton />
                             <Tooltip title="Tema">
                                 <IconButton onClick={settings.handleDrawerOpen}>
@@ -165,13 +167,7 @@ export const TopNav = ({ settings }: { settings: any }) => {
                         direction="row"
                         spacing={2}
                     >
-                        <Tooltip title="Tema">
-                            <IconButton onClick={settings.handleDrawerOpen}>
-                                <SvgIcon fontSize="small">
-                                    <SettingsBrightnessIcon />
-                                </SvgIcon>
-                            </IconButton>
-                        </Tooltip>
+                        <LanguageSwitch />
                         <IconButton
                             onClick={handleSignIn}
                             edge="start"

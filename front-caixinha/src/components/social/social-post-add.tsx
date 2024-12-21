@@ -1,3 +1,4 @@
+import { useTranslations } from '@/hooks/useTranlations';
 import { useUserAuth } from '@/hooks/useUserAuth';
 import { publicarPost, uploadResource } from '@/pages/api/api.service';
 import { getInitials } from '@/utils/utils';
@@ -19,6 +20,7 @@ export const SocialPostAdd = (props: any) => {
     const smUp = useMediaQuery((theme: any) => theme.breakpoints.up('sm'));
     const [media, setMedia] = useState<string | null>(null)
     const [postText, setPostText] = useState('')
+    const { t } = useTranslations()
 
     const uploadPhoto = useCallback(() => {
         let input = document.createElement('input');
@@ -27,11 +29,11 @@ export const SocialPostAdd = (props: any) => {
         input.addEventListener('change', function (event: any) {
             let arquivo = event.target.files[0];
 
-            toast.loading('Enviando foto')
+            toast.loading(t.realizando_upload)
             uploadResource(arquivo)
                 .then((fileUrl: string) => {
                     setMedia(fileUrl)
-                    toast.success('Foto enviada')
+                    toast.success(t.upload_sucesso)
                 })
                 .catch(e => toast.error(e.message))
         });
@@ -40,7 +42,7 @@ export const SocialPostAdd = (props: any) => {
     }, [])
 
     const post = () => {
-        toast.loading('Publicando...')
+        toast.loading(t.feed.publicando)
         publicarPost({
             authorName: user?.name,
             authorAvatar: user?.photoUrl,
@@ -48,7 +50,7 @@ export const SocialPostAdd = (props: any) => {
             media
         })
             .then(() => {
-                toast.success('publicado')
+                toast.success(t.sucesso)
                 setPostText('')
                 setMedia(null)
             })
@@ -79,7 +81,7 @@ export const SocialPostAdd = (props: any) => {
                         <OutlinedInput
                             fullWidth
                             multiline
-                            placeholder="What's on your mind"
+                            placeholder={t.feed.placeholder}
                             rows={3}
                             value={postText}
                             onChange={(e) => setPostText(e.target.value)}

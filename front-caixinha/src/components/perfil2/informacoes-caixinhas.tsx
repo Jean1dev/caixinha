@@ -15,10 +15,12 @@ import { getMinhasCaixinhas } from "@/pages/api/caixinhas-disponiveis";
 import { sairDaCaixinha } from "@/pages/api/api.service";
 import toast from "react-hot-toast";
 import { useUserAuth } from "@/hooks/useUserAuth";
+import { useTranslations } from "@/hooks/useTranlations";
 
 export const InformacoesCaixinhas = () => {
     const [caixinhas, setCaixinhas] = useState([])
     const { user } = useUserAuth()
+    const { t } = useTranslations()
 
     useEffect(() => {
         getMinhasCaixinhas(user.name, user.email)
@@ -26,14 +28,14 @@ export const InformacoesCaixinhas = () => {
     }, [user])
 
     const sair = useCallback((caixinhaID: string) => {
-        const resposta = confirm('Essa operacao e irreversivel voce tem certeza que deseja continuar?')
+        const resposta = confirm(t.operacao_irreversivel)
         if (resposta) {
             sairDaCaixinha({
                 caixinhaID,
                 name: user.name,
                 email: user.email
             }).then(() => {
-                alert('voce saiu dessa caixinha')
+                alert(t.saiu_caixinha)
                 window.location.reload()
             }).catch((e) => toast.error(e.message))
         }
@@ -47,7 +49,7 @@ export const InformacoesCaixinhas = () => {
                     <TableHead>
                         <TableRow>
                             <TableCell>
-                                nome
+                                {t.nome}
                             </TableCell>
                             <TableCell/>
                         </TableRow>
@@ -64,7 +66,7 @@ export const InformacoesCaixinhas = () => {
                                     </TableCell>
                                     <TableCell align="right">
                                         <Button color="error" onClick={() => sair(item.id)}>
-                                            Sair
+                                            {t.sair}
                                         </Button>
                                     </TableCell>
                                 </TableRow>
