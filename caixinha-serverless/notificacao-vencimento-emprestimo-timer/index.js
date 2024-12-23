@@ -18,6 +18,24 @@ function enviarEvento({ name, email, dia }) {
     ], 'default-all')
 }
 
+async function verificarSeHouvePagamentoNoMes(emprestimoEntity) {
+    const collectionName = 'caixinhas'
+    const caixinhas = await find(collectionName, { 'loans.uid': emprestimoEntity['uid'] })
+    if (!caixinhas || caixinhas.length == 0) {
+        return true
+    } 
+
+    const currentLoan = caixinhas[0]['loans'].find(loan => loan['uid'] == emprestimoEntity['uid'])
+    const lastPayment = currentLoan['payments'][currentLoan['payments'].length - 1]
+    const currentMonth = new Date().getMonth()
+    const lastPaymentMonth = new Date(lastPayment['date']).getMonth()
+    if (currentMonth == lastPaymentMonth) {
+        return false
+    }
+
+    return true
+}
+
 module.exports = async function (context, _myTimer) {
     var timeStamp = new Date().toISOString();
     context.log('Notificacao vencimento emprestimo trigger function ran!', timeStamp);
@@ -58,11 +76,16 @@ module.exports = async function (context, _myTimer) {
 
             const diferenciaDias = hoje.diff(vencimento, 'days')
             if (diferenciaDias >= -3) {
-                enviarEvento({
-                    name: emprestimo['memberName'],
-                    email: emprestimo['member']['email'],
-                    dia: vencimento.format('DD/MM/YYYY')
-                })
+                verificarSeHouvePagamentoNoMes(emprestimo)
+                    .then(enviarNotificacao => {
+                        if (enviarNotificacao)
+                            enviarEvento({
+                                name: emprestimo['memberName'],
+                                email: emprestimo['member']['email'],
+                                dia: vencimento.format('DD/MM/YYYY')
+                            })
+                    })
+
             }
         })
     })
