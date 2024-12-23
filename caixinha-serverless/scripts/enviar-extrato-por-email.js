@@ -6,6 +6,7 @@ const PDFDocument = require('pdfkit')
 const { find, connect } = require('../v2/mongo-operations')
 const { Box } = require("caixinha-core/dist/src");
 const { GenerateBankStatement } = require("caixinha-core/dist/src/operations")
+const os = require('os')
 
 async function enviarEmail(linkAnexos) {
     for (link of linkAnexos) {
@@ -102,7 +103,7 @@ async function gerarRelatorios(extratos) {
     for (extrato of extratos) {
         const doc = new PDFDocument()
         const filename = `${extrato.member.memberName}-${extrato.boxName}.pdf`
-        const fullFileName = path.resolve(__dirname, '..', filename)
+        const fullFileName = path.join(os.tmpdir(), filename)
         const writeStream = fs.createWriteStream(fullFileName)
         doc.pipe(writeStream)
         doc.text(`Extrato ate o dia ${today.getDate()}/${today.getMonth()}/${today.getFullYear()}.`, {
