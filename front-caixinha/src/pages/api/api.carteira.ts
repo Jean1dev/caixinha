@@ -49,6 +49,10 @@ async function asyncFetch(url: string, method: string, body?: any): Promise<any>
     }
 }
 
+export function getCarteiraApiCaller() {
+    return asyncFetch
+}
+
 export async function setDefaultHeaders(user: string, email: string) {
     http.defaults.headers.common['user'] = user
     http.defaults.headers.common['email'] = email
