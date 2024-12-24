@@ -82,3 +82,13 @@ export interface MetaComValorRecomendado {
   tipoAtivo: string
   valorRecomendado: number
 }
+
+export interface AtivosListagemCompra {
+  codigo: string
+  disponivel: boolean
+  imgUrl?: string
+  nome: string
+  valor: number
+  variacao: number
+  variacaoPositiva: boolean
+}
