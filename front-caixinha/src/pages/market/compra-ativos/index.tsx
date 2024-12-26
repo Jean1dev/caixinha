@@ -125,7 +125,7 @@ const useCurrentData = (data: any[], dataId: any) => {
 }
 
 export default function ListagemAtivosCompraPage() {
-    const rootRef = useRef(null)
+    const rootRef = useRef<HTMLDivElement>(null);
     const ativosSearch = useAtivosSearch()
     const ativoStore = useAtivoStore(ativosSearch.state)
     const dialog = useDialog()
@@ -223,7 +223,7 @@ export default function ListagemAtivosCompraPage() {
                         />
                     </ContainerListagem>
                     <CompraAtivoDrawer
-                        container={rootRef.current}
+                        container={rootRef.current || undefined}
                         onClose={dialog.handleClose}
                         open={dialog.open}
                         data={currentData}

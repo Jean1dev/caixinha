@@ -1,4 +1,3 @@
-import { useCallback, useState } from 'react';
 import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
 import IconButton from '@mui/material/IconButton';
@@ -9,9 +8,21 @@ import useMediaQuery from '@mui/material/useMediaQuery';
 import { Close } from '@mui/icons-material';
 import { CompraAtivoDrawerDetails } from './compra-ativo-drawer-details';
 
-export const CompraAtivoDrawer = (props) => {
+import { Theme } from '@mui/material/styles';
+
+interface CompraAtivoDrawerProps {
+    container?: Element;
+    onClose: () => void;
+    onApprove: () => void;
+    open: boolean;
+    data?: {
+        codigo: string;
+    };
+}
+
+export const CompraAtivoDrawer: React.FC<CompraAtivoDrawerProps> = (props) => {
     const { container, onClose, onApprove, open, data } = props;
-    const lgUp = useMediaQuery((theme) => theme.breakpoints.up('lg'));
+    const lgUp = useMediaQuery((theme: Theme) => theme.breakpoints.up('lg'));
 
     let content = null;
 

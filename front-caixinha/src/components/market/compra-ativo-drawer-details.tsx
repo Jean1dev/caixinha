@@ -8,7 +8,7 @@ import { PropertyList } from '../property-list';
 
 export const CompraAtivoDrawerDetails = (props: any) => {
     const { onApprove, onReject, data } = props;
-    const lgUp = useMediaQuery((theme) => theme.breakpoints.up('lg'));
+    const lgUp = useMediaQuery((theme: any) => theme.breakpoints.up('lg'));
 
     const align = lgUp ? 'horizontal' : 'vertical';
     const createdAt = new Date().toDateString();

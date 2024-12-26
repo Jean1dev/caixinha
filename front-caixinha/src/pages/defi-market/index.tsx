@@ -1,12 +1,12 @@
 import TradeHistory from "@/components/defi/trade-history";
 import TradeMapping from "@/components/defi/charts/trade-mapping";
-import Layout from "@/components/Layout";
 import { Seo } from "@/components/Seo";
 import { Box } from "@mui/material";
+import Web3Layout from "@/components/Web3-Layoyt";
 
 export default function DefiMarket() {
     return (
-        <Layout>
+        <Web3Layout>
             <Seo title="DeFi Market" />
             <Box component="main"
                 sx={{
@@ -19,6 +19,6 @@ export default function DefiMarket() {
                     <TradeHistory />
                 </Box>
             </Box>
-        </Layout>
+        </Web3Layout>
     )
 }
