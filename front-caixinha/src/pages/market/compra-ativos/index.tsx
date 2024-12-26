@@ -12,6 +12,8 @@ import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import CompraApi from '@/pages/api/marketplace/api.compra'
+import { getSession } from "next-auth/react";
+import toast from "react-hot-toast";
 
 interface AtivoStoreState {
     data: any[];
@@ -41,7 +43,16 @@ const useAtivosSearch = () => {
         sortDir: 'desc'
     })
 
-    const handleFiltersChange = useCallback((newFilters: any) => { }, [])
+    const handleFiltersChange = useCallback((newFilters: any) => {
+        setState((prevState) => ({
+            ...prevState,
+            filters: {
+                ...prevState.filters,
+                ...newFilters
+            }
+        }))
+     }, [])
+
     const handleSortChange = useCallback((newSortBy: any) => { }, [])
 
     return {
@@ -58,7 +69,22 @@ const useAtivoStore = (searchState: AtivosSearchState) => {
         dataCount: 0,
     })
 
+    const applyLocalFilters = useCallback((filterText: string) => {
+        setState((prevState) => {
+            const newData = prevState.data.filter((item) => item.nome.toLowerCase().includes(filterText.toLowerCase()))
+            return {
+                data: newData,
+                dataCount: newData.length
+            }
+        })
+    }, [])
+
     useEffect(() => {
+        if (searchState.filters.query) { 
+            applyLocalFilters(searchState.filters.query)
+            return
+        }
+
         const fetchData = async () => {
             const data = await CompraApi.getListagemAtivos({})
             if (isMounted()) {
@@ -75,8 +101,16 @@ const useAtivoStore = (searchState: AtivosSearchState) => {
         fetchData()
     }, [searchState])
 
+    const removeByKey = useCallback((key: string) => {
+        setState((prevState) => ({
+            data: prevState.data.filter((item) => item.id !== key),
+            dataCount: prevState.dataCount - 1
+        }))
+    }, [])
+
     return {
-        state
+        state,
+        removeByKey
     }
 }
 
@@ -107,14 +141,27 @@ export default function ListagemAtivosCompraPage() {
     }, [dialog])
 
     const onBuy = useCallback(async () => {
+        const session = await getSession();
+        const ticker = dialog.data
         fetch('/api/trpc/ordem-compra-ativo',
             {
                 method: 'POST',
-                body: JSON.stringify({ ativo: dialog.data })
+                credentials: 'include',
+                body: JSON.stringify({ ativo: ticker }),
+                headers: {
+                    'Content-Type': 'application/json',
+                    'email': session?.user?.email || '',
+                    'user': session?.user?.name || '',
+                },
             })
             .then((res) => res.json())
-            .then((data) => console.log(data));
-        dialog.handleClose()
+            .then(() => {
+                toast.success('Ativo comprado com sucesso!')
+                if (ticker) {
+                    ativoStore.removeByKey(ticker);
+                }
+                dialog.handleClose()
+            });
     }, [dialog])
 
     return (

@@ -18,20 +18,20 @@ const tabOptions = [
     value: 'all'
   },
   {
-    label: 'Canceled',
-    value: 'canceled'
+    label: 'Acoes nacionais',
+    value: 'nacionais'
   },
   {
-    label: 'Completed',
-    value: 'complete'
+    label: 'Acoes internacionais',
+    value: 'internacionais'
   },
   {
-    label: 'Pending',
-    value: 'pending'
+    label: 'Cripto',
+    value: 'cripto'
   },
   {
-    label: 'Rejected',
-    value: 'rejected'
+    label: 'Fundos',
+    value: 'fundos'
   }
 ];
 
@@ -127,7 +127,7 @@ export const ListagemSearch = (props: any) => {
             fullWidth
             inputProps={{ ref: queryRef }}
             name="orderNumber"
-            placeholder="Search by order number"
+            placeholder="Buscar Por ticker"
             startAdornment={(
               <InputAdornment position="start">
                 <SvgIcon>

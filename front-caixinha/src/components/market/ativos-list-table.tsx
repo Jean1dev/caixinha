@@ -75,7 +75,7 @@ export const AtivosListTable = (props: any) => {
                                             color="text.secondary"
                                             variant="body2"
                                         >
-                                            Total of
+                                            Valor atual
                                             {' '}
                                             {totalAmount}
                                         </Typography>
