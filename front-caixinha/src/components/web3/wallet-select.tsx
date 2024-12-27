@@ -3,7 +3,6 @@ import {
     Box,
     MenuItem,
     FormControl,
-    FormHelperText,
     Select,
     IconButton,
     Stack,
@@ -17,7 +16,6 @@ import {
     Wallet as SolanaWallet,
 } from "@solana/wallet-adapter-react";
 import toast from "react-hot-toast";
-import { AlertNav } from "../alert-nav";
 import { CopyAllOutlined, LogoutOutlined } from "@mui/icons-material";
 
 const TOP_NAV_HEIGHT = 64;
@@ -39,8 +37,10 @@ const WalletSelect = () => {
     };
 
     const onConnectWallet = async (wallet: SolanaWallet) => {
+        if (!wallet || !wallet.adapter) return
+
         try {
-            select(wallet.adapter.name);
+            await select(wallet.adapter.name);
             await connect();
         } catch (e) {
             console.log("Wallet Error: ", e);
@@ -59,7 +59,6 @@ const WalletSelect = () => {
                 <FormControl fullWidth>
                     <Select
                         value={wallet}
-                        onChange={onConnectWallet}
                     >
                         {wallets.map((wallet: SolanaWallet, index) => {
                             return (
@@ -67,7 +66,7 @@ const WalletSelect = () => {
                                     key={index}
                                     onClick={async () => {
                                         try {
-                                            onConnectWallet(wallet)
+                                            await onConnectWallet(wallet)
                                         } catch (e: any) {
                                             console.log(e)
                                         }
@@ -89,9 +88,6 @@ const WalletSelect = () => {
                         })}
 
                     </Select>
-                    <FormHelperText>
-                        <AlertNav />
-                    </FormHelperText>
                 </FormControl>
             </Box>
         )
@@ -113,7 +109,7 @@ const WalletSelect = () => {
                 direction="row"
                 spacing={2}
             >
-                <Tooltip title="Tema">
+                <Tooltip title="Copy">
                     <IconButton onClick={copyPublicKey}>
                         <SvgIcon fontSize="small">
                             <CopyAllOutlined />
@@ -131,8 +127,8 @@ const WalletSelect = () => {
                     </Typography>
                 </IconButton>
 
-                <Tooltip title="Tema">
-                    <IconButton onClick={() => { }}>
+                <Tooltip title="Disconnect">
+                    <IconButton onClick={disconnect}>
                         <SvgIcon fontSize="small">
                             <LogoutOutlined />
                         </SvgIcon>

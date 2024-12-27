@@ -5,6 +5,8 @@ import { SolflareWalletAdapter, PhantomWalletAdapter } from '@solana/wallet-adap
 import { clusterApiUrl } from '@solana/web3.js';
 import { useMemo } from 'react';
 
+require('@solana/wallet-adapter-react-ui/styles.css');
+
 type Props = { children?: React.ReactNode }
 
 export const WalletContextProvider: React.FC<Props> = ({ children }: Props) => {
@@ -14,8 +16,8 @@ export const WalletContextProvider: React.FC<Props> = ({ children }: Props) => {
 
     const wallets = useMemo(
         () => [
-            new SolflareWalletAdapter(),
-            new PhantomWalletAdapter()
+            new PhantomWalletAdapter(),
+            new SolflareWalletAdapter()
         ],
         [network]
     )
