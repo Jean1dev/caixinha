@@ -1,0 +1,128 @@
+{
+    "address": "FRY15CneU5jCkMryAGTKSHcHVBYh2DpjRL2G2oaqFsku",
+    "metadata": {
+      "name": "caixinha_dapp",
+      "version": "0.1.0",
+      "spec": "0.1.0",
+      "description": "Created with Anchor"
+    },
+    "instructions": [
+      {
+        "name": "create_caixinha",
+        "discriminator": [
+          92,
+          39,
+          65,
+          27,
+          74,
+          129,
+          177,
+          75
+        ],
+        "accounts": [
+          {
+            "name": "caixinha",
+            "writable": true,
+            "signer": true
+          },
+          {
+            "name": "authority",
+            "writable": true,
+            "signer": true
+          },
+          {
+            "name": "system_program",
+            "address": "11111111111111111111111111111111"
+          }
+        ],
+        "args": [
+          {
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "name": "desc",
+            "type": "string"
+          },
+          {
+            "name": "ref_id",
+            "type": "string"
+          }
+        ]
+      },
+      {
+        "name": "deposit",
+        "discriminator": [
+          242,
+          35,
+          198,
+          137,
+          82,
+          225,
+          242,
+          182
+        ],
+        "accounts": [
+          {
+            "name": "caixinha",
+            "writable": true
+          }
+        ],
+        "args": [
+          {
+            "name": "amount",
+            "type": "f32"
+          }
+        ]
+      }
+    ],
+    "accounts": [
+      {
+        "name": "Caixinha",
+        "discriminator": [
+          58,
+          7,
+          87,
+          126,
+          210,
+          119,
+          18,
+          79
+        ]
+      }
+    ],
+    "types": [
+      {
+        "name": "Caixinha",
+        "type": {
+          "kind": "struct",
+          "fields": [
+            {
+              "name": "name",
+              "type": "string"
+            },
+            {
+              "name": "desc",
+              "type": "string"
+            },
+            {
+              "name": "ref_id",
+              "type": "string"
+            },
+            {
+              "name": "amount",
+              "type": "f32"
+            },
+            {
+              "name": "deposits_count",
+              "type": "u8"
+            },
+            {
+              "name": "owner",
+              "type": "pubkey"
+            }
+          ]
+        }
+      }
+    ]
+  }
