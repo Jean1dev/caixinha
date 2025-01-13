@@ -2,7 +2,7 @@ import { RouterLink } from "@/components/RouterLink"
 import { Seo } from "@/components/Seo"
 import Web3Layout from "@/components/Web3-Layoyt"
 import { rpc_BuyNft } from "@/program/buy-nft"
-import { rpc_getNftById } from "@/program/get-nft"
+import { rpc_getNftById, rpc_getNFts } from "@/program/get-nft"
 import NodeWallet from "@coral-xyz/anchor/dist/cjs/nodewallet"
 import { GavelOutlined, ShoppingCart } from "@mui/icons-material"
 import {
@@ -15,7 +15,13 @@ import {
     Avatar,
     styled,
     Button,
-    SvgIcon
+    SvgIcon,
+    Card,
+    CardContent,
+    Divider,
+    Grid,
+    Rating,
+    CardMedia
 } from "@mui/material"
 import { useAnchorWallet } from "@solana/wallet-adapter-react"
 import { useRouter } from "next/router"
@@ -47,6 +53,7 @@ const Page = () => {
     const router = useRouter()
     const wallet = useAnchorWallet();
     const [nft, setNft] = useState<any>({});
+    const [sugestaoNFts, setSugestaoNFts] = useState<any[]>([]);
     const [bid, setBid] = useState(0.0)
 
     const id = useMemo(() => {
@@ -55,13 +62,19 @@ const Page = () => {
 
     useEffect(() => {
         const fetchNft = async () => {
-            try {
-                if (id && wallet) {
-                    const res = await rpc_getNftById(wallet as NodeWallet, id);
-                    setNft(res.sig);
+            if (id && wallet) {
+                const res = await rpc_getNftById(wallet as NodeWallet, id);
+                setNft(res.sig);
+
+                const sugestaoNFTS = await rpc_getNFts(wallet as NodeWallet)
+                const items = []
+                for (let i = 0; i < 3; i++) {
+                    const item = sugestaoNFTS.sig[i]
+                    if (item)
+                        items.push(item)
                 }
-            } catch (error) {
-                console.error("Failed to fetch NFT:", error);
+
+                setSugestaoNFts(items)
             }
         };
         fetchNft();
@@ -81,9 +94,14 @@ const Page = () => {
         const inputBid = parseFloat(prompt('Enter your bid:') || '0');
         if (!isNaN(inputBid)) {
             setBid(inputBid);
+            toast(`Sua oferta foi atualizada para ${inputBid.toFixed(4)} $OL`)
         } else {
             toast.error('Invalid bid amount');
         }
+    }, [])
+
+    const updatePage = useCallback((id: string) => {
+        router.push(`/web3/nft-market/${id}`)
     }, [])
 
     return (
@@ -259,6 +277,86 @@ const Page = () => {
                     </Box>
 
                 </Box>
+
+                <Stack
+                    spacing={8}
+                    sx={{ py: '120px' }}
+                >
+                    <Stack spacing={2}>
+                        <Typography
+                            align="center"
+                            variant="h3"
+                        >
+                            Confira outros NFTs.
+                        </Typography>
+                        <Typography
+                            align="center"
+                            color="text.secondary"
+                            variant="subtitle1"
+                        >
+                            Our template is so simple that people can’t help but fall in love with it. Simplicity is easy when you just skip tons of mission-critical features.
+                        </Typography>
+                    </Stack>
+
+                    <Grid
+                        container
+                        spacing={3}
+                    >
+                        {sugestaoNFts.map((nfs, index) => (
+                            <Grid
+                                key={index}
+                                xs={12}
+                                md={6}
+                                lg={4}
+                            >
+                                <Card
+                                    onClick={() => updatePage(nfs.id)}
+                                    sx={{ height: '100%' }}>
+                                    <CardContent
+                                        sx={{
+                                            display: 'flex',
+                                            flexDirection: 'column',
+                                            position: 'relative',
+                                            height: '100%'
+                                        }}
+                                    >
+                                        <CardMedia
+                                            image={nfs.img}
+                                            sx={{
+                                                height: '100%',
+                                                position: 'absolute',
+                                                top: 0,
+                                                width: '100%'
+                                            }}
+                                        />
+                                        <Box sx={{ position: 'absolute' }}>
+                                            <Avatar src={nfs.img} />
+                                        </Box>
+                                        <div>
+                                            <Rating
+                                                readOnly
+                                                sx={{ color: 'success.main' }}
+                                                value={4}
+                                            />
+                                        </div>
+                                        <Typography
+                                            sx={{
+                                                flexGrow: 1,
+                                                mt: 2
+                                            }}
+                                        >
+                                            {nfs.price}
+                                        </Typography>
+                                        <Divider sx={{ my: 2 }} />
+                                        <Typography color="text.secondary">
+                                            {nfs.price}
+                                        </Typography>
+                                    </CardContent>
+                                </Card>
+                            </Grid>
+                        ))}
+                    </Grid>
+                </Stack>
 
             </Box>
         </>
