@@ -246,12 +246,6 @@ export default function Deposito() {
                                 }
                             }}
                         >
-                            {/* <LogoSamsung />
-                <LogoVisma />
-                <LogoBolt />
-                <LogoAws />
-                <LogoAccenture />
-                <LogoAtt /> */}
                         </Stack>
                     </Container>
                 </Box>
@@ -352,9 +346,6 @@ export default function Deposito() {
                                             name='valor'
                                             type='number'
                                             sx={{ m: 1, width: '25ch' }}
-                                        // InputProps={{
-                                        //     startAdornment: <InputAdornment position="start">R$</InputAdornment>,
-                                        // }}
                                         />
                                     </FormControl>
                                 </Grid>

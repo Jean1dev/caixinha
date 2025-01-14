@@ -23,13 +23,17 @@ async function verificarSeHouvePagamentoNoMes(emprestimoEntity) {
     const caixinhas = await find(collectionName, { 'loans.uid': emprestimoEntity['uid'] })
     if (!caixinhas || caixinhas.length == 0) {
         return true
-    } 
+    }
 
     const currentLoan = caixinhas[0]['loans'].find(loan => loan['uid'] == emprestimoEntity['uid'])
     const lastPayment = currentLoan['payments'][currentLoan['payments'].length - 1]
-    const currentMonth = new Date().getMonth()
+    const today = new Date()
+    const currentMonth = today.getMonth()
+    const currentYear = today.getFullYear()
+
     const lastPaymentMonth = new Date(lastPayment['date']).getMonth()
-    if (currentMonth == lastPaymentMonth) {
+    const lastPaymentYear = new Date(lastPayment['date']).getFullYear()
+    if (currentMonth == lastPaymentMonth && lastPaymentYear == currentYear) {
         return false
     }
 
@@ -37,7 +41,7 @@ async function verificarSeHouvePagamentoNoMes(emprestimoEntity) {
 }
 
 module.exports = async function (context, _myTimer) {
-    var timeStamp = new Date().toISOString();
+    const timeStamp = new Date().toISOString();
     context.log('Notificacao vencimento emprestimo trigger function ran!', timeStamp);
 
     await connect()

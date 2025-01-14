@@ -7,6 +7,7 @@ import { createTheme } from "@/theme/theme";
 import { SettingsDrawer } from "./tema-configuracoes";
 import { Toaster } from "./Toaster";
 import CenteredCircularProgress from "./CenteredCircularProgress";
+import { Footer } from "./footer";
 
 const siteId = process.env.NEXT_PUBLIC_HOTJAR_ID
 const hotjarVersion = 6
@@ -65,6 +66,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                             <>
                                 {children}
                                 <Toaster />
+                                <Footer/>
                             </>
                         </ThemeProvider>
                     )

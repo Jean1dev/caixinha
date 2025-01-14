@@ -21,7 +21,8 @@ import {
     AssuredWorkload,
     FiberNew,
     Savings,
-    AccountBalanceWallet
+    AccountBalanceWallet,
+    EmojiEvents
 } from '@mui/icons-material';
 import { Chip, Link } from '@mui/material';
 
@@ -83,22 +84,22 @@ const routes = [
     },
     {
         text: 'Novo emprestimo',
-        path: 'emprestimo',
+        path: '/emprestimo',
         icon: <FiberNew />
     },
     {
         text: 'Meus emprestimos',
-        path: 'meus-emprestimos',
+        path: '/meus-emprestimos',
         icon: <AssuredWorkload />
     },
     {
         text: 'Novo Deposito',
-        path: 'deposito',
+        path: '/deposito',
         icon: <AttachMoney />
     },
     {
         text: 'Extrato',
-        path: 'extrato',
+        path: '/extrato',
         icon: <ListAltSharp />
     }
 ]
@@ -106,17 +107,17 @@ const routes = [
 const carteiraRoutes = [
     {
         text: 'Carteira',
-        path: 'carteira',
+        path: '/carteira',
         icon: <ShowChartOutlined />
     },
     {
         text: 'Meus ativos',
-        path: 'carteira/meus-ativos',
+        path: '/carteira/meus-ativos',
         icon: <AccountBalanceWallet />
     },
     {
         text: 'Novo aporte',
-        path: 'carteira/aporte',
+        path: '/carteira/aporte',
         icon: <SavingsOutlined />,
         newFeature: true
     },
@@ -124,6 +125,12 @@ const carteiraRoutes = [
         text: 'Alt-Coins',
         path: '/token-market',
         icon: <CurrencyBitcoin />,
+        newFeature: true
+    },
+    {
+        text: 'NFT',
+        path: '/web3/meus-nft',
+        icon: <EmojiEvents />,
         newFeature: true
     }
 ]
