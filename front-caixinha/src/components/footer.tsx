@@ -85,10 +85,8 @@ export const Footer = (props: any) => (
           <Stack spacing={1}>
             <Stack
               alignItems="center"
-              component={RouterLink}
               direction="row"
               display="inline-flex"
-              href={'/'}
               spacing={1}
               sx={{ textDecoration: 'none' }}
             >
