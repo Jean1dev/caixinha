@@ -149,6 +149,14 @@ export default function MeusAtivos() {
                                     >
                                         Carteira
                                     </Link>
+                                    <Link
+                                        color="text.primary"
+                                        component={RouterLink}
+                                        href={'/market/compra-ativos'}
+                                        variant="subtitle2"
+                                    >
+                                        Comprar ativos
+                                    </Link>
                                     <Typography
                                         color="text.secondary"
                                         variant="subtitle2"

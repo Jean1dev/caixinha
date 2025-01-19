@@ -1,7 +1,7 @@
 import Layout from "@/components/Layout";
 import { BannerNovidades } from "@/components/bem-vindo/banner-novidades";
 import { Dicas } from "@/components/bem-vindo/dicas";
-import { AtalhoEmprestimo} from "@/components/bem-vindo/atalho-emprestimo";
+import { AtalhoEmprestimo } from "@/components/bem-vindo/atalho-emprestimo";
 import { useSettings } from "@/hooks/useSettings";
 import { Box, Card, CardContent, Container, Typography } from "@mui/material";
 import { useRouter } from "next/router";
@@ -12,6 +12,7 @@ import { useEffect, useState } from "react";
 import { getUltimoEmprestimoPendente } from "./api/api.service";
 import { useUserAuth } from "@/hooks/useUserAuth";
 import { useTranslations } from "@/hooks/useTranlations";
+import { Footer } from "@/components/footer";
 
 const corAleatoriaCombinada = () => {
   const cores = [
@@ -53,11 +54,11 @@ const card = (title: string, description: string, action: any) => {
   )
 }
 
-export default function Home() {
+const Page = () => {
   const router = useRouter()
   const settings = useSettings()
   const { t } = useTranslations()
-  
+
   const [ultimoEmprestimoAtalho, setUltimoEmprestimoAtalho] = useState<any | null>(null)
   const { user } = useUserAuth()
 
@@ -75,89 +76,98 @@ export default function Home() {
   }, [user])
 
   return (
-    <Layout>
-      <Seo title={t.home.seo} />
-      <Box component="main"
-        sx={{
-          flexGrow: 1,
-          py: 8
-        }}>
-        <Container maxWidth={settings.stretch ? false : 'xl'}>
+    <Box component="main"
+      sx={{
+        flexGrow: 1,
+        py: 8
+      }}>
+      <Container maxWidth={settings.stretch ? false : 'xl'}>
+        <Grid
+          container
+          spacing={{
+            xs: 3,
+            lg: 4
+          }}
+        >
           <Grid
-            container
-            spacing={{
-              xs: 3,
-              lg: 4
-            }}
+            xs={12}
+            md={7}
           >
-            <Grid
-              xs={12}
-              md={7}
-            >
-              <BannerNovidades />
-            </Grid>
+            <BannerNovidades />
+          </Grid>
 
-            <Grid
-              xs={12}
-              md={5}
-            >
-              {
-                ultimoEmprestimoAtalho?.exists
-                  ? (
-                    <>
-                      <AtalhoEmprestimo emprestimo={ultimoEmprestimoAtalho.data} />
-                    </>
-                  )
+          <Grid
+            xs={12}
+            md={5}
+          >
+            {
+              ultimoEmprestimoAtalho?.exists
+                ? (
+                  <>
+                    <AtalhoEmprestimo emprestimo={ultimoEmprestimoAtalho.data} />
+                  </>
+                )
 
-                  : (
-                    <Dicas
-                      sx={{ height: '100%' }}
-                      tips={[
-                        {
-                          title: t.dicas[0].title,
-                          content: t.dicas[0].content,
-                          link: {
-                            href: '/token-market',
-                            label: t.dicas[0].link_label
-                          }
-                        },
-                        {
-                          title: t.dicas[0].title,
-                          content: t.dicas[0].content
+                : (
+                  <Dicas
+                    sx={{ height: '100%' }}
+                    tips={[
+                      {
+                        title: t.dicas[0].title,
+                        content: t.dicas[0].content,
+                        link: {
+                          href: '/token-market',
+                          label: t.dicas[0].link_label
                         }
-                      ]}
-                    />
-                  )
-              }
-
-            </Grid>
-
-            <Grid
-              xs={12}
-              md={7}
-            >
-              {card("Caixinhas", t.listar_caixinha_disponiveis, () => { router.push('caixinhas-disponiveis') })}
-            </Grid>
-
-            <Grid
-              xs={12}
-              md={7}
-            >
-
-              {card("Depositar", t.depositar, () => { router.push('deposito') })}
-
-            </Grid>
-
-            <Grid
-              xs={12}
-              md={7}
-            >
-              {card("Meu Extrato", t.ver_meu_extrato, () => { router.push('extrato') })}
-            </Grid>
+                      },
+                      {
+                        title: t.dicas[0].title,
+                        content: t.dicas[0].content
+                      }
+                    ]}
+                  />
+                )
+            }
 
           </Grid>
-        </Container>
-      </Box>
+
+          <Grid
+            xs={12}
+            md={7}
+          >
+            {card("Caixinhas", t.listar_caixinha_disponiveis, () => { router.push('caixinhas-disponiveis') })}
+          </Grid>
+
+          <Grid
+            xs={12}
+            md={7}
+          >
+
+            {card("Depositar", t.depositar, () => { router.push('deposito') })}
+
+          </Grid>
+
+          <Grid
+            xs={12}
+            md={7}
+          >
+            {card("Meu Extrato", t.ver_meu_extrato, () => { router.push('extrato') })}
+          </Grid>
+
+        </Grid>
+      </Container>
+    </Box>
+  )
+}
+
+export default function Home() {
+  return (
+    <Layout>
+      <>
+        <Seo title="Home" />
+        <Page />
+        <Footer />
+      </>
     </Layout>
   )
 }

@@ -14,6 +14,7 @@ import CenteredCircularProgress from '@/components/CenteredCircularProgress'
 import { useRouter } from 'next/router'
 import Grid from '@mui/material/Unstable_Grid2';
 import { getCaixinhas } from '../api/caixinhas'
+import { Footer } from '@/components/footer'
 
 export default function Home() {
   const [data, setData] = useState<Caixinha[]>([])
@@ -94,6 +95,7 @@ export default function Home() {
           </Stack>
         </Container>
       </Box>
+      <Footer/>
     </Layout>
   )
 }

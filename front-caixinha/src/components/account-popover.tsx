@@ -8,7 +8,7 @@ export const AccountPopover = (props: any) => {
   const { data } = useSession()
   const router = useRouter()
 
-  const perfil = () => router.push('perfil')
+  const perfil = () => router.push('/perfil')
     
   return (
     <Popover
@@ -19,7 +19,7 @@ export const AccountPopover = (props: any) => {
       }}
       onClose={onClose}
       open={open}
-      PaperProps={{ sx: { width: 200 } }}
+      
     >
       <Box
         sx={{
