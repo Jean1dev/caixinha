@@ -46,7 +46,7 @@ export function getBuckets() {
     if (dev) {
         return
     }
-    
+
     http.get(`${URL_STORAGE_SERVER}/v1/s3/buckets`).then(({ data }) => {
         console.log(data)
     }).catch(() => {
@@ -255,6 +255,21 @@ export async function updatePerfil(body: any) {
     return asyncFetch(`${BASE_URL}/update-profile-member`, 'POST', body)
 }
 
+export async function getMeusPagamentos(uid: string) {
+    if (dev) {
+        return retornaComAtraso([
+            {
+                caixinha: 'caixinha',
+                description: 'description',
+                value: 25,
+                date: '30/05/2023'
+            }
+        ])
+    }
+
+    return asyncGetWithParamethers(`${BASE_URL}/get-meus-pagamentos`, { uid })
+}
+
 export async function getEmprestimo(uid: string) {
     if (dev) {
         return retornaComAtraso({
@@ -292,45 +307,45 @@ export async function getUltimoEmprestimoPendente(name: string, email: string) {
         return retornaComAtraso({
             "exists": exists,
             "data": {
-              "_id": "6525c854c1f42464218bef74",
-              "approved": true,
-              "member": {
-                "name": "Jeanluca FP",
-                "email": "jeanlucafp@gmail.com"
-              },
-              "date": "2023-10-10T21:55:32.544Z",
-              "valueRequested": {
-                "value": 50
-              },
-              "fees": {
-                "value": 0
-              },
-              "interest": {
-                "value": 1
-              },
-              "box": null,
-              "approvals": 1,
-              "description": "Preciso para pagar o Arnaldo",
-              "payments": [],
-              "uid": "068c8030-4f1a-4568-a8f0-38497dbd9da2",
-              "installments": 0,
-              "memberName": "Jeanluca FP",
-              "requiredNumberOfApprovals": 6,
-              "listOfMembersWhoHaveAlreadyApproved": [
-                {
-                  "name": "Jeanluca FP",
-                  "email": "jeanlucafp@gmail.com"
-                }
-              ],
-              "billingDates": [
-                "2023-11-09T21:55:32.544Z"
-              ],
-              "totalValue": {
-                "value": 50.5
-              },
-              "boxId": "646f538de5cd54cc6344ec69"
+                "_id": "6525c854c1f42464218bef74",
+                "approved": true,
+                "member": {
+                    "name": "Jeanluca FP",
+                    "email": "jeanlucafp@gmail.com"
+                },
+                "date": "2023-10-10T21:55:32.544Z",
+                "valueRequested": {
+                    "value": 50
+                },
+                "fees": {
+                    "value": 0
+                },
+                "interest": {
+                    "value": 1
+                },
+                "box": null,
+                "approvals": 1,
+                "description": "Preciso para pagar o Arnaldo",
+                "payments": [],
+                "uid": "068c8030-4f1a-4568-a8f0-38497dbd9da2",
+                "installments": 0,
+                "memberName": "Jeanluca FP",
+                "requiredNumberOfApprovals": 6,
+                "listOfMembersWhoHaveAlreadyApproved": [
+                    {
+                        "name": "Jeanluca FP",
+                        "email": "jeanlucafp@gmail.com"
+                    }
+                ],
+                "billingDates": [
+                    "2023-11-09T21:55:32.544Z"
+                ],
+                "totalValue": {
+                    "value": 50.5
+                },
+                "boxId": "646f538de5cd54cc6344ec69"
             }
-          })
+        })
     }
 
     return asyncGetWithParamethers(`${BASE_URL}/get-ultimo-emprestimo-pendente`, { name, email })
