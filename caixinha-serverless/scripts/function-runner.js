@@ -1,4 +1,4 @@
-const Function = require('../get-meus-pagamentos')
+const Function = require('../notificacao-vencimento-emprestimo-timer')
 
 function createContext() {
     const context = {
@@ -10,15 +10,8 @@ function createContext() {
 
 async function run() {
     const context = createContext()
-
-    const params2 = {
-        query: {
-            all: true,
-            email: 'jeanlucafp@gmail.com',
-            user: 'Jeanluca FP'
-        }
-    }
-    await Function(context, params2)  
+    const params = {}
+    await Function(context, params)  
     process.exit(0) 
 }
 
