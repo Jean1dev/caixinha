@@ -22,7 +22,8 @@ import {
     FiberNew,
     Savings,
     AccountBalanceWallet,
-    EmojiEvents
+    EmojiEvents,
+    ChatBubble
 } from '@mui/icons-material';
 import { Chip, Link } from '@mui/material';
 
@@ -140,6 +141,12 @@ const socialRoutes = [
         text: 'Feed',
         path: 'feed',
         icon: <Reddit />,
+        newFeature: true
+    },
+    {
+        text: 'Chat',
+        path: 'chat',
+        icon: <ChatBubble />,
         newFeature: true
     }
 ]
