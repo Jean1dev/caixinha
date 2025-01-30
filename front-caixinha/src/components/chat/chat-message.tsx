@@ -1,3 +1,4 @@
+import { formatDate } from '@/utils/utils';
 import Avatar from '@mui/material/Avatar';
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
@@ -11,14 +12,14 @@ interface ChatMessageProps {
     authorName: string;
     body: string;
     contentType: 'text' | 'image';
-    createdAt: number;
+    createdAt: Date;
     position: 'left' | 'right';
 }
 
 export const ChatMessage = (props: ChatMessageProps) => {
     const { authorAvatar, authorName, body, contentType, createdAt, position, ...other } = props;
 
-    const ago = `formatDistanceToNowStrict(createdAt);`
+    const ago = formatDate(createdAt)
 
     return (
         <Box
@@ -96,7 +97,7 @@ export const ChatMessage = (props: ChatMessageProps) => {
                         >
                             {ago}
                             {' '}
-                            ago
+                            enviado
                         </Typography>
                     </Box>
                 </Box>

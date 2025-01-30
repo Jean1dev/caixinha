@@ -26,19 +26,11 @@ const TOP_NAV_HEIGHT = 64;
 
 export const TopNav = ({ settings }: { settings: any }) => {
     
+    const menuPopover = usePopover()
     const accountPopover = usePopover()
-    const [open, setOpen] = useState(false)
     const { status } = useSession()
     const { user } = useUserAuth()
     const handleSignIn = async () => await signIn()
-
-    const handleDrawerOpen = () => {
-        setOpen(true)
-    }
-
-    const handleDrawerClose = () => {
-        setOpen(false)
-    }
 
     if (status === 'authenticated') {
         return (
@@ -75,7 +67,7 @@ export const TopNav = ({ settings }: { settings: any }) => {
                             spacing={2}
                         >
                             <IconButton
-                                onClick={handleDrawerOpen}
+                                onClick={menuPopover.handleOpen}
                                 edge="start"
                                 color="inherit"
                                 aria-label="menu"
@@ -83,7 +75,7 @@ export const TopNav = ({ settings }: { settings: any }) => {
                                 <MenuIcon
                                     sx={{
                                         marginRight: 5,
-                                        ...(open && { display: 'none' }),
+                                        ...(menuPopover.open && { display: 'none' }),
                                     }}
                                 />
                             </IconButton>
@@ -129,7 +121,12 @@ export const TopNav = ({ settings }: { settings: any }) => {
                     open={accountPopover.open}
                     onClose={accountPopover.handleClose}
                 />
-                <MiniDrawer open={open} handleDrawerClose={handleDrawerClose} />
+                <MiniDrawer 
+                    anchorEl={menuPopover.anchorRef.current}
+                    keepMounted
+                    open={menuPopover.open} 
+                    handleDrawerClose={menuPopover.handleClose} 
+                    />
             </>
         );
     }

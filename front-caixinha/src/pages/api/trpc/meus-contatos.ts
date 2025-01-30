@@ -29,7 +29,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
         const resultAnalise = await getDadosAnaliseCaixinha(caixinha.id);
         resultAnalise.membros.forEach((membro: any) => {
             const exists = contatos.find(m => m.email === membro.email)
+
             if (exists) return
+            if (email === membro.email) return
 
             contatos.push({
                 id: membro._id         ,

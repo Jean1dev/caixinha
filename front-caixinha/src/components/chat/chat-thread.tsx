@@ -7,15 +7,21 @@ import { ChatThreadToolbar } from './chat-thread-toolbar';
 import { Scrollbar } from '../scrollbar';
 import { ChatMessages } from './chat-messages';
 import { ChatMessageAdd } from './chat-message-add';
+import { useUserAuth } from '@/hooks/useUserAuth';
 
-const useParticipants = (threadKey: string) => {
+const useParticipants = (threadKey: string, userEmail: string) => {
   const router = useRouter();
   const [participants, setParticipants] = useState([]);
 
   const handleParticipantsGet = useCallback(async () => {
     try {
-      //const participants = await chatApi.getParticipants({ threadKey });
-      const participants = []
+      const participants: any = [
+        {
+          email: threadKey
+        }, {
+          email: userEmail
+        }
+      ]
       setParticipants(participants);
 
     } catch (err) {
@@ -25,8 +31,8 @@ const useParticipants = (threadKey: string) => {
   }, [router, threadKey]);
 
   useEffect(() => {
-      handleParticipantsGet();
-    },
+    handleParticipantsGet();
+  },
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [threadKey]);
 
@@ -35,12 +41,10 @@ const useParticipants = (threadKey: string) => {
 
 const useThread = (threadKey: string) => {
   const router = useRouter();
-  const thread = null;
-//   const thread = useSelector((state) => {
-//     const { threads, currentThreadId } = state.chat;
-
-//     return threads.byId[currentThreadId];
-//   });
+  const [thread, setThreads] = useState<any>({
+    messages: [],
+    threadKey
+  })
 
   const handleThreadGet = useCallback(async () => {
     // If thread key is not a valid key (thread id or contact id)
@@ -50,10 +54,10 @@ const useThread = (threadKey: string) => {
     let threadId;
 
     try {
-    //   threadId = await dispatch(thunks.getThread({
-    //     threadKey
-    //   }));
-    threadId = 1
+      //   threadId = await dispatch(thunks.getThread({
+      //     threadKey
+      //   }));
+      threadId = 1
     } catch (err) {
       console.error(err);
       router.push('/chat');
@@ -70,22 +74,46 @@ const useThread = (threadKey: string) => {
     // Mark the thread as seen only if it exists
 
     if (threadId) {
-    //   dispatch(thunks.markThreadAsSeen({
-    //     threadId
-    //   }));
+      //   dispatch(thunks.markThreadAsSeen({
+      //     threadId
+      //   }));
     }
+
   }, [router, threadKey]);
 
+  const addMessage = useCallback((message: string, author: any) => {
+    setThreads((prevState: any) => {
+      return {
+        ...prevState,
+        messages: [
+          ...prevState.messages,
+          {
+            id: prevState.messages.length + 1,
+            body: message,
+            contentType: 'text',
+            author: {
+              name: author.name,
+              email: author.email,
+              photoUrl: author.photoUrl
+            },
+            createdAt: new Date()
+          }
+        ]
+      };
+    })
+
+  }, [])
+
   useEffect(() => {
-      handleThreadGet();
-    },
+    handleThreadGet();
+  },
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [threadKey]);
 
-  return thread;
+  return { thread, addMessage };
 };
 
-const useMessagesScroll = (thread) => {
+const useMessagesScroll = (thread: any) => {
   const messagesRef = useRef(null);
 
   const handleUpdate = useCallback(() => {
@@ -99,7 +127,7 @@ const useMessagesScroll = (thread) => {
       return;
     }
 
-    const container = messagesRef.current;
+    const container: any = messagesRef.current;
     const scrollElement = container.getScrollElement();
 
     if (scrollElement) {
@@ -108,8 +136,8 @@ const useMessagesScroll = (thread) => {
   }, [thread]);
 
   useEffect(() => {
-      handleUpdate();
-    },
+    handleUpdate();
+  },
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [thread]);
 
@@ -118,29 +146,19 @@ const useMessagesScroll = (thread) => {
   };
 };
 
-export const ChatThread = (props) => {
+export const ChatThread = (props: any) => {
   const { threadKey, ...other } = props;
-  const user = {
-    id: '5e86809283e28b96d2d38537',
-    avatar: '/assets/avatars/avatar-anika-visser.png',
-    name: 'Anika Visser',
-    email: 'anika.visser@devias.io'
-  };
-  const thread = useThread(threadKey);
-  const participants = useParticipants(threadKey);
+  const { user } = useUserAuth()
+  const { thread, addMessage } = useThread(threadKey);
+  const participants = useParticipants(threadKey, user.email);
   const { messagesRef } = useMessagesScroll(thread);
 
   const handleSend = useCallback(async (body: string) => {
     // If we have the thread, we use its ID to add a new message
-    alert('local 2')
-    debugger
-    console.log(body)
+
     if (thread) {
       try {
-        // await dispatch(thunks.addMessage({
-        //   threadId: thread.id,
-        //   body
-        // }));
+        addMessage(body, user)
       } catch (err) {
         console.error(err);
       }
@@ -154,18 +172,18 @@ export const ChatThread = (props) => {
     // Filter the current user to get only the other participants
 
     const recipientIds = participants
-      .filter((participant) => participant.id !== user.id)
-      .map((participant) => participant.id);
+      .filter((participant: any) => participant.email !== user.email)
+      .map((participant: any) => participant.email);
 
     // Add the new message
 
     let threadId;
 
     try {
-    //   threadId = await dispatch(thunks.addMessage({
-    //     recipientIds,
-    //     body
-    //   }));
+      //   threadId = await dispatch(thunks.addMessage({
+      //     recipientIds,
+      //     body
+      //   }));
     } catch (err) {
       console.error(err);
       return;
@@ -174,9 +192,9 @@ export const ChatThread = (props) => {
     // Load the thread because we did not have it
 
     try {
-    //   await dispatch(thunks.getThread({
-    //     threadKey: threadId
-    //   }));
+      //   await dispatch(thunks.getThread({
+      //     threadKey: threadId
+      //   }));
     } catch (err) {
       console.error(err);
       return;
@@ -210,7 +228,6 @@ export const ChatThread = (props) => {
         >
           <ChatMessages
             messages={thread?.messages || []}
-            participants={thread?.participants || []}
           />
         </Scrollbar>
       </Box>

@@ -25,7 +25,7 @@ import {
     EmojiEvents,
     ChatBubble
 } from '@mui/icons-material';
-import { Chip, Link } from '@mui/material';
+import { Chip, Link, Popover } from '@mui/material';
 
 const drawerWidth = 240;
 
@@ -58,7 +58,6 @@ const DrawerHeader = styled('div')(({ theme }) => ({
     // necessary for content to be below app bar
     ...theme.mixins.toolbar,
 }));
-
 
 const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' })(
     ({ theme, open }) => ({
@@ -120,19 +119,22 @@ const carteiraRoutes = [
         text: 'Novo aporte',
         path: '/carteira/aporte',
         icon: <SavingsOutlined />,
-        newFeature: true
+        newFeature: true,
+        beta: true,
     },
     {
         text: 'Alt-Coins',
         path: '/token-market',
         icon: <CurrencyBitcoin />,
-        newFeature: true
+        newFeature: true,
+        beta: true,
     },
     {
         text: 'NFT',
         path: '/web3/meus-nft',
         icon: <EmojiEvents />,
-        newFeature: true
+        newFeature: true,
+        beta: false,
     }
 ]
 
@@ -141,152 +143,173 @@ const socialRoutes = [
         text: 'Feed',
         path: 'feed',
         icon: <Reddit />,
-        newFeature: true
+        newFeature: true,
+        beta: false,
     },
     {
         text: 'Chat',
         path: 'chat',
         icon: <ChatBubble />,
-        newFeature: true
+        newFeature: true,
+        beta: true
     }
 ]
 
-export default function MiniDrawer({ open, handleDrawerClose }: any) {
+const CustomChips = ({ it }: { it: any }) => (
+    <>
+        {it.newFeature && (
+            <Chip
+                color="primary"
+                label="New"
+                size="small"
+            />
+        )}
+        {it?.beta && (
+            <Chip
+                color="warning"
+                label="Beta"
+                size="small"
+            />
+        )}
+    </>
+)
+
+export default function MiniDrawer(props: any) {
+    const {
+        open,
+        handleDrawerClose,
+        anchorEl
+    } = props
     const theme = useTheme()
 
-    if (!open) {
-        return <></>
-    }
-
     return (
-        <Drawer variant="permanent" open={open}>
-            <DrawerHeader>
-                <IconButton onClick={handleDrawerClose}>
-                    {theme.direction === 'rtl' ? <ChevronRight /> : <ChevronLeft />}
-                </IconButton>
-            </DrawerHeader>
-            <Divider />
-            <List>
-                {routes.map((it, index) => (
-                    <ListItem key={it.text} disablePadding sx={{ display: 'block' }}>
-                        <ListItemButton
-                            LinkComponent={Link}
-                            href={it.path}
-                            sx={{
-                                minHeight: 48,
-                                justifyContent: open ? 'initial' : 'center',
-                                px: 2.5,
-                            }}
-                        >
-                            <ListItemIcon
+        <Popover
+            anchorEl={anchorEl}
+            anchorOrigin={{
+                horizontal: 'left',
+                vertical: 'bottom'
+            }}
+            onClose={handleDrawerClose}
+            open={open}
+        >
+            <Drawer variant="permanent" open={open}>
+                <DrawerHeader>
+                    <IconButton onClick={handleDrawerClose}>
+                        {theme.direction === 'rtl' ? <ChevronRight /> : <ChevronLeft />}
+                    </IconButton>
+                </DrawerHeader>
+                <Divider />
+                <List>
+                    {routes.map((it, index) => (
+                        <ListItem key={it.text} disablePadding sx={{ display: 'block' }}>
+                            <ListItemButton
+                                LinkComponent={Link}
+                                href={it.path}
                                 sx={{
-                                    minWidth: 0,
-                                    mr: open ? 3 : 'auto',
-                                    justifyContent: 'center',
+                                    minHeight: 48,
+                                    justifyContent: open ? 'initial' : 'center',
+                                    px: 2.5,
                                 }}
                             >
-                                {it.icon}
-                            </ListItemIcon>
-                            <ListItemText primary={it.text} sx={{ opacity: open ? 1 : 0 }} />
-                        </ListItemButton>
-                    </ListItem>
-                ))}
-            </List>
-            <Divider />
-            <List>
-                {carteiraRoutes.map((it, index) => (
-                    <ListItem key={it.text} disablePadding sx={{ display: 'block' }}>
-                        <ListItemButton
-                            LinkComponent={Link}
-                            href={it.path}
-                            sx={{
-                                minHeight: 48,
-                                justifyContent: open ? 'initial' : 'center',
-                                px: 2.5,
-                            }}
-                        >
-                            <ListItemIcon
+                                <ListItemIcon
+                                    sx={{
+                                        minWidth: 0,
+                                        mr: open ? 3 : 'auto',
+                                        justifyContent: 'center',
+                                    }}
+                                >
+                                    {it.icon}
+                                </ListItemIcon>
+                                <ListItemText primary={it.text} sx={{ opacity: open ? 1 : 0 }} />
+                                <CustomChips it={it} />
+                            </ListItemButton>
+                        </ListItem>
+                    ))}
+                </List>
+                <Divider />
+                <List>
+                    {carteiraRoutes.map((it, index) => (
+                        <ListItem key={it.text} disablePadding sx={{ display: 'block' }}>
+                            <ListItemButton
+                                LinkComponent={Link}
+                                href={it.path}
                                 sx={{
-                                    minWidth: 0,
-                                    mr: open ? 3 : 'auto',
-                                    justifyContent: 'center',
+                                    minHeight: 48,
+                                    justifyContent: open ? 'initial' : 'center',
+                                    px: 2.5,
                                 }}
                             >
-                                {it.icon}
-                            </ListItemIcon>
-                            <ListItemText primary={it.text} sx={{ opacity: open ? 1 : 0 }} />
-                            {it.newFeature && (
-                                <Chip
-                                    color="primary"
-                                    label="New"
-                                    size="small"
-                                />
-                            )}
-                        </ListItemButton>
-                    </ListItem>
-                ))}
-            </List>
-            <Divider />
-            <List>
-                {socialRoutes.map((it, index) => (
-                    <ListItem key={it.text} disablePadding sx={{ display: 'block' }}>
-                        <ListItemButton
-                            LinkComponent={Link}
-                            href={it.path}
-                            sx={{
-                                minHeight: 48,
-                                justifyContent: open ? 'initial' : 'center',
-                                px: 2.5,
-                            }}
-                        >
-                            <ListItemIcon
+                                <ListItemIcon
+                                    sx={{
+                                        minWidth: 0,
+                                        mr: open ? 3 : 'auto',
+                                        justifyContent: 'center',
+                                    }}
+                                >
+                                    {it.icon}
+                                </ListItemIcon>
+                                <ListItemText primary={it.text} sx={{ opacity: open ? 1 : 0 }} />
+                                <CustomChips it={it} />
+                            </ListItemButton>
+                        </ListItem>
+                    ))}
+                </List>
+                <Divider />
+                <List>
+                    {socialRoutes.map((it, index) => (
+                        <ListItem key={it.text} disablePadding sx={{ display: 'block' }}>
+                            <ListItemButton
+                                LinkComponent={Link}
+                                href={it.path}
                                 sx={{
-                                    minWidth: 0,
-                                    mr: open ? 3 : 'auto',
-                                    justifyContent: 'center',
+                                    minHeight: 48,
+                                    justifyContent: open ? 'initial' : 'center',
+                                    px: 2.5,
                                 }}
                             >
-                                {it.icon}
-                            </ListItemIcon>
-                            <ListItemText primary={it.text} sx={{ opacity: open ? 1 : 0 }} />
-                            {it.newFeature && (
-                                <Chip
-                                    color="primary"
-                                    label="New"
-                                    size="small"
-                                />
-                            )}
-                        </ListItemButton>
-                    </ListItem>
-                ))}
-            </List>
-            <Divider />
-            <List>
-                {['Home'].map((text, _index) => (
-                    <ListItem key={text} disablePadding sx={{ display: 'block' }}>
-                        <ListItemButton
-                            LinkComponent={Link}
-                            href="/"
-                            sx={{
-                                minHeight: 48,
-                                justifyContent: open ? 'initial' : 'center',
-                                px: 2.5,
-                            }}
-                        >
-                            <ListItemIcon
+                                <ListItemIcon
+                                    sx={{
+                                        minWidth: 0,
+                                        mr: open ? 3 : 'auto',
+                                        justifyContent: 'center',
+                                    }}
+                                >
+                                    {it.icon}
+                                </ListItemIcon>
+                                <ListItemText primary={it.text} sx={{ opacity: open ? 1 : 0 }} />
+                                <CustomChips it={it} />
+                            </ListItemButton>
+                        </ListItem>
+                    ))}
+                </List>
+                <Divider />
+                <List>
+                    {['Home'].map((text, _index) => (
+                        <ListItem key={text} disablePadding sx={{ display: 'block' }}>
+                            <ListItemButton
+                                LinkComponent={Link}
+                                href="/"
                                 sx={{
-                                    minWidth: 0,
-                                    mr: open ? 3 : 'auto',
-                                    justifyContent: 'center',
+                                    minHeight: 48,
+                                    justifyContent: open ? 'initial' : 'center',
+                                    px: 2.5,
                                 }}
                             >
-                                <Home />
-                            </ListItemIcon>
-                            <ListItemText primary={text} sx={{ opacity: open ? 1 : 0 }} />
-                        </ListItemButton>
-                    </ListItem>
-                ))}
-            </List>
-        </Drawer>
+                                <ListItemIcon
+                                    sx={{
+                                        minWidth: 0,
+                                        mr: open ? 3 : 'auto',
+                                        justifyContent: 'center',
+                                    }}
+                                >
+                                    <Home />
+                                </ListItemIcon>
+                                <ListItemText primary={text} sx={{ opacity: open ? 1 : 0 }} />
+                            </ListItemButton>
+                        </ListItem>
+                    ))}
+                </List>
+            </Drawer>
+        </Popover>
     );
 }
