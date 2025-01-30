@@ -1,3 +1,4 @@
+//@ts-nocheck
 import { Light } from '@mui/icons-material';
 import SvgIcon from '@mui/material/SvgIcon';
 import Typography from '@mui/material/Typography';

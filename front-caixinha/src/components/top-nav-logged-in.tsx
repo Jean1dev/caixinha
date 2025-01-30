@@ -21,14 +21,16 @@ import { LanguageSwitch } from "./language-switch";
 import { NotificationsButton } from "./notificacoes/notificacaoes-button";
 import { usePopover } from "@/hooks/usePopover";
 import { useUserAuth } from "@/hooks/useUserAuth";
+import { useState } from "react";
 
 const SIDE_NAV_WIDTH = 280;
 const TOP_NAV_HEIGHT = 64;
 
 export const TopNavLoggedIn = ({ settings }: { settings: any }) => {
-    const menuPopover = usePopover()
     const accountPopover = usePopover()
     const { user } = useUserAuth()
+
+    const [openMenu, setOpenMenu] = useState(false)
 
     return (
         <>
@@ -61,7 +63,7 @@ export const TopNavLoggedIn = ({ settings }: { settings: any }) => {
                         spacing={2}
                     >
                         <IconButton
-                            onClick={menuPopover.handleOpen}
+                            onClick={() => setOpenMenu(!openMenu)}
                             edge="start"
                             color="inherit"
                             aria-label="menu"
@@ -69,7 +71,7 @@ export const TopNavLoggedIn = ({ settings }: { settings: any }) => {
                             <MenuIcon
                                 sx={{
                                     marginRight: 5,
-                                    ...(menuPopover.open && { display: 'none' }),
+                                    ...(openMenu && { display: 'none' }),
                                 }}
                             />
                         </IconButton>
@@ -116,10 +118,8 @@ export const TopNavLoggedIn = ({ settings }: { settings: any }) => {
                 onClose={accountPopover.handleClose}
             />
             <MiniDrawer
-                anchorEl={menuPopover.anchorRef.current}
-                keepMounted
-                open={menuPopover.open}
-                handleDrawerClose={menuPopover.handleClose}
+                open={openMenu}
+                handleDrawerClose={() => setOpenMenu(false)}
             />
         </>
     );

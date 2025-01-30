@@ -28,13 +28,21 @@ export const ChatComposerRecipients = (props: ChatComposerRecipientsProps) => {
   const searchRef = useRef(null);
   const [searchFocused, setSearchFocused] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
-  const [searchResults, setSearchResults] = useState([]);
+  const [searchResults, setSearchResults] = useState<any>([]);
 
   const showSearchResults = !!(searchFocused && searchQuery);
   const hasSearchResults = searchResults.length > 0;
 
-  const handleSearchChange = useCallback(async (event) => {
-    const query = event.target.value;
+  interface Contact {
+    id: string;
+    name: string;
+    avatar: string;
+  }
+
+  interface SearchChangeEvent extends React.ChangeEvent<HTMLInputElement> {}
+
+  const handleSearchChange = useCallback(async (event: SearchChangeEvent) => {
+    const query: string = event.target.value;
 
     setSearchQuery(query);
 
@@ -44,13 +52,12 @@ export const ChatComposerRecipients = (props: ChatComposerRecipientsProps) => {
     }
 
     try {
-      //const contacts = await chatApi.getContacts({ query });
-      const contacts = []
+      //const contacts: Contact[] = await chatApi.getContacts({ query });
+      const contacts: Contact[] = [];
 
       // Filter already picked recipients
-
-      const recipientIds = recipients.map((recipient) => recipient.id);
-      const filtered = contacts.filter((contact) => !recipientIds.includes(contact.id));
+      const recipientIds: string[] = recipients.map((recipient) => recipient.id);
+      const filtered: Contact[] = contacts.filter((contact) => !recipientIds.includes(contact.id));
 
       setSearchResults(filtered);
     } catch (err) {
@@ -68,7 +75,7 @@ export const ChatComposerRecipients = (props: ChatComposerRecipientsProps) => {
     setSearchFocused(true);
   }, []);
 
-  const handleSearchSelect = useCallback((contact) => {
+  const handleSearchSelect = useCallback((contact: Contact) => {
     setSearchQuery('');
     onRecipientAdd?.(contact);
   }, [onRecipientAdd]);
@@ -141,7 +148,7 @@ export const ChatComposerRecipients = (props: ChatComposerRecipientsProps) => {
                               </Typography>
                             </Box>
                             <List>
-                              {searchResults.map((contact) => (
+                              {searchResults.map((contact: Contact) => (
                                 <ListItemButton
                                   key={contact.id}
                                   onClick={() => handleSearchSelect(contact)}
