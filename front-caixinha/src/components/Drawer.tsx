@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { styled, useTheme, Theme, CSSObject } from '@mui/material/styles';
-import MuiDrawer from '@mui/material/Drawer';
 import List from '@mui/material/List';
 import Divider from '@mui/material/Divider';
+import MuiDrawer from '@mui/material/Drawer';
 import IconButton from '@mui/material/IconButton';
 import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
@@ -23,11 +23,11 @@ import {
     Savings,
     AccountBalanceWallet,
     EmojiEvents,
-    ChatBubble
+    ChatBubble,
 } from '@mui/icons-material';
 import { Chip, Link, Popover } from '@mui/material';
 
-const drawerWidth = 240;
+const drawerWidth = 340;
 
 const openedMixin = (theme: Theme): CSSObject => ({
     width: drawerWidth,
