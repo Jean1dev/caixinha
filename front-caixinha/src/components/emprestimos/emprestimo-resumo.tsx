@@ -3,7 +3,6 @@ import Card from '@mui/material/Card';
 import Divider from '@mui/material/Divider';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
-import ListItemAvatar from '@mui/material/ListItemAvatar';
 import ListItemText from '@mui/material/ListItemText';
 import Typography from '@mui/material/Typography';
 
@@ -19,90 +18,43 @@ export const EmprestimoResumo = (props: any) => {
     const { solicitacao, stateParcelas } = props;
 
     const formattedShippingTax = `${solicitacao.juros}%`
-    const formattedSubtotal = `R$${solicitacao.valor}`
+    const formattedSubtotal = `R$ ${solicitacao.valor}`
     const total = calcularTotal(solicitacao)
-    const formattedTotal = `R$${total}`
+    const formattedTotal = `R$ ${total.toFixed(2)}`
 
     return (
         <Card
             variant="outlined"
             sx={{ p: 3 }}>
-            <Typography variant="h6">
+            <Typography variant="subtitle2" sx={{ color: 'text.secondary' }}>
                 Resumo
+            </Typography>
+            <Typography variant="subtitle2" sx={{ color: 'text.secondary' }}>
+                Total
+            </Typography>
+            <Typography variant="h4" gutterBottom>
+                {formattedTotal}
             </Typography>
             {
                 stateParcelas.loading && <Typography>Calculando parcelamento</Typography>
             }
-            <List sx={{ mt: 2 }}>
+            <List disablePadding>
                 {stateParcelas.data.map((parcela: any, index: any) => {
-                    const price = `R$${parcela.value}`
+                    const price = `R$ ${parcela.value}`
 
                     return (
-                        <ListItem
-                            disableGutters
-                            key={index}
-                        >
-                            <ListItemAvatar sx={{ pr: 2 }}>
-                                <Box
-                                    sx={{
-                                        alignItems: 'center',
-                                        display: 'flex',
-                                        height: 100,
-                                        justifyContent: 'center',
-                                        overflow: 'hidden',
-                                        width: 100,
-                                        '& img': {
-                                            width: '100%',
-                                            height: 'auto'
-                                        }
-                                    }}
-                                >
-                                    {/* <img
-                    alt={product.name}
-                    src={product.image}
-                  /> */}
-                                </Box>
-                            </ListItemAvatar>
+                        <ListItem key={index} sx={{ py: 1, px: 0 }}>
                             <ListItemText
-                                primary={(
-                                    <Typography
-                                        sx={{ fontWeight: 'fontWeightBold' }}
-                                        variant="subtitle2"
-                                    >
-                                        parcela {index + 1}
-                                    </Typography>
-                                )}
-                                secondary={(
-                                    <Typography
-                                        color="text.secondary"
-                                        sx={{ mt: 1 }}
-                                        variant="body1"
-                                    >
-                                        {price}
-                                    </Typography>
-                                )}
+                                sx={{ mr: 2 }}
+                                primary={`parcela ${index + 1}`}
                             />
+                            <Typography variant="subtitle2" sx={{ fontWeight: 'medium' }}>
+                                {price}
+                            </Typography>
                         </ListItem>
-                    );
+                    )
                 })}
             </List>
-            {/* <OutlinedInput
-                fullWidth
-                placeholder="Discount Code"
-                size="small"
-                sx={{ mt: 2 }}
-            />
-            <Box
-                sx={{
-                    display: 'flex',
-                    justifyContent: 'flex-end',
-                    mt: 2
-                }}
-            >
-                <Button type="button">
-                    Apply Coupon
-                </Button>
-            </Box> */}
             <Box
                 sx={{
                     display: 'flex',
@@ -110,10 +62,10 @@ export const EmprestimoResumo = (props: any) => {
                     mt: 2
                 }}
             >
-                <Typography variant="subtitle2">
+                <Typography variant="body1">
                     Subtotal
                 </Typography>
-                <Typography variant="subtitle2">
+                <Typography variant="body1">
                     {formattedSubtotal}
                 </Typography>
             </Box>
@@ -124,10 +76,10 @@ export const EmprestimoResumo = (props: any) => {
                     mt: 2
                 }}
             >
-                <Typography variant="subtitle2">
+                <Typography variant="body1">
                     Taxas
                 </Typography>
-                <Typography variant="subtitle2">
+                <Typography variant="body1">
                     {formattedShippingTax}
                 </Typography>
             </Box>
@@ -138,11 +90,11 @@ export const EmprestimoResumo = (props: any) => {
                     mt: 2
                 }}
             >
-                <Typography variant="subtitle2">
+                <Typography variant="body1">
                     Impostos
                 </Typography>
-                <Typography variant="subtitle2">
-                    {solicitacao.fees}
+                <Typography variant="body1">
+                    R$ {solicitacao.fees.toFixed(2)}
                 </Typography>
             </Box>
             <Divider sx={{ my: 2 }} />
@@ -152,10 +104,10 @@ export const EmprestimoResumo = (props: any) => {
                     justifyContent: 'space-between'
                 }}
             >
-                <Typography variant="subtitle2">
+                <Typography variant="body1">
                     Total
                 </Typography>
-                <Typography variant="subtitle2">
+                <Typography variant="body1">
                     {formattedTotal}
                 </Typography>
             </Box>
