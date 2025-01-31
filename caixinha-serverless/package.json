@@ -6,8 +6,9 @@
     "start": "func start",
     "test": "jest --forceExit --detectOpenHandles",
     "coverage": "jest --coverage",
-    "scripts": "node ./scripts/enviar-extrato-por-email.js",
-    "debug-test-script": "npx jest notificacao-vencimento-emprestimo-timer/function.test.js"
+    "scripts": "node ./scripts/function-runner.js",
+    "scripts-bkp": "node ./scripts/clone-bkp-caixinha-prd.js",
+    "debug-test-script": "npx jest get-meus-pagamentos/func.test.js"
   },
   "dependencies": {
     "@sentry/node": "^7.54.0",
