@@ -5,23 +5,19 @@ import Tooltip from '@mui/material/Tooltip';
 
 import { LanguagePopover } from './language-popover';
 import { usePopover } from '@/hooks/usePopover';
-import { useTranslations } from '@/hooks/useTranlations';
 import { useCallback, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 const languages = {
-    "en-US": 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a9/Flag_of_the_United_States_%28DoS_ECA_Color_Standard%29.svg/640px-Flag_of_the_United_States_%28DoS_ECA_Color_Standard%29.svg.png',
-    "pt-BR": 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/05/Flag_of_Brazil.svg/1280px-Flag_of_Brazil.svg.png',
+    en: 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a9/Flag_of_the_United_States_%28DoS_ECA_Color_Standard%29.svg/640px-Flag_of_the_United_States_%28DoS_ECA_Color_Standard%29.svg.png',
+    pt: 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/05/Flag_of_Brazil.svg/1280px-Flag_of_Brazil.svg.png',
 };
 
 export const LanguageSwitch = () => {
-    const { currentLocale, set } = useTranslations();
-    const [flag, setFlag] = useState<string>(languages[currentLocale]);
+    const { i18n } = useTranslation();
     const popover = usePopover();
 
-    const changeLanguage = useCallback((language: 'en-US' | 'pt-BR') => {
-        setFlag(languages[language]);
-        set(language);
-    }, [])
+    const flag = languages[i18n.language];
 
     return (
         <>
@@ -43,7 +39,6 @@ export const LanguageSwitch = () => {
                 </IconButton>
             </Tooltip>
             <LanguagePopover
-                changeLanguage={changeLanguage}
                 anchorEl={popover.anchorRef.current}
                 onClose={popover.handleClose}
                 open={popover.open}

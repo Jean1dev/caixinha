@@ -7,14 +7,14 @@ import ListItemText from '@mui/material/ListItemText';
 import MenuItem from '@mui/material/MenuItem';
 import Popover from '@mui/material/Popover';
 import Typography from '@mui/material/Typography';
-import { useTranslations } from '@/hooks/useTranlations';
+import { useTranslation } from 'react-i18next';
 
 const languageOptions: { [key: string]: { icon: string, label: string } } = {
-    "en-US": {
+    en: {
         icon: 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a9/Flag_of_the_United_States_%28DoS_ECA_Color_Standard%29.svg/640px-Flag_of_the_United_States_%28DoS_ECA_Color_Standard%29.svg.png',
         label: 'English'
     },
-    "pt-BR": {
+    pt: {
         icon: 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/05/Flag_of_Brazil.svg/1280px-Flag_of_Brazil.svg.png',
         label: 'Brazil'
     },
@@ -25,17 +25,15 @@ export const LanguagePopover = (props: any) => {
         anchorEl,
         onClose,
         open = false,
-        changeLanguage,
         ...other
     } = props;
-    const { t } = useTranslations();
+    const { i18n, t } = useTranslation();
 
     const handleChange = useCallback(async (language: string) => {
-        changeLanguage(language);
         onClose?.();
-        const message = t.alterou_idioma;
-        toast.success(message);
-    }, [onClose, t]);
+        await i18n.changeLanguage(language);
+        toast.success(`Language changed to ${language}`);
+    }, [onClose, t, i18n]);
 
     return (
         <Popover

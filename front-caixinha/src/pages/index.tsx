@@ -11,8 +11,8 @@ import { getAleatorio } from "@/utils/utils";
 import { useEffect, useState } from "react";
 import { getUltimoEmprestimoPendente } from "./api/api.service";
 import { useUserAuth } from "@/hooks/useUserAuth";
-import { useTranslations } from "@/hooks/useTranlations";
 import { Footer } from "@/components/footer";
+import { useTranslation } from "react-i18next";
 
 const corAleatoriaCombinada = () => {
   const cores = [
@@ -57,7 +57,7 @@ const card = (title: string, description: string, action: any) => {
 const Page = () => {
   const router = useRouter()
   const settings = useSettings()
-  const { t } = useTranslations()
+  const { t } = useTranslation()
 
   const [ultimoEmprestimoAtalho, setUltimoEmprestimoAtalho] = useState<any | null>(null)
   const { user } = useUserAuth()
@@ -113,16 +113,16 @@ const Page = () => {
                     sx={{ height: '100%' }}
                     tips={[
                       {
-                        title: t.dicas[0].title,
-                        content: t.dicas[0].content,
+                        title: t('dicas.0.title'),
+                        content: t('dicas.0.content'),
                         link: {
                           href: '/token-market',
-                          label: t.dicas[0].link_label
+                          label: t('dicas.0.link_label')
                         }
                       },
                       {
-                        title: t.dicas[0].title,
-                        content: t.dicas[0].content
+                        title: t('dicas.1.title'),
+                        content: t('dicas.1.content')
                       }
                     ]}
                   />
@@ -135,7 +135,7 @@ const Page = () => {
             xs={12}
             md={7}
           >
-            {card("Caixinhas", t.listar_caixinha_disponiveis, () => { router.push('caixinhas-disponiveis') })}
+            {card("Caixinhas", t('listar_caixinha_disponiveis'), () => { router.push('caixinhas-disponiveis') })}
           </Grid>
 
           <Grid
@@ -143,7 +143,7 @@ const Page = () => {
             md={7}
           >
 
-            {card("Depositar", t.depositar, () => { router.push('deposito') })}
+            {card("Depositar", t('depositar'), () => { router.push('deposito') })}
 
           </Grid>
 
@@ -151,7 +151,7 @@ const Page = () => {
             xs={12}
             md={7}
           >
-            {card("Pedir emprestimo", t.emprestimo.solicitar_emprestimo, () => { router.push('emprestimo') })}
+            {card("Pedir emprestimo", t('emprestimo.solicitar_emprestimo'), () => { router.push('emprestimo') })}
           </Grid>
 
         </Grid>
