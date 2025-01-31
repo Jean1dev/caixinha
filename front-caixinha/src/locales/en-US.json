@@ -113,6 +113,7 @@
     "pago": "Pago",
     "emprestimo": {
         "referente_ultimos": "Referente aos ultimos",
-        "pendente_aprovacao": "Pendente de aprovação"
+        "pendente_aprovacao": "Pendente de aprovação",
+        "solicitar_emprestimo": "Request loan"
     }
 }

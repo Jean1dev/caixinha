@@ -38,7 +38,7 @@ const Emprestimo = () => {
         parcela: 0,
         name: "",
         email: '',
-        fees: 1.90
+        fees: 3.00
     })
     const [stateParcelas, setStateParcelas] = useState({
         data: [],

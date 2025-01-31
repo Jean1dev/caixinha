@@ -151,7 +151,7 @@ const Page = () => {
             xs={12}
             md={7}
           >
-            {card("Meu Extrato", t.ver_meu_extrato, () => { router.push('extrato') })}
+            {card("Pedir emprestimo", t.emprestimo.solicitar_emprestimo, () => { router.push('emprestimo') })}
           </Grid>
 
         </Grid>
