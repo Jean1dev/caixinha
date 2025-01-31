@@ -51,7 +51,6 @@ module.exports = async function (context, _myTimer) {
 
     results.forEach(emprestimo => {
         if (emprestimo.isPaidOff) {
-            context.log('emprestimo ja foi pago ', emprestimo._id)
             return
         }
 
@@ -89,7 +88,6 @@ module.exports = async function (context, _myTimer) {
                                 dia: vencimento.format('DD/MM/YYYY')
                             })
                     })
-
             }
         })
     })

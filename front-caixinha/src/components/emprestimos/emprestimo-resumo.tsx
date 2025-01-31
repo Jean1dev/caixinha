@@ -21,7 +21,7 @@ export const EmprestimoResumo = (props: any) => {
     const formattedShippingTax = `${solicitacao.juros}%`
     const formattedSubtotal = `R$${solicitacao.valor}`
     const total = calcularTotal(solicitacao)
-    const formattedTotal = `R$${total}`
+    const formattedTotal = `R$${total.toFixed(2)}`
 
     return (
         <Card
@@ -34,8 +34,8 @@ export const EmprestimoResumo = (props: any) => {
                 stateParcelas.loading && <Typography>Calculando parcelamento</Typography>
             }
             <List sx={{ mt: 2 }}>
-                {stateParcelas.data.map((parcela: any, index: any) => {
-                    const price = `R$${parcela.value}`
+                {stateParcelas.data.map((parcela: any, index: number) => {
+                    const price = `R$ ${parcela.value.toFixed(2)}`;
 
                     return (
                         <ListItem
@@ -57,10 +57,10 @@ export const EmprestimoResumo = (props: any) => {
                                         }
                                     }}
                                 >
-                                    {/* <img
-                    alt={product.name}
-                    src={product.image}
-                  /> */}
+                                    <img
+                                        alt="Parcela"
+                                        src="https://cdn-icons-png.flaticon.com/512/1525/1525188.png"
+                                    />
                                 </Box>
                             </ListItemAvatar>
                             <ListItemText
@@ -142,7 +142,7 @@ export const EmprestimoResumo = (props: any) => {
                     Impostos
                 </Typography>
                 <Typography variant="subtitle2">
-                    {solicitacao.fees}
+                    R$ {solicitacao.fees}
                 </Typography>
             </Box>
             <Divider sx={{ my: 2 }} />

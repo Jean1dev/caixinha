@@ -9,8 +9,8 @@ import {
     SvgIcon,
     TextField,
     Typography,
+    Unstable_Grid2 as Grid
 } from "@mui/material"
-import Grid from '@mui/material/Unstable_Grid2';
 import { FormEvent, useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
 import { doEmprestimo, getValorParcelas } from '../api/api.service'
@@ -83,7 +83,8 @@ export default function Emprestimo() {
     const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault()
         setLoading(true)
-        doEmprestimo({ ...solicitacao, caixinhaID: caixinha?.id }).then(() => router.push('/sucesso'))
+        doEmprestimo({ ...solicitacao, caixinhaID: caixinha?.id })
+            .then(() => router.push('/sucesso'))
             .catch(err => {
                 setLoading(false)
                 toast.error(err.message)
