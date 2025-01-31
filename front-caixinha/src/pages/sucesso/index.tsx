@@ -2,10 +2,10 @@ import Head from 'next/head';
 import NextLink from 'next/link';
 import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward'
 import { Box, Button, Container, SvgIcon, Typography } from '@mui/material';
-import { useTranslations } from '@/hooks/useTranlations';
+import { useTranslation } from 'react-i18next';
 
 const Sucesso = () => {
-  const { t } = useTranslations()
+  const { t } = useTranslation()
 
   return (
     <>
@@ -43,14 +43,14 @@ const Sucesso = () => {
               sx={{ mb: 3 }}
               variant="h3"
             >
-              {t.sucesso}
+              {t('sucesso')}
             </Typography>
             <Typography
               align="center"
               color="text.secondary"
               variant="body1"
             >
-              {t.notificaremos}
+              {t('notificaremos')}
             </Typography>
             <Button
               component={NextLink}
@@ -63,7 +63,7 @@ const Sucesso = () => {
               sx={{ mt: 3 }}
               variant="contained"
             >
-              {t.voltar}
+              {t('voltar')}
             </Button>
           </Box>
         </Container>

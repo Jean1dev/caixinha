@@ -22,7 +22,7 @@ import FilterAltIcon from '@mui/icons-material/FilterAlt';
 import FilterAltOffIcon from '@mui/icons-material/FilterAltOff';
 import CenteredCircularProgress from "@/components/CenteredCircularProgress";
 import DisplayValorMonetario from "@/components/display-valor-monetario";
-import { useTranslations } from "@/hooks/useTranlations";
+import { useTranslation } from "react-i18next";
 
 export default function Extrato() {
     const [data, setData] = useState([])
@@ -32,7 +32,7 @@ export default function Extrato() {
     const [emprestimosFiltro, setEmprestimosFiltro] = useState(true)
     const router = useRouter()
     const { data: user } = useSession()
-    const { t } = useTranslations()
+    const { t } = useTranslation()
 
     useEffect(() => {
         setLoading(true)
@@ -78,23 +78,23 @@ export default function Extrato() {
                         >
                             <Stack spacing={1}>
                                 <Typography variant="h4">
-                                    {t.extrato}
+                                    {t('extrato')}
                                 </Typography>
 
                             </Stack>
 
                         </Stack>
                         <Card sx={{ p: 2, width: '100%' }}>
-                            <Typography> {t.filtros}</Typography>
+                            <Typography> {t('filtros')}</Typography>
                             <Chip
-                                label={somenteMeuFiltro ? t.extrato_filtros.todo_mundo : t.extrato_filtros.somente_meu }
+                                label={somenteMeuFiltro ? t('extrato_filtros.todo_mundo') : t('extrato_filtros.somente_meu')}
                                 variant={somenteMeuFiltro ? 'filled' : 'outlined'}
                                 color={somenteMeuFiltro ? 'success' : 'default'}
                                 onClick={() => { setSomenteMeuFiltro(!somenteMeuFiltro) }}
                                 onDelete={() => { setEmprestimosFiltro(!emprestimosFiltro) }}
                                 deleteIcon={somenteMeuFiltro ? <FilterAltOffIcon /> : <FilterAltIcon />} />
                             <Chip
-                                label={depositosFiltro ? t.extrato_filtros.remover_depositos : t.extrato_filtros.incluir_depositos }
+                                label={depositosFiltro ? t('extrato_filtros.remover_depositos') : t('extrato_filtros.incluir_depositos')}
                                 variant={depositosFiltro ? 'filled' : 'outlined'}
                                 color={depositosFiltro ? 'success' : 'default'}
                                 onClick={() => { setDepositosFiltro(!depositosFiltro) }}
@@ -103,7 +103,7 @@ export default function Extrato() {
                             <Chip
                                 onClick={() => { setEmprestimosFiltro(!emprestimosFiltro) }}
                                 onDelete={() => { setEmprestimosFiltro(!emprestimosFiltro) }}
-                                label={emprestimosFiltro ? 'Remover emprestimos' : 'Incluir emprestimos'}
+                                label={emprestimosFiltro ? t('extrato_filtros.remover_emprestimos') : t('extrato_filtros.incluir_emprestimos')}
                                 variant={emprestimosFiltro ? 'filled' : 'outlined'}
                                 color={emprestimosFiltro ? 'success' : 'default'}
                                 deleteIcon={emprestimosFiltro ? <FilterAltOffIcon /> : <FilterAltIcon />} />
@@ -119,19 +119,19 @@ export default function Extrato() {
                                             <TableHead>
                                                 <TableRow>
                                                     <TableCell>
-                                                        {t.operacao}
+                                                        {t('operacao')}
                                                     </TableCell>
                                                     <TableCell>
-                                                        {t.membro}
+                                                        {t('membro')}
                                                     </TableCell>
                                                     <TableCell>
-                                                        {t.value}
+                                                        {t('value')}
                                                     </TableCell>
                                                     <TableCell sortDirection="desc">
-                                                        {t.data}
+                                                        {t('data')}
                                                     </TableCell>
                                                     <TableCell>
-                                                        {t.status}
+                                                        {t('status')}
                                                     </TableCell>
                                                 </TableRow>
                                             </TableHead>

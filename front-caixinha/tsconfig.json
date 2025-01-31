@@ -1,7 +1,12 @@
 {
   "compilerOptions": {
     "target": "es5",
-    "lib": ["dom", "dom.iterable", "esnext"],
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "esnext",
+      "es2015"
+    ],
     "allowJs": true,
     "skipLibCheck": true,
     "strict": true,
@@ -15,9 +20,18 @@
     "jsx": "preserve",
     "incremental": true,
     "paths": {
-      "@/*": ["./src/*"]
+      "@/*": [
+        "./src/*"
+      ]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "src/theme/base/create-components.js"],
-  "exclude": ["node_modules"]
+  "include": [
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    "src/theme/base/create-components.js"
+  ],
+  "exclude": [
+    "node_modules"
+  ]
 }

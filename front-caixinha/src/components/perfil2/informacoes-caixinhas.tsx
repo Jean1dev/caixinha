@@ -15,12 +15,12 @@ import { getMinhasCaixinhas } from "@/pages/api/caixinhas-disponiveis";
 import { sairDaCaixinha } from "@/pages/api/api.service";
 import toast from "react-hot-toast";
 import { useUserAuth } from "@/hooks/useUserAuth";
-import { useTranslations } from "@/hooks/useTranlations";
+import { useTranslation } from "react-i18next";
 
 export const InformacoesCaixinhas = () => {
     const [caixinhas, setCaixinhas] = useState([])
     const { user } = useUserAuth()
-    const { t } = useTranslations()
+    const { t } = useTranslation()
 
     useEffect(() => {
         getMinhasCaixinhas(user.name, user.email)
@@ -28,18 +28,18 @@ export const InformacoesCaixinhas = () => {
     }, [user])
 
     const sair = useCallback((caixinhaID: string) => {
-        const resposta = confirm(t.operacao_irreversivel)
+        const resposta = confirm(t('operacao_irreversivel'))
         if (resposta) {
             sairDaCaixinha({
                 caixinhaID,
                 name: user.name,
                 email: user.email
             }).then(() => {
-                alert(t.saiu_caixinha)
+                alert(t('saiu_caixinha'))
                 window.location.reload()
             }).catch((e) => toast.error(e.message))
         }
-    }, [user])
+    }, [user, t])
 
     return (
         <Card>
@@ -49,7 +49,7 @@ export const InformacoesCaixinhas = () => {
                     <TableHead>
                         <TableRow>
                             <TableCell>
-                                {t.nome}
+                                {t('nome')}
                             </TableCell>
                             <TableCell/>
                         </TableRow>
@@ -66,7 +66,7 @@ export const InformacoesCaixinhas = () => {
                                     </TableCell>
                                     <TableCell align="right">
                                         <Button color="error" onClick={() => sair(item.id)}>
-                                            {t.sair}
+                                            {t('sair')}
                                         </Button>
                                     </TableCell>
                                 </TableRow>

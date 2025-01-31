@@ -12,7 +12,7 @@ import { pagarEmprestimo } from '@/pages/api/api.service';
 import toast from 'react-hot-toast';
 import { Link, Stack } from '@mui/material';
 import Image from 'next/image';
-import { useTranslations } from '@/hooks/useTranlations';
+import { useTranslation } from 'react-i18next';
 
 const Ok = ({ t }: { t: any }) => (
     <Card>
@@ -47,7 +47,7 @@ export const AtalhoEmprestimo = (props: any) => {
     const [ok, setOk] = useState(false)
     const { user } = useUserAuth()
     const { caixinha } = useCaixinhaSelect()
-    const { t } = useTranslations()
+    const { t } = useTranslation()
 
     const handleClick = useCallback(() => {
         const resposta = confirm(`Voce confirma o pagamento de R$${valorPago}`)
@@ -60,7 +60,7 @@ export const AtalhoEmprestimo = (props: any) => {
                 valor: valorPago,
                 comprovante: null
             }).then(() => {
-                toast.success(t.pagamento_efetuado)
+                toast.success(t('pagamento_efetuado'))
                 setOk(true)
             }).catch(e => {
                 toast.error(e.message)
@@ -75,11 +75,11 @@ export const AtalhoEmprestimo = (props: any) => {
     return (
         <Card {...props}>
             <CardHeader
-                title={t.ultimo_emprestimo}
+                title={t('ultimo_emprestimo')}
             />
             <CardContent sx={{ pt: 0 }}>
                 <TextField
-                    label={t.origem}
+                    label={t('origem')}
                     fullWidth
                     disabled
                     InputProps={{
@@ -105,7 +105,7 @@ export const AtalhoEmprestimo = (props: any) => {
                 >
                 </Box>
                 <TextField
-                    label={t.valor_a_ser_pago}
+                    label={t('valor_a_ser_pago')}
                     fullWidth
                     type="number"
                     onChange={(e: any) => setValorPago(e.target.value)}
@@ -135,7 +135,7 @@ export const AtalhoEmprestimo = (props: any) => {
                     underline="always"
                     variant="body2"
                 >
-                    {t.ver_detalhes}
+                    {t('ver_detalhes')}
                 </Link>
                 <Button
                     onClick={handleClick}
@@ -144,7 +144,7 @@ export const AtalhoEmprestimo = (props: any) => {
                     sx={{ mt: 2 }}
                     variant="contained"
                 >
-                    {t.pagar}
+                    {t('pagar')}
                 </Button>
             </CardContent>
         </Card>

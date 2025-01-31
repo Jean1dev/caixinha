@@ -6,12 +6,12 @@ import { Box, Container, Stack, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 import { getMeuFeed } from "../api/feed";
 import { useUserAuth } from "@/hooks/useUserAuth";
-import { useTranslations } from "@/hooks/useTranlations";
+import { useTranslation } from "react-i18next";
 
 export default function Feed() {
     const [posts, setPosts] = useState([])
     const { user } = useUserAuth()
-    const { t } = useTranslations()
+    const { t } = useTranslation()
 
     useEffect(() => {
         const username = user?.name
@@ -24,7 +24,7 @@ export default function Feed() {
 
     return (
         <Layout>
-            <Seo title={t.feed.seo} />
+            <Seo title={t('feed.seo')} />
             <Box
                 component="main"
                 sx={{
@@ -38,7 +38,7 @@ export default function Feed() {
                             color="text.secondary"
                             variant="overline"
                         >
-                            {t.feed.title}
+                            {t('feed.title')}
                         </Typography>
                         <Typography variant="h4">
                             WIP
@@ -61,7 +61,6 @@ export default function Feed() {
                                 likes={post.likes}
                                 media={post.media}
                                 message={post.message}
-                                translation={t}
                             />
                         ))}
                     </Stack>

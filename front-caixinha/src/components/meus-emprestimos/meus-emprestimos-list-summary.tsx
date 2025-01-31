@@ -6,7 +6,7 @@ import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import { LockClock, Receipt } from '@mui/icons-material';
 import { IMeusEmprestimos } from '@/types/types';
-import { useTranslations } from '@/hooks/useTranlations';
+import { useTranslation } from 'react-i18next';
 
 export const MeusEmprestimosListSummary = ({ data }: { data: IMeusEmprestimos }) => {
   const total = {
@@ -14,7 +14,7 @@ export const MeusEmprestimosListSummary = ({ data }: { data: IMeusEmprestimos })
     totalPago: data.totalPago,
     totalGeral: data.totalGeral
   }
-  const { t } = useTranslations()
+  const { t } = useTranslation()
 
   return (
 
@@ -48,7 +48,7 @@ export const MeusEmprestimosListSummary = ({ data }: { data: IMeusEmprestimos })
                     color="text.secondary"
                     variant="body2"
                   >
-                    {t.total}
+                    {t('total')}
                   </Typography>
                   <Typography variant="h6">
                     R$ {total.totalGeral.toFixed(2)}
@@ -57,7 +57,7 @@ export const MeusEmprestimosListSummary = ({ data }: { data: IMeusEmprestimos })
                     color="text.secondary"
                     variant="body2"
                   >
-                    {t.emprestimo.referente_ultimos}
+                    {t('emprestimo.referente_ultimos')}
                   </Typography>
                 </div>
               </Stack>
@@ -91,7 +91,7 @@ export const MeusEmprestimosListSummary = ({ data }: { data: IMeusEmprestimos })
                     color="text.secondary"
                     variant="body2"
                   >
-                    {t.pago}
+                    {t('pago')}
                   </Typography>
                   <Typography variant="h6">
                     R$ {total.totalPago.toFixed(2)}
@@ -100,7 +100,7 @@ export const MeusEmprestimosListSummary = ({ data }: { data: IMeusEmprestimos })
                     color="text.secondary"
                     variant="body2"
                   >
-                    {t.emprestimo.referente_ultimos}
+                    {t('emprestimo.referente_ultimos')}
                   </Typography>
                 </div>
               </Stack>
@@ -134,7 +134,7 @@ export const MeusEmprestimosListSummary = ({ data }: { data: IMeusEmprestimos })
                     color="text.secondary"
                     variant="body2"
                   >
-                    {t.emprestimo.pendente_aprovacao}
+                    {t('emprestimo.pendente_aprovacao')}
                   </Typography>
                   <Typography variant="h6">
                     R$ {total.totalPendente.toFixed(2)}
@@ -143,7 +143,7 @@ export const MeusEmprestimosListSummary = ({ data }: { data: IMeusEmprestimos })
                     color="text.secondary"
                     variant="body2"
                   >
-                    {t.emprestimo.referente_ultimos}
+                    {t('emprestimo.referente_ultimos')}
                   </Typography>
                 </div>
               </Stack>
@@ -153,6 +153,4 @@ export const MeusEmprestimosListSummary = ({ data }: { data: IMeusEmprestimos })
       </Grid>
     </div>
   );
-
 }
-

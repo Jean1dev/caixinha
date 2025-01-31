@@ -12,15 +12,15 @@ import { PropostaRenegociacao } from "@/components/renegociacao/proposta-renegoc
 import { useCaixinhaSelect } from "@/hooks/useCaixinhaSelect";
 import { solicitarRenegociacao } from "../api/api.service";
 import toast from "react-hot-toast";
-import { useTranslations } from "@/hooks/useTranlations";
+import { useTranslation } from "react-i18next";
 
 export default function Renegociacao() {
     const [renegociacao, setRenegociacao] = useState<any | null>(null)
     const { caixinha } = useCaixinhaSelect()
-    const { t } = useTranslations()
+    const { t } = useTranslation()
 
     const verProposta = useCallback((uid: string) => {
-        toast.success(t.renegociacao.solicitando_renegociacao)
+        toast.success(t('renegociacao.solicitando_renegociacao'))
         solicitarRenegociacao({
             caixinhaId: caixinha?.id,
             emprestimoUid: uid
@@ -28,11 +28,11 @@ export default function Renegociacao() {
             setRenegociacao(res)
         })
         
-    }, [caixinha])
+    }, [caixinha, t])
 
     return (
         <Layout>
-            <Seo title={t.renegociacao.title} />
+            <Seo title={t('renegociacao.title')} />
             <Box
                 component="main"
                 sx={{
@@ -46,7 +46,7 @@ export default function Renegociacao() {
                         sx={{ mb: 3 }}
                     >
                         <Typography variant="h4">
-                            {t.renegociacao.ultimo_emprestimo}
+                            {t('renegociacao.ultimo_emprestimo')}
                         </Typography>
                     </Stack>
 

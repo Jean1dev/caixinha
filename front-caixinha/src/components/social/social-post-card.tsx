@@ -17,6 +17,7 @@ import { SocialComment } from './social-comment';
 import { SocialCommentAdd } from './social-comment-add';
 import { likePost, unlikePost } from '@/pages/api/api.service';
 import toast from 'react-hot-toast';
+import { useTranslation } from 'react-i18next';
 
 export const SocialPostCard = (props: any) => {
   const {
@@ -29,9 +30,9 @@ export const SocialPostCard = (props: any) => {
     likes: likesProp,
     media,
     message,
-    translation,
     ...other
   } = props;
+  const { t } = useTranslation()
   const [isLiked, setIsLiked] = useState(isLikedProp);
   const [likes, setLikes] = useState(likesProp);
 
@@ -51,10 +52,10 @@ export const SocialPostCard = (props: any) => {
     const currentUrl = window.location.href
     navigator.clipboard.writeText(`${currentUrl}/${postId}`)
       .then(() => {
-        toast.success(translation.feed.link_copiado);
+        toast.success(t('feed.link_copiado'));
       })
       .catch(() => {
-        toast.error(translation.feed.erro_copiar_link);
+        toast.error(t('feed.erro_copiar_link'));
       })
   }, [postId])
 
@@ -102,7 +103,7 @@ export const SocialPostCard = (props: any) => {
               {authorName}
             </Link>
             <Typography variant="body2">
-              {translation.feed.att_status}
+              {t('feed.att_status')}
             </Typography>
           </Stack>
         )}

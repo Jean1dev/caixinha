@@ -10,7 +10,7 @@ import { Seo } from '@/components/Seo';
 import Layout from '@/components/Layout';
 import { InformacoesGeraisPerfil } from '@/components/perfil2/informacoes-gerais-perfil';
 import { InformacoesCaixinhas } from '@/components/perfil2/informacoes-caixinhas';
-import { useTranslations } from '@/hooks/useTranlations';
+import { useTranslation } from 'react-i18next';
 
 export interface IUser {
     name: string
@@ -27,7 +27,7 @@ const tabs = [
 
 export default function Perfil() {
     const [currentTab, setCurrentTab] = useState('geral');
-    const { t } = useTranslations()
+    const { t } = useTranslation()
 
     const handleTabsChange = useCallback((_event: any, value: any) => {
         setCurrentTab(value);
@@ -35,7 +35,7 @@ export default function Perfil() {
 
     return (
         <Layout>
-            <Seo title={t.perfil.seo} />
+            <Seo title={t('perfil.seo')} />
             <Box
                 component="main"
                 sx={{
@@ -49,7 +49,7 @@ export default function Perfil() {
                         sx={{ mb: 3 }}
                     >
                         <Typography variant="h4">
-                            {t.perfil.detalhes}
+                            {t('perfil.detalhes')}
                         </Typography>
                         <div>
                             <Tabs

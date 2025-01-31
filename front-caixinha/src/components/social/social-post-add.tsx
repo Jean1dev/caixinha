@@ -1,4 +1,3 @@
-import { useTranslations } from '@/hooks/useTranlations';
 import { useUserAuth } from '@/hooks/useUserAuth';
 import { publicarPost, uploadResource } from '@/pages/api/api.service';
 import { getInitials } from '@/utils/utils';
@@ -14,13 +13,14 @@ import SvgIcon from '@mui/material/SvgIcon';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useCallback, useState } from 'react';
 import toast from 'react-hot-toast';
+import { useTranslation } from 'react-i18next';
 
 export const SocialPostAdd = (props: any) => {
     const { user } = useUserAuth()
     const smUp = useMediaQuery((theme: any) => theme.breakpoints.up('sm'));
     const [media, setMedia] = useState<string | null>(null)
     const [postText, setPostText] = useState('')
-    const { t } = useTranslations()
+    const { t } = useTranslation()
 
     const uploadPhoto = useCallback(() => {
         let input = document.createElement('input');
@@ -29,20 +29,20 @@ export const SocialPostAdd = (props: any) => {
         input.addEventListener('change', function (event: any) {
             let arquivo = event.target.files[0];
 
-            toast.loading(t.realizando_upload)
+            toast.loading(t('realizando_upload'))
             uploadResource(arquivo)
                 .then((fileUrl: string) => {
                     setMedia(fileUrl)
-                    toast.success(t.upload_sucesso)
+                    toast.success(t('upload_sucesso'))
                 })
                 .catch(e => toast.error(e.message))
         });
 
         input.click()
-    }, [])
+    }, [t])
 
     const post = () => {
-        toast.loading(t.feed.publicando)
+        toast.loading(t('feed.publicando'))
         publicarPost({
             authorName: user?.name,
             authorAvatar: user?.photoUrl,
@@ -50,7 +50,7 @@ export const SocialPostAdd = (props: any) => {
             media
         })
             .then(() => {
-                toast.success(t.sucesso)
+                toast.success(t('sucesso'))
                 setPostText('')
                 setMedia(null)
             })
@@ -81,7 +81,7 @@ export const SocialPostAdd = (props: any) => {
                         <OutlinedInput
                             fullWidth
                             multiline
-                            placeholder={t.feed.placeholder}
+                            placeholder={t('feed.placeholder')}
                             rows={3}
                             value={postText}
                             onChange={(e) => setPostText(e.target.value)}
@@ -122,7 +122,7 @@ export const SocialPostAdd = (props: any) => {
                             )}
                             <div>
                                 <Button variant="contained" onClick={post}>
-                                    Post
+                                    {t('Post')}
                                 </Button>
                             </div>
                         </Stack>

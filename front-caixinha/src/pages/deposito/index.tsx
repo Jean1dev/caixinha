@@ -136,7 +136,7 @@ export default function Deposito() {
 
     return (
         <Layout>
-            <Seo title="Contact" />
+            <Seo title="Deposito" />
             <Box
                 component="main"
                 sx={{
