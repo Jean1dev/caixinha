@@ -3,10 +3,10 @@ import NextLink from 'next/link';
 import { Box, Button, Container, SvgIcon, Typography } from '@mui/material';
 import { ArrowLeftOutlined } from '@mui/icons-material';
 import Image from 'next/image';
-import { useTranslations } from '@/hooks/useTranlations';
+import { useTranslation } from 'react-i18next';
 
 export default function ErrorPage() {
-    const { t } = useTranslations()
+    const { t } = useTranslation()
 
     return (
         <>
@@ -53,14 +53,14 @@ export default function ErrorPage() {
                             sx={{ mb: 3 }}
                             variant="h3"
                         >
-                            {t.not_found_404}
+                            {t('not_found_404')}
                         </Typography>
                         <Typography
                             align="center"
                             color="text.secondary"
                             variant="body1"
                         >
-                            {t.erro_rota}
+                            {t('erro_rota')}
                         </Typography>
                         <Button
                             component={NextLink}
@@ -73,7 +73,7 @@ export default function ErrorPage() {
                             sx={{ mt: 3 }}
                             variant="contained"
                         >
-                            {t.voltar}
+                            {t('voltar')}
                         </Button>
                     </Box>
                 </Container>

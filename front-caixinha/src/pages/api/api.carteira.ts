@@ -58,6 +58,16 @@ export async function setDefaultHeaders(user: string, email: string) {
     http.defaults.headers.common['email'] = email
 }
 
+export async function getUserIdByEmailAndUser(user?: string, email?: string) {
+    if (!user)
+        user = http.defaults.headers.common['user'] as string
+
+    if (!email)
+        email = http.defaults.headers.common['email'] as string
+
+    return asyncFetch(`/usuarios?name=${user}&email=${email}`, 'GET')
+}
+
 export async function getTipoAtivos() {
     return asyncFetch(`/ativo/tipo-ativos`, 'GET')
 }

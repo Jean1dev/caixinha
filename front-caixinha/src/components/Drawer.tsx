@@ -1,8 +1,8 @@
 import * as React from 'react';
-import { styled, useTheme, Theme, CSSObject } from '@mui/material/styles';
-import MuiDrawer from '@mui/material/Drawer';
+import { styled, useTheme } from '@mui/material/styles';
 import List from '@mui/material/List';
 import Divider from '@mui/material/Divider';
+import Drawer from '@mui/material/Drawer';
 import IconButton from '@mui/material/IconButton';
 import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
@@ -22,59 +22,20 @@ import {
     FiberNew,
     Savings,
     AccountBalanceWallet,
-    EmojiEvents
+    EmojiEvents,
+    ChatBubble,
 } from '@mui/icons-material';
 import { Chip, Link } from '@mui/material';
 
-const drawerWidth = 240;
-
-const openedMixin = (theme: Theme): CSSObject => ({
-    width: drawerWidth,
-    transition: theme.transitions.create('width', {
-        easing: theme.transitions.easing.sharp,
-        duration: theme.transitions.duration.enteringScreen,
-    }),
-    overflowX: 'hidden',
-});
-
-const closedMixin = (theme: Theme): CSSObject => ({
-    transition: theme.transitions.create('width', {
-        easing: theme.transitions.easing.sharp,
-        duration: theme.transitions.duration.leavingScreen,
-    }),
-    overflowX: 'hidden',
-    width: `calc(${theme.spacing(7)} + 1px)`,
-    [theme.breakpoints.up('sm')]: {
-        width: `calc(${theme.spacing(8)} + 1px)`,
-    },
-});
+const drawerWidth = 340;
 
 const DrawerHeader = styled('div')(({ theme }) => ({
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'flex-end',
     padding: theme.spacing(0, 1),
-    // necessary for content to be below app bar
     ...theme.mixins.toolbar,
 }));
-
-
-const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' })(
-    ({ theme, open }) => ({
-        width: drawerWidth,
-        flexShrink: 0,
-        whiteSpace: 'nowrap',
-        boxSizing: 'border-box',
-        ...(open && {
-            ...openedMixin(theme),
-            '& .MuiDrawer-paper': openedMixin(theme),
-        }),
-        ...(!open && {
-            ...closedMixin(theme),
-            '& .MuiDrawer-paper': closedMixin(theme),
-        }),
-    }),
-);
 
 const routes = [
     {
@@ -119,19 +80,22 @@ const carteiraRoutes = [
         text: 'Novo aporte',
         path: '/carteira/aporte',
         icon: <SavingsOutlined />,
-        newFeature: true
+        newFeature: true,
+        beta: true,
     },
     {
         text: 'Alt-Coins',
         path: '/token-market',
         icon: <CurrencyBitcoin />,
-        newFeature: true
+        newFeature: true,
+        beta: true,
     },
     {
         text: 'NFT',
         path: '/web3/meus-nft',
         icon: <EmojiEvents />,
-        newFeature: true
+        newFeature: true,
+        beta: false,
     }
 ]
 
@@ -140,19 +104,58 @@ const socialRoutes = [
         text: 'Feed',
         path: 'feed',
         icon: <Reddit />,
-        newFeature: true
+        newFeature: true,
+        beta: false,
+    },
+    {
+        text: 'Chat',
+        path: 'chat',
+        icon: <ChatBubble />,
+        newFeature: true,
+        beta: true
     }
 ]
 
-export default function MiniDrawer({ open, handleDrawerClose }: any) {
+const CustomChips = ({ it }: { it: any }) => (
+    <>
+        {it.newFeature && (
+            <Chip
+                color="primary"
+                label="New"
+                size="small"
+            />
+        )}
+        {it?.beta && (
+            <Chip
+                color="warning"
+                label="Beta"
+                size="small"
+            />
+        )}
+    </>
+)
+
+export default function MiniDrawer(props: any) {
+    const {
+        open,
+        handleDrawerClose,
+    } = props
     const theme = useTheme()
 
-    if (!open) {
-        return <></>
-    }
-
     return (
-        <Drawer variant="permanent" open={open}>
+        <Drawer
+            anchor={'left'}
+            open={open}
+            onClose={handleDrawerClose}
+            sx={{
+                width: drawerWidth,
+                flexShrink: 0,
+                '& .MuiDrawer-paper': {
+                    width: drawerWidth,
+                    boxSizing: 'border-box',
+                },
+            }}
+        >
             <DrawerHeader>
                 <IconButton onClick={handleDrawerClose}>
                     {theme.direction === 'rtl' ? <ChevronRight /> : <ChevronLeft />}
@@ -161,7 +164,7 @@ export default function MiniDrawer({ open, handleDrawerClose }: any) {
             <Divider />
             <List>
                 {routes.map((it, index) => (
-                    <ListItem key={it.text} disablePadding sx={{ display: 'block' }}>
+                    <ListItem key={index} disablePadding sx={{ display: 'block' }}>
                         <ListItemButton
                             LinkComponent={Link}
                             href={it.path}
@@ -181,6 +184,7 @@ export default function MiniDrawer({ open, handleDrawerClose }: any) {
                                 {it.icon}
                             </ListItemIcon>
                             <ListItemText primary={it.text} sx={{ opacity: open ? 1 : 0 }} />
+                            <CustomChips it={it} />
                         </ListItemButton>
                     </ListItem>
                 ))}
@@ -188,7 +192,7 @@ export default function MiniDrawer({ open, handleDrawerClose }: any) {
             <Divider />
             <List>
                 {carteiraRoutes.map((it, index) => (
-                    <ListItem key={it.text} disablePadding sx={{ display: 'block' }}>
+                    <ListItem key={index} disablePadding sx={{ display: 'block' }}>
                         <ListItemButton
                             LinkComponent={Link}
                             href={it.path}
@@ -208,13 +212,7 @@ export default function MiniDrawer({ open, handleDrawerClose }: any) {
                                 {it.icon}
                             </ListItemIcon>
                             <ListItemText primary={it.text} sx={{ opacity: open ? 1 : 0 }} />
-                            {it.newFeature && (
-                                <Chip
-                                    color="primary"
-                                    label="New"
-                                    size="small"
-                                />
-                            )}
+                            <CustomChips it={it} />
                         </ListItemButton>
                     </ListItem>
                 ))}
@@ -222,7 +220,7 @@ export default function MiniDrawer({ open, handleDrawerClose }: any) {
             <Divider />
             <List>
                 {socialRoutes.map((it, index) => (
-                    <ListItem key={it.text} disablePadding sx={{ display: 'block' }}>
+                    <ListItem key={index} disablePadding sx={{ display: 'block' }}>
                         <ListItemButton
                             LinkComponent={Link}
                             href={it.path}
@@ -242,13 +240,7 @@ export default function MiniDrawer({ open, handleDrawerClose }: any) {
                                 {it.icon}
                             </ListItemIcon>
                             <ListItemText primary={it.text} sx={{ opacity: open ? 1 : 0 }} />
-                            {it.newFeature && (
-                                <Chip
-                                    color="primary"
-                                    label="New"
-                                    size="small"
-                                />
-                            )}
+                            <CustomChips it={it} />
                         </ListItemButton>
                     </ListItem>
                 ))}

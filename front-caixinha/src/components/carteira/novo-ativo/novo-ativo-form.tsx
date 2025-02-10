@@ -22,13 +22,13 @@ import { DisplayResumoNota } from "./display-resumo-nota";
 import toast from "react-hot-toast";
 import { useSession } from "next-auth/react";
 import { publicarPost } from "@/pages/api/api.service";
-import { useTranslations } from "@/hooks/useTranlations";
+import { useTranslation } from 'react-i18next';
 
 export const NovoAtivoForm = () => {
     const [state, setState] = useState<any>({
         tipoAtivo: ''
     })
-    const { t } = useTranslations()
+    const { t } = useTranslation()
 
     const [sugestaoList, setSugestaoList] = useState<string[]>([])
     const [categoryOptions, setOptions] = useState<any[]>([])
@@ -63,7 +63,7 @@ export const NovoAtivoForm = () => {
 
     const handleSubmit = async (e: React.ChangeEvent<HTMLFormElement>) => {
         e.preventDefault()
-        toast.loading(t.loading)
+        toast.loading(t('loading'))
 
         criarAtivo({
             tipoAtivo: state.tipoAtivo,
@@ -74,7 +74,7 @@ export const NovoAtivoForm = () => {
             valorAtual: state.valorAtual
         })
             .then(() => {
-                toast.success(t.carteira.ativo_add)
+                toast.success(t('carteira.ativo_add'))
                 // if perfil.publicarAoInvestir = true
                 publicarPost({
                     message: `Estou investindo em ${state.nome}`,
@@ -139,7 +139,7 @@ export const NovoAtivoForm = () => {
                                         md={4}
                                     >
                                         <Typography variant="h6">
-                                            {t.carteira.carteira}
+                                            {t('carteira.carteira')}
                                         </Typography>
                                     </Grid>
                                     <Grid
@@ -149,7 +149,7 @@ export const NovoAtivoForm = () => {
                                         <Stack spacing={3}>
                                             <TextField
                                                 fullWidth
-                                                label={t.carteira.carteira}
+                                                label={t('carteira.carteira')}
                                                 name="identificacaoCarteira"
                                                 onChange={handleChange}
                                                 select
@@ -184,7 +184,7 @@ export const NovoAtivoForm = () => {
                                 md={4}
                             >
                                 <Typography variant="h6">
-                                    {t.carteira.tipo_ativo}
+                                    {t('carteira.tipo_ativo')}
                                 </Typography>
                             </Grid>
                             <Grid
@@ -194,7 +194,7 @@ export const NovoAtivoForm = () => {
                                 <Stack spacing={3}>
                                     <TextField
                                         fullWidth
-                                        label={t.carteira.tipo_ativo}
+                                        label={t('carteira.tipo_ativo')}
                                         name="tipoAtivo"
                                         onChange={handleChange}
                                         select
@@ -228,7 +228,7 @@ export const NovoAtivoForm = () => {
                                             md={4}
                                         >
                                             <Typography variant="h6">
-                                                {t.carteira.info}
+                                                {t('carteira.info')}
                                             </Typography>
                                         </Grid>
                                         <Grid
@@ -244,7 +244,7 @@ export const NovoAtivoForm = () => {
                                                         <TextField
                                                             {...params}
                                                             fullWidth
-                                                            label={t.nome}
+                                                            label={t('nome')}
                                                             name="nome"
                                                             onChange={handleChange}
                                                             value={state.nome}
@@ -253,7 +253,7 @@ export const NovoAtivoForm = () => {
                                                 />
                                                 <TextField
                                                     fullWidth
-                                                    label={t.quantidade}
+                                                    label={t('quantidade')}
                                                     name="quantidade"
                                                     onChange={handleChange}
                                                     type="number"
@@ -262,7 +262,7 @@ export const NovoAtivoForm = () => {
                                                 {state.tipoAtivo === 'RENDA_FIXA' && (
                                                     <TextField
                                                         fullWidth
-                                                        label={t.valor_atual}
+                                                        label={t('valor_atual')}
                                                         name="valorAtual"
                                                         onChange={handleChange}
                                                         type="number"
@@ -272,7 +272,7 @@ export const NovoAtivoForm = () => {
                                                 <div>
                                                     <FormControlLabel
                                                         control={<Switch defaultChecked />}
-                                                        label={t.carteira.postar_automaticamente}
+                                                        label={t('carteira.postar_automaticamente')}
                                                     />
                                                 </div>
                                             </Stack>
@@ -291,7 +291,7 @@ export const NovoAtivoForm = () => {
                                             md={4}
                                         >
                                             <Typography variant="h6">
-                                                {t.carteira.diagrama}
+                                                {t('carteira.diagrama')}
                                             </Typography>
                                         </Grid>
                                         <Grid
@@ -301,7 +301,7 @@ export const NovoAtivoForm = () => {
                                             <Stack spacing={3}>
                                                 <TextField
                                                     fullWidth
-                                                    label={t.carteira.nota}
+                                                    label={t('carteira.nota')}
                                                     name="nota"
                                                     onChange={handleChange}
                                                     type="number"
@@ -320,13 +320,13 @@ export const NovoAtivoForm = () => {
                                 spacing={1}
                             >
                                 <Button color="inherit" onClick={cancel}>
-                                    {t.cancelar}
+                                    {t('cancelar')}
                                 </Button>
                                 <Button
                                     type="submit"
                                     variant="contained"
                                 >
-                                    {t.salvar}
+                                    {t('salvar')}
                                 </Button>
                             </Stack>
                         </>

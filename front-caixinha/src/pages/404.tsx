@@ -1,12 +1,12 @@
-import { useTranslations } from '@/hooks/useTranlations';
 import Link from 'next/link';
+import { useTranslation } from 'react-i18next';
 
 export default function NotFoundPage() {
-    const { t } = useTranslations();
+    const { t } = useTranslation();
 
     return (
         <div>
-            <h1>{t.not_found}</h1>
+            <h1>{t('not_found')}</h1>
             <img
                 alt="Under development"
                 src="/assets/error-404.png"
@@ -16,7 +16,7 @@ export default function NotFoundPage() {
                     width: 250
                 }}
             />
-            <Link href="/">{t.voltar}</Link>
+            <Link href="/">{t('voltar')}</Link>
         </div>
     );
 };

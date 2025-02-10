@@ -17,12 +17,12 @@ import { updatePerfil, uploadResource } from '@/pages/api/api.service';
 import toast from 'react-hot-toast';
 import { useUserAuth } from '@/hooks/useUserAuth';
 import CenteredCircularProgress from '../CenteredCircularProgress';
-import { useTranslations } from '@/hooks/useTranlations';
+import { useTranslation } from 'react-i18next';
 
 export const InformacoesGeraisPerfil = () => {
     const { user, updateUser } = useUserAuth()
     const [loadingPhoto, setLoadingPhoto] = useState(false)
-    const { t } = useTranslations();
+    const { t } = useTranslation();
     const [values, setValues] = useState<any | null>(null);
 
     const updateProfile = () => {
@@ -44,7 +44,7 @@ export const InformacoesGeraisPerfil = () => {
                 pix: values.pix,
                 photoUrl: values?.photoUrl
             })
-            toast.success(t.perfil.atualizado)
+            toast.success(t('perfil.atualizado'))
         }).catch(e => {
             toast.error(e.message)
         })
@@ -86,7 +86,7 @@ export const InformacoesGeraisPerfil = () => {
                         ...user,
                         photoUrl: fileUrl
                     })
-                    toast.success(t.upload_sucesso)
+                    toast.success(t('upload_sucesso'))
                 })
                 .catch(e => toast.error(e.message))
                 .finally(() => setLoadingPhoto(false))
@@ -109,7 +109,7 @@ export const InformacoesGeraisPerfil = () => {
                             md={4}
                         >
                             <Typography variant="h6">
-                                {t.perfil.detalhes_basicos}
+                                {t('perfil.detalhes_basicos')}
                             </Typography>
                         </Grid>
                         <Grid
@@ -178,7 +178,7 @@ export const InformacoesGeraisPerfil = () => {
                                                                 variant="subtitle2"
                                                                 sx={{ fontWeight: 700 }}
                                                             >
-                                                                Select
+                                                                {t('selecionar')}
                                                             </Typography>
                                                         </Stack>
                                                     )
@@ -202,7 +202,7 @@ export const InformacoesGeraisPerfil = () => {
                                         color="inherit"
                                         size="small"
                                     >
-                                        {t.alterar}
+                                        {t('alterar')}
                                     </Button>
                                 </Stack>
                                 <Stack
@@ -211,7 +211,7 @@ export const InformacoesGeraisPerfil = () => {
                                     spacing={2}
                                 >
                                     <TextField
-                                        label={t.nome}
+                                        label={t('nome')}
                                         name="firstName"
                                         disabled={true}
                                         onChange={handleChange}
@@ -244,7 +244,7 @@ export const InformacoesGeraisPerfil = () => {
                                 >
                                     <TextField
                                         fullWidth
-                                        label={t.email}
+                                        label={t('email')}
                                         name="email"
                                         disabled
                                         onChange={handleChange}
@@ -266,7 +266,7 @@ export const InformacoesGeraisPerfil = () => {
                                 >
                                     <TextField
                                         fullWidth
-                                        label={t.telefone}
+                                        label={t('telefone')}
                                         name="phone"
                                         onChange={handleChange}
                                         type="number"
@@ -308,7 +308,7 @@ export const InformacoesGeraisPerfil = () => {
                                         color="primary"
                                         variant="outlined"
                                     >
-                                        {t.salvar}
+                                        {t('salvar')}
                                     </Button>
                                 </Stack>
                             </Grid>
@@ -327,7 +327,7 @@ export const InformacoesGeraisPerfil = () => {
                             md={4}
                         >
                             <Typography variant="h6">
-                                {t.perfil.configuracoes}
+                                {t('perfil.configuracoes')}
                             </Typography>
                         </Grid>
                         <Grid
@@ -347,13 +347,13 @@ export const InformacoesGeraisPerfil = () => {
                                 >
                                     <Stack spacing={1}>
                                         <Typography variant="subtitle1">
-                                            {t.perfil.publicar}
+                                            {t('perfil.publicar')}
                                         </Typography>
                                         <Typography
                                             color="text.secondary"
                                             variant="body2"
                                         >
-                                            {t.perfil.publicar_descricao}
+                                            {t('perfil.publicar_descricao')}
                                         </Typography>
                                     </Stack>
                                     <Switch />
@@ -366,13 +366,13 @@ export const InformacoesGeraisPerfil = () => {
                                 >
                                     <Stack spacing={1}>
                                         <Typography variant="subtitle1">
-                                            {t.perfil.permitir_amigos}
+                                            {t('perfil.permitir_amigos')}
                                         </Typography>
                                         <Typography
                                             color="text.secondary"
                                             variant="body2"
                                         >
-                                            {t.perfil.permitir_amigos_descricao}
+                                            {t('perfil.permitir_amigos_descricao')}
                                         </Typography>
                                     </Stack>
                                     <Switch defaultChecked />
@@ -393,7 +393,7 @@ export const InformacoesGeraisPerfil = () => {
                             md={4}
                         >
                             <Typography variant="h6">
-                                {t.perfil.deletar_conta}
+                                {t('perfil.deletar_conta')}
                             </Typography>
                         </Grid>
                         <Grid
@@ -405,13 +405,13 @@ export const InformacoesGeraisPerfil = () => {
                                 spacing={3}
                             >
                                 <Typography variant="subtitle1">
-                                    {t.perfil.deletar_conta_descricao}
+                                    {t('perfil.deletar_conta_descricao')}
                                 </Typography>
                                 <Button
                                     color="error"
                                     variant="outlined"
                                 >
-                                    {t.perfil.deletar_conta}
+                                    {t('perfil.deletar_conta')}
                                 </Button>
                             </Stack>
                         </Grid>

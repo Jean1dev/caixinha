@@ -14,7 +14,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 
     const result = await OrdemCompraCall({
         quantidade: 1,
-        ticker: req.body.ativo
+        ticker: req.body.ativo,
+        email: email as string,
+        username: user as string
     });
 
     res.status(result.status).json({ message: result.message });

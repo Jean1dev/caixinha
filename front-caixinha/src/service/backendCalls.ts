@@ -9,6 +9,8 @@ interface DefaultBackendResponse {
 export interface OrdemCompraInput {
     quantidade: number
     ticker: string
+    email: string
+    username: string
 }
 
 function buildBackendResponse(res: any): DefaultBackendResponse {
@@ -50,7 +52,10 @@ export async function OrdemCompraCall(input: OrdemCompraInput): Promise<DefaultB
     try {
         const ativoRef = await getIDByTicker(input.ticker)
         const body = {
-            usuarioRef: getUserId(),
+            usuarioRef: await getUserId({
+                email: input.email,
+                username: input.username
+            }),
             quantidade: 1.0,
             ativoRef,
         }
