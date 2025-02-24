@@ -27,6 +27,9 @@ async function verificarSeHouvePagamentoNoMes(emprestimoEntity) {
 
     const currentLoan = caixinhas[0]['loans'].find(loan => loan['uid'] == emprestimoEntity['uid'])
     const lastPayment = currentLoan['payments'][currentLoan['payments'].length - 1]
+    if (!lastPayment)
+        return true
+    
     const today = new Date()
     const currentMonth = today.getMonth()
     const currentYear = today.getFullYear()
