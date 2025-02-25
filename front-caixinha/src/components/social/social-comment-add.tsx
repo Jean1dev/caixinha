@@ -14,7 +14,7 @@ import toast from 'react-hot-toast';
 
 export const SocialCommentAdd = (props: any) => {
     const smUp = useMediaQuery((theme: any) => theme.breakpoints.up('sm'));
-    const { parentPostId } = props
+    const { parentPostId, addCommentView } = props
     const { user } = useUserAuth()
     const [comment, setComment] = useState('')
     const [disableButton, setDisableButton] = useState(false)
@@ -29,6 +29,7 @@ export const SocialCommentAdd = (props: any) => {
         }).then(() => {
             toast.success('Comentario publicado')
             setComment('')
+            addCommentView(comment, parentPostId)
         })
     }
 
