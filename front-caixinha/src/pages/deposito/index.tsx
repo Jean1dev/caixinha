@@ -80,7 +80,7 @@ export default function Deposito() {
             valor: solicitacao.valor,
             comprovante: solicitacao.fileUrl
         }).then(() => {
-            router.push('/sucesso')
+            router.push('/sucesso/deposito')
         }).catch(err => {
             console.log(err)
             setLoading(false)
@@ -164,7 +164,7 @@ export default function Deposito() {
                             <div>
                                 <Link
                                     color="text.primary"
-                                    component={RouterLink}
+                                    component="a"
                                     href={'/'}
                                     sx={{
                                         alignItems: 'center',
