@@ -30,6 +30,7 @@ export const SocialPostCard = (props: any) => {
     likes: likesProp,
     media,
     message,
+    addCommentView,
     ...other
   } = props;
   const { t } = useTranslation()
@@ -198,7 +199,7 @@ export const SocialPostCard = (props: any) => {
           ))}
         </Stack>
         <Divider sx={{ my: 3 }} />
-        <SocialCommentAdd parentPostId={postId} />
+        <SocialCommentAdd parentPostId={postId} addCommentView={addCommentView} />
       </Box>
     </Card>
   );
