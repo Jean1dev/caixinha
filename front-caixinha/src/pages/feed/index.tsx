@@ -15,7 +15,8 @@ import { useUserAuth } from "@/hooks/useUserAuth";
 import { useTranslation } from "react-i18next";
 
 export default function Feed() {
-    const [posts, setPosts] = useState([])
+    const [posts, setPosts] = useState<any[]>([])
+    const [page, setPage] = useState(0)
     const [hasMore, setHasMore] = useState(false)
     const { user } = useUserAuth()
     const { t } = useTranslation()
@@ -31,6 +32,17 @@ export default function Feed() {
                 setHasMore(data.hasMore)
             })
     }, [user])
+
+    const loadMore = useCallback(() => {
+        setPage(page + 1)
+        getMeuFeed(user.name, page + 1)
+            .then((data: any) => {
+                setPosts((prevValues: any) => {
+                    return [...prevValues, ...data.data]
+                })
+                setHasMore(data.hasMore)
+            })
+    }, [page, user])
 
     const addCommentView = useCallback((comment: string, postId: string) => {
         setPosts((prevValues: any) => {
@@ -107,7 +119,7 @@ export default function Feed() {
                                 mt: 3
                             }}
                         >
-                            <Button variant="outlined" onClick={() => { }}>
+                            <Button variant="outlined" onClick={loadMore}>
                                 {t('loadmore')} ...
                             </Button>
                         </Box>
