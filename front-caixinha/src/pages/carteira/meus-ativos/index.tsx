@@ -48,6 +48,10 @@ export default function MeusAtivos() {
     const { user } = useUserAuth()
 
     useEffect(() => {
+        if (!user || !user.name || !user.email) {
+            return
+        }
+        
         getMinhasCarteiras(user.name, user.email)
             .then((carteiras: any) => {
                 if (carteiras.length > 0) {
