@@ -51,7 +51,7 @@ const useAtivosSearch = () => {
                 ...newFilters
             }
         }))
-     }, [])
+    }, [])
 
     const handleSortChange = useCallback((newSortBy: any) => { }, [])
 
@@ -80,7 +80,7 @@ const useAtivoStore = (searchState: AtivosSearchState) => {
     }, [])
 
     useEffect(() => {
-        if (searchState.filters.query) { 
+        if (searchState.filters.query) {
             applyLocalFilters(searchState.filters.query)
             return
         }
@@ -161,6 +161,10 @@ export default function ListagemAtivosCompraPage() {
                     ativoStore.removeByKey(ticker);
                 }
                 dialog.handleClose()
+            })
+            .catch((error) => {
+                console.error('Error buying ativo:', error);
+                toast.error('Erro ao comprar ativo. Tente novamente mais tarde.');
             });
     }, [dialog])
 

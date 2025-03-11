@@ -19,6 +19,7 @@ import {
     Card
 } from "@mui/material";
 import Link from '@mui/material/Link';
+import { useRouter } from "next/router";
 import { useCallback, useEffect, useState } from "react";
 
 interface MeusAtivoStateType {
@@ -43,6 +44,7 @@ export default function MeusAtivos() {
         tipo: [],
         terms: null
     })
+    const router = useRouter()
     const { user } = useUserAuth()
 
     useEffect(() => {
@@ -64,6 +66,8 @@ export default function MeusAtivos() {
                 } else {
                     setLoading(false)
                 }
+            }).catch(() => {
+                router.push('/carteira')
             })
     }, [user])
 
