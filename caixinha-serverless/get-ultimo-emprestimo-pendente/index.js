@@ -3,11 +3,11 @@ const middleware = require('../utils/middleware')
 const { connect, find } = require('../v2/mongo-operations')
 
 function elementoMaisRecente(lista) {
-    let elementoMaisRecente = lista[0]; // assume que o primeiro elemento é o mais recente
+    let elementoMaisRecente = lista[0];
 
     for (let i = 1; i < lista.length; i++) {
         if (lista[i].date > elementoMaisRecente.date) {
-            elementoMaisRecente = lista[i]; // atualiza o elemento mais recente
+            elementoMaisRecente = lista[i];
         }
     }
 
