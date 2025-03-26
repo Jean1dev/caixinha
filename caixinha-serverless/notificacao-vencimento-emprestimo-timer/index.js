@@ -6,7 +6,7 @@ function enviarEvento({ name, email, dia }) {
     dispatchEvent([
         {
             type: 'NOTIFICACAO',
-            data: { message: `${name} seu emprestimo esta vencendo pague até dia ${dia}` }
+            data: { message: `${name} seu emprestimo esta vencendo pague até dia ${dia} \n Digite o comando $up para ver informacoes do ultimo emprestimo` }
         },
         {
             type: 'EMAIL',
