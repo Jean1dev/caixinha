@@ -95,5 +95,7 @@ export const en = {
     ["pago"]: "Paid",
     ["emprestimo.referente_ultimos"]: "Referring to the last",
     ["emprestimo.pendente_aprovacao"]: "Pending approval",
-    ["emprestimo.solicitar_emprestimo"]: "Request loan"
+    ["emprestimo.solicitar_emprestimo"]: "Request loan",
+    ["extrato_filtros.remover_emprestimos"]: "Remove loans",
+    ["extrato_filtros.incluir_emprestimos"]: "Include loans",
 };

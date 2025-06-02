@@ -9,7 +9,9 @@ import {
     Grid,
     Stack,
     TextField,
-    Typography
+    Typography,
+    Avatar,
+    CircularProgress
 } from "@mui/material";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
@@ -21,8 +23,12 @@ import { toast } from "react-hot-toast";
 import DisplayValorMonetario from "@/components/display-valor-monetario";
 import { getCaixinhas } from "../api/caixinhas";
 import { Seo } from "@/components/Seo";
+import GroupIcon from '@mui/icons-material/Group';
+import MonetizationOnIcon from '@mui/icons-material/MonetizationOn';
+import { useTheme } from '@mui/material/styles';
 
 export default function Join() {
+    const theme = useTheme();
     const { status, data } = useSession()
     const [loading, setLoading] = useState(true)
     const [formData, setFormData] = useState({
@@ -36,6 +42,7 @@ export default function Join() {
         loans: [],
         id: ''
     })
+    const [submitting, setSubmitting] = useState(false)
 
     const router = useRouter()
 
@@ -61,20 +68,20 @@ export default function Join() {
     if (loading)
         return <CenteredCircularProgress />
 
-    const handleSubmit = () => {
+    const handleSubmit = (e: React.FormEvent) => {
+        e.preventDefault()
         const payload = {
             nick: formData.nick,
             email: formData.email,
             boxId: box.id
         }
-
-        setLoading(true)
+        setSubmitting(true)
         joinABox(payload).then(() => {
             alert('Você é um membro dessa caixinha agora')
             router.back()
         }).catch(err => {
             toast.error(err.message)
-            setLoading(false)
+            setSubmitting(false)
         })
     }
 
@@ -95,75 +102,81 @@ export default function Join() {
                 component="main"
                 sx={{
                     flexGrow: 1,
-                    py: 8
+                    minHeight: '100vh',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    background: theme.palette.mode === 'dark' ? 'neutral.800' : 'neutral.50',
                 }}
             >
-                <Container maxWidth="xl">
-                    <Stack
-                        spacing={3}
-                        sx={{ mb: 3 }} >
-                        <Typography variant="h4">
-                            Participar da caixinha
-                        </Typography>
-                    </Stack>
-
-                    <Stack spacing={4}>
-                        <Card>
-                            <CardContent>
-
-                                <Grid item xs={12} md={6} sx={{ "& .MuiTextField-root": { my: 2 } }}>
-                                    <Box mt={2} mb={2}>
-                                        <p>Total de membros dessa caixinha {box.members.length}</p>
-                                        <p>Valor atual
-                                            <DisplayValorMonetario>
-                                                {box.currentBalance.value}
-                                            </DisplayValorMonetario>
-                                        </p>
-                                    </Box>
-                                </Grid>
-
-                                <form onSubmit={handleSubmit}>
-                                    <Grid container spacing={4}>
-                                        <Grid item xs={12} md={6} sx={{ "& .MuiTextField-root": { my: 2 } }}>
-                                            <FormControl fullWidth>
-                                                <TextField
-                                                    name="nick"
-                                                    label="Nick"
-                                                    value={formData.nick}
-                                                    onChange={handleChange}
-                                                />
-                                            </FormControl>
-                                            <FormControl fullWidth>
-                                                <TextField
-                                                    name="email"
-                                                    label="Email"
-                                                    type="email"
-                                                    value={formData.email}
-                                                    onChange={handleChange}
-                                                />
-                                            </FormControl>
-                                        </Grid>
-                                    </Grid>
-
-                                    <Box display="flex" sx={{ my: 2 }} gap={2}>
-                                        <Button variant="contained" color="secondary" onClick={back}>
-                                            Voltar
-                                        </Button>
-
-                                        <Button
-                                            type="submit"
-                                            color="primary"
-                                            variant="contained"
-                                        >
-                                            Entrar
-                                        </Button>
-                                    </Box>
-                                </form>
-                            </CardContent>
-                        </Card>
-                    </Stack>
+                <Container maxWidth="sm">
+                    <Card sx={{ p: 3, borderRadius: 4, boxShadow: 6 }}>
+                        <CardContent>
+                            <Stack spacing={3} alignItems="center" mb={2}>
+                                <Avatar sx={{ bgcolor: 'primary.main', width: 56, height: 56 }}>
+                                    <GroupIcon fontSize="large" />
+                                </Avatar>
+                                <Typography variant="h4" fontWeight={700} align="center">
+                                    Participar da caixinha
+                                </Typography>
+                            </Stack>
+                            <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2} justifyContent="center" mb={3}>
+                                <Stack direction="row" alignItems="center" spacing={1}>
+                                    <GroupIcon color="action" />
+                                    <Typography variant="subtitle1">
+                                        {box.members.length} membros
+                                    </Typography>
+                                </Stack>
+                                <Stack direction="row" alignItems="center" spacing={1}>
+                                    <MonetizationOnIcon color="action" />
+                                    <Typography variant="subtitle1">
+                                        <DisplayValorMonetario>
+                                            {box.currentBalance.value}
+                                        </DisplayValorMonetario>
+                                    </Typography>
+                                </Stack>
+                            </Stack>
+                            <form onSubmit={handleSubmit} autoComplete="off">
+                                <Stack spacing={2}>
+                                    <FormControl fullWidth>
+                                        <TextField
+                                            name="nick"
+                                            label="Nick"
+                                            value={formData.nick}
+                                            onChange={handleChange}
+                                            required
+                                            autoFocus
+                                        />
+                                    </FormControl>
+                                    <FormControl fullWidth>
+                                        <TextField
+                                            name="email"
+                                            label="Email"
+                                            type="email"
+                                            value={formData.email}
+                                            onChange={handleChange}
+                                            required
+                                        />
+                                    </FormControl>
+                                </Stack>
+                                <Stack direction="row" spacing={2} justifyContent="center" mt={4}>
+                                    <Button variant="outlined" color="secondary" onClick={back} disabled={submitting}>
+                                        Voltar
+                                    </Button>
+                                    <Button
+                                        type="submit"
+                                        color="primary"
+                                        variant="contained"
+                                        disabled={submitting}
+                                        startIcon={submitting && <CircularProgress size={20} color="inherit" />}
+                                    >
+                                        {submitting ? 'Entrando...' : 'Entrar'}
+                                    </Button>
+                                </Stack>
+                            </form>
+                        </CardContent>
+                    </Card>
                 </Container>
-
             </Box>
         </Layout>
     )

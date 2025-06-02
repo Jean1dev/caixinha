@@ -1,28 +1,12 @@
 import { CssBaseline, Divider, ThemeProvider } from "@mui/material";
 import { TopNav } from "./top-nav";
-import { useEffect } from 'react';
-import Hotjar from '@hotjar/browser';
 import { SettingsConsumer, SettingsProvider } from "@/contexts/settings";
 import { createTheme } from "@/theme/theme";
 import { SettingsDrawer } from "./tema-configuracoes";
 import { Toaster } from "./Toaster";
 import CenteredCircularProgress from "./CenteredCircularProgress";
 
-const siteId = process.env.NEXT_PUBLIC_HOTJAR_ID
-const hotjarVersion = 6
-
 export default function Layout({ children }: { children: React.ReactNode }) {
-
-    useEffect(() => {
-        if (siteId) {
-            let res = Hotjar.init(3503957, hotjarVersion);
-            console.log('HOTJAR IS OK?', res)
-            if (res) {
-                res = Hotjar.event('Novo Acesso')
-            }
-        }
-    }, [])
-
     return (
         <SettingsProvider>
             <SettingsConsumer>
