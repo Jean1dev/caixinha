@@ -6,7 +6,7 @@
     "start": "func start",
     "test": "jest --forceExit --detectOpenHandles",
     "coverage": "jest --coverage",
-    "scripts": "node ./scripts/function-runner.js",
+    "scripts": "node ./scripts/enviar-extrato-por-email.js",
     "scripts-bkp": "node ./scripts/clone-bkp-caixinha-prd.js",
     "debug-test-script": "npx jest get-meus-pagamentos/func.test.js"
   },

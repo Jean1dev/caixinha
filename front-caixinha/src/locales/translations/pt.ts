@@ -68,6 +68,8 @@ export const pt = {
     ["extrato_filtros.somente_meu"]: "Somente meu",
     ["extrato_filtros.remover_depositos"]: "Remover depositos",
     ["extrato_filtros.incluir_depositos"]: "Incluir depositos",
+    ["extrato_filtros.remover_emprestimos"]: "Remover emprestimos",
+    ["extrato_filtros.incluir_emprestimos"]: "Incluir emprestimos",
     ["feed.seo"]: "Feed",
     ["feed.title"]: "Feed",
     ["feed.headlines"]: "Aqui está o que suas conexões postaram",

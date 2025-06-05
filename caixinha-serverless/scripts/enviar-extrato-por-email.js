@@ -63,76 +63,145 @@ async function uploadRelatorios(relatoriosPath) {
     return linkSucessos
 }
 
-function preencherDepositos(doc, depositos) {
-    doc
-        .fillColor('black')
-        .text('Depositos', {
-            width: 410,
+function criarCabecalho(doc, extrato, today) {
+    doc.fontSize(20)
+        .fillColor('#2c3e50')
+        .text('Extrato Financeiro', {
             align: 'center'
         })
         .moveDown()
 
-    for (deposito of depositos) {
-        doc
-            .fillColor('black')
-            .text(`${deposito.date}: R$${deposito.value}`)
-            .moveDown()
-    }
+    doc.fontSize(12)
+        .fillColor('#7f8c8d')
+        .text(`Data: ${today.getDate()}/${today.getMonth() + 1}/${today.getFullYear()}`, {
+            align: 'center'
+        })
+        .moveDown(2)
+
+    doc.fontSize(14)
+        .fillColor('#2c3e50')
+        .text(`Membro: ${extrato.member.memberName}`, {
+            align: 'left'
+        })
+        .moveDown()
+
+    doc.fontSize(14)
+        .fillColor('#2c3e50')
+        .text(`Caixinha: ${extrato.boxName}`, {
+            align: 'left'
+        })
+        .moveDown(2)
 }
 
-function preencherEmprestimos(doc, emprestimos) {
-    doc
-        .fillColor('black')
-        .text('Emprestimos', {
-            width: 410,
-            align: 'center'
+function formatarData(data) {
+    const date = new Date(data)
+    return date.toLocaleDateString('pt-BR', {
+        day: '2-digit',
+        month: '2-digit',
+        year: 'numeric'
+    })
+}
+
+function adicionarDepositos(doc, depositos) {
+    doc.fontSize(16)
+        .fillColor('#2c3e50')
+        .text('Depósitos', {
+            align: 'left'
         })
         .moveDown()
 
-    for (emprestimo of emprestimos) {
-        doc
-            .fillColor('black')
-            .text(`${emprestimo.date}: R$${emprestimo.value}`)
-            .moveDown()
+    doc.fontSize(12)
+    let totalDepositos = 0
+    for (const deposito of depositos) {
+        doc.fillColor('#34495e')
+            .text(`${formatarData(deposito.date)}: R$ ${deposito.value.toFixed(2)}`, {
+                align: 'left'
+            })
+        totalDepositos += deposito.value
+    }
+    doc.moveDown()
+        .fillColor('#27ae60')
+        .text(`Total de Depósitos: R$ ${totalDepositos.toFixed(2)}`, {
+            align: 'right'
+        })
+        .moveDown(2)
+
+    return totalDepositos
+}
+
+function adicionarEmprestimos(doc, emprestimos) {
+    doc.fontSize(16)
+        .fillColor('#2c3e50')
+        .text('Empréstimos', {
+            align: 'left'
+        })
+        .moveDown()
+
+    doc.fontSize(12)
+    let totalEmprestimos = 0
+    for (const emprestimo of emprestimos) {
+        doc.fillColor('#34495e')
+            .text(`${formatarData(emprestimo.date)}: R$ ${emprestimo.value.toFixed(2)}`, {
+                align: 'left'
+            })
+        totalEmprestimos += emprestimo.value
+    }
+    doc.moveDown()
+        .fillColor('#c0392b')
+        .text(`Total de Empréstimos: R$ ${totalEmprestimos.toFixed(2)}`, {
+            align: 'right'
+        })
+        .moveDown(2)
+
+    return totalEmprestimos
+}
+
+function adicionarSaldo(doc, totalDepositos, totalEmprestimos) {
+    doc.fontSize(14)
+        .fillColor('#2c3e50')
+        .text(`Saldo: R$ ${(totalDepositos - totalEmprestimos).toFixed(2)}`, {
+            align: 'right'
+        })
+}
+
+async function gerarPDF(extrato, today) {
+    const doc = new PDFDocument({
+        size: 'A4',
+        margin: 50
+    })
+    const filename = `${extrato.member.memberName}-${extrato.boxName}.pdf`
+    const fullFileName = path.join(os.tmpdir(), filename)
+    const writeStream = fs.createWriteStream(fullFileName)
+    doc.pipe(writeStream)
+
+    criarCabecalho(doc, extrato, today)
+    const totalDepositos = adicionarDepositos(doc, extrato.deposits)
+    const totalEmprestimos = adicionarEmprestimos(doc, extrato.loans)
+    adicionarSaldo(doc, totalDepositos, totalEmprestimos)
+
+    doc.end()
+
+    await new Promise((resolve, reject) => {
+        writeStream.on('finish', () => {
+            console.log(`Arquivo ${filename} foi criado com sucesso.`);
+            resolve();
+        });
+        writeStream.on('error', reject);
+    });
+
+    return {
+        member: extrato.member,
+        path: fullFileName
     }
 }
 
 async function gerarRelatorios(extratos) {
     const listFiles = []
     const today = new Date()
-    for (extrato of extratos) {
-        const doc = new PDFDocument()
-        const filename = `${extrato.member.memberName}-${extrato.boxName}.pdf`
-        const fullFileName = path.join(os.tmpdir(), filename)
-        const writeStream = fs.createWriteStream(fullFileName)
-        doc.pipe(writeStream)
-        doc.text(`Extrato ate o dia ${today.getDate()}/${today.getMonth()}/${today.getFullYear()}.`, {
-            width: 410,
-            align: 'center'
-        })
-
-        preencherDepositos(doc, extrato.deposits)
-        preencherEmprestimos(doc, extrato.loans)
-
-        doc
-            .addPage()
-            .fillColor('blue')
-            .text(extrato.boxName, 100, 100)
-            .underline(100, 100, 160, 27, { color: '#0000FF' })
-
-        doc.end()
-        listFiles.push({
-            member: extrato.member,
-            path: fullFileName
-        })
-
-        await new Promise((resolve, reject) => {
-            writeStream.on('finish', () => {
-                console.log(`Arquivo ${filename} foi criado com sucesso.`);
-                resolve();
-            });
-            writeStream.on('error', reject);
-        });
+    
+    for (const extrato of extratos) {
+        const file = await gerarPDF(extrato, today)
+        listFiles.push(file)
     }
 
     return listFiles
@@ -146,8 +215,8 @@ async function getAllCaixinhas() {
 async function gerarExtrato(caixinhas) {
     const extratos = []
     const membrosComExtratoRealizado = new Set()
-    for (caixinha of caixinhas) {
-        for (membro of caixinha._members) {
+    for (const caixinha of caixinhas) {
+        for (const membro of caixinha._members) {
             if (membrosComExtratoRealizado.has(membro.memberName)) continue
 
             GenerateBankStatement(membro, caixinhas)

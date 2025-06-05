@@ -3,7 +3,7 @@ import { BannerNovidades } from "@/components/bem-vindo/banner-novidades";
 import { Dicas } from "@/components/bem-vindo/dicas";
 import { AtalhoEmprestimo } from "@/components/bem-vindo/atalho-emprestimo";
 import { useSettings } from "@/hooks/useSettings";
-import { Box, Card, CardContent, Container, Typography } from "@mui/material";
+import { Box, Card, CardContent, Container, Typography, Stack } from "@mui/material";
 import { useRouter } from "next/router";
 import Grid from '@mui/material/Unstable_Grid2';
 import { Seo } from "@/components/Seo";
@@ -13,6 +13,9 @@ import { getUltimoEmprestimoPendente } from "./api/api.service";
 import { useUserAuth } from "@/hooks/useUserAuth";
 import { Footer } from "@/components/footer";
 import { useTranslation } from "react-i18next";
+import SavingsIcon from '@mui/icons-material/Savings';
+import AccountBalanceWalletIcon from '@mui/icons-material/AccountBalanceWallet';
+import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 
 const corAleatoriaCombinada = () => {
   const cores = [
@@ -24,29 +27,40 @@ const corAleatoriaCombinada = () => {
     "#9599BA-#D0D2EA",
     "#8988B8-#AFAEE1"
   ]
-
   return getAleatorio(cores)
 }
 
-const card = (title: string, description: string, action: any) => {
+const card = (title: string, description: string, action: any, icon: any) => {
   const cor = corAleatoriaCombinada().split('-')
   return (
     <Card
       onClick={action}
       variant="elevation"
       sx={{
-        backgroundColor: cor[0],
-        shadowOpacity: 50,
-        "& :hover": {
-          backgroundColor: cor[1],
-          opacity: 1
-        }
+        background: `linear-gradient(135deg, ${cor[0]}, ${cor[1]})`,
+        boxShadow: 6,
+        borderRadius: 4,
+        cursor: 'pointer',
+        transition: 'transform 0.2s, box-shadow 0.2s',
+        '&:hover': {
+          transform: 'translateY(-4px) scale(1.03)',
+          boxShadow: 12,
+          opacity: 0.95
+        },
+        p: 2,
+        minHeight: 140,
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'center',
       }}>
       <CardContent>
-        <Typography variant="h5" component="div">
-          {title}
-        </Typography>
-        <Typography variant="body2">
+        <Stack direction="row" alignItems="center" spacing={2} mb={1}>
+          {icon}
+          <Typography variant="h5" component="div" fontWeight={700} color="white">
+            {title}
+          </Typography>
+        </Stack>
+        <Typography variant="body2" color="white">
           {description}
         </Typography>
       </CardContent>
@@ -66,7 +80,6 @@ const Page = () => {
     if (user.name === '' || !user) {
       return
     }
-
     getUltimoEmprestimoPendente(user.name, user.email)
       .then((response) => {
         if (response.exists) {
@@ -79,9 +92,15 @@ const Page = () => {
     <Box component="main"
       sx={{
         flexGrow: 1,
-        py: 8
+        minHeight: '100vh',
+        py: 8,
       }}>
       <Container maxWidth={settings.stretch ? false : 'xl'}>
+        <Stack spacing={4} alignItems="center" mb={4}>
+          <Typography variant="h3" fontWeight={700} align="center">
+            Bem-vindo à Caixinha!
+          </Typography>
+        </Stack>
         <Grid
           container
           spacing={{
@@ -89,25 +108,15 @@ const Page = () => {
             lg: 4
           }}
         >
-          <Grid
-            xs={12}
-            md={7}
-          >
+          <Grid xs={12} md={7}>
             <BannerNovidades />
           </Grid>
-
-          <Grid
-            xs={12}
-            md={5}
-          >
+          <Grid xs={12} md={5}>
             {
               ultimoEmprestimoAtalho?.exists
                 ? (
-                  <>
-                    <AtalhoEmprestimo emprestimo={ultimoEmprestimoAtalho.data} />
-                  </>
+                  <AtalhoEmprestimo emprestimo={ultimoEmprestimoAtalho.data} />
                 )
-
                 : (
                   <Dicas
                     sx={{ height: '100%' }}
@@ -128,32 +137,31 @@ const Page = () => {
                   />
                 )
             }
-
           </Grid>
-
-          <Grid
-            xs={12}
-            md={7}
-          >
-            {card("Caixinhas", t('listar_caixinha_disponiveis'), () => { router.push('caixinhas-disponiveis') })}
+          <Grid xs={12} md={7}>
+            {card(
+              "Caixinhas",
+              t('listar_caixinha_disponiveis'),
+              () => { router.push('caixinhas-disponiveis') },
+              <SavingsIcon sx={{ color: 'white', fontSize: 36 }} />
+            )}
           </Grid>
-
-          <Grid
-            xs={12}
-            md={7}
-          >
-
-            {card("Depositar", t('depositar'), () => { router.push('deposito') })}
-
+          <Grid xs={12} md={7}>
+            {card(
+              "Depositar",
+              t('depositar'),
+              () => { router.push('deposito') },
+              <AccountBalanceWalletIcon sx={{ color: 'white', fontSize: 36 }} />
+            )}
           </Grid>
-
-          <Grid
-            xs={12}
-            md={7}
-          >
-            {card("Pedir emprestimo", t('emprestimo.solicitar_emprestimo'), () => { router.push('emprestimo') })}
+          <Grid xs={12} md={7}>
+            {card(
+              "Pedir emprestimo",
+              t('emprestimo.solicitar_emprestimo'),
+              () => { router.push('emprestimo') },
+              <AddCircleOutlineIcon sx={{ color: 'white', fontSize: 36 }} />
+            )}
           </Grid>
-
         </Grid>
       </Container>
     </Box>
