@@ -2,6 +2,8 @@ import {
     Avatar,
     Box,
     Button,
+    Card,
+    CardContent,
     Chip,
     Container,
     FormControl,
@@ -12,6 +14,7 @@ import {
     Stack,
     SvgIcon,
     Typography,
+    useTheme,
 } from "@mui/material"
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import CheckIcon from '@mui/icons-material/Check';
@@ -24,13 +27,13 @@ import CenteredCircularProgress from '@/components/CenteredCircularProgress';
 import toast from 'react-hot-toast';
 import { Seo } from '@/components/Seo';
 import { useUserAuth } from "@/hooks/useUserAuth";
-import { ArrowBackIos, Mail } from "@mui/icons-material";
-import { RouterLink } from "@/components/RouterLink";
+import { ArrowBackIos, Mail, QrCode2 } from "@mui/icons-material";
 
 export default function Deposito() {
     const { user } = useUserAuth()
     const { caixinha } = useCaixinhaSelect()
     const router = useRouter()
+    const theme = useTheme()
     const [isLoading, setLoading] = useState(false)
     const [arquivos, setArquivo] = useState<any>([])
     const [pix, setPix] = useState<any>(null)
@@ -94,10 +97,7 @@ export default function Deposito() {
 
         input.addEventListener('change', function (event: any) {
             let arquivo = event.target.files[0];
-
-            console.log('Arquivo selecionado:', arquivo);
             setArquivo([...arquivos, { file: arquivo, name: arquivo.name }])
-
         });
 
         input.click()
@@ -108,8 +108,7 @@ export default function Deposito() {
 
         uploadResource(resource.file).then((fileUrl: string) => {
             toast.success('Upload realizado')
-            //@ts-ignore
-            const novaLista = arquivos.filter(it => it.name !== resource.name)
+            const novaLista = arquivos.filter((it: { name: any; }) => it.name !== resource.name)
             novaLista.push({ file: resource, name: resource.name, status: 'success' })
             setArquivo(novaLista)
             setSolicitacao({ ...solicitacao, fileUrl })
@@ -119,16 +118,28 @@ export default function Deposito() {
     const getChipByItem = (item: any) => {
         if (item.status === 'success') {
             return (
-                <p>
-                    <Chip key={item.index} label={`Upload realizado ${item.name}`} onDelete={() => {
+                <Chip 
+                    key={item.index} 
+                    label={`Upload realizado ${item.name}`} 
+                    onDelete={() => {
                         window.open(solicitacao.fileUrl, "_blank")
-                    }} deleteIcon={<CheckIcon />} />
-                </p>
+                    }} 
+                    deleteIcon={<CheckIcon />}
+                    color="success"
+                    sx={{ m: 0.5 }}
+                />
             )
         }
 
         return (
-            <Chip key={item.index} label={item?.name} variant="outlined" onDelete={() => { uploadItem(item) }} deleteIcon={<CloudUploadIcon />} />
+            <Chip 
+                key={item.index} 
+                label={item?.name} 
+                variant="outlined" 
+                onDelete={() => { uploadItem(item) }} 
+                deleteIcon={<CloudUploadIcon />}
+                sx={{ m: 0.5 }}
+            />
         )
     }
 
@@ -140,301 +151,195 @@ export default function Deposito() {
             <Box
                 component="main"
                 sx={{
-                    display: 'grid',
-                    gridTemplateColumns: {
-                        lg: 'repeat(2, 1fr)',
-                        xs: 'repeat(1, 1fr)'
-                    },
-                    flexGrow: 1
+                    flexGrow: 1,
+                    py: 8,
+                    background: theme.palette.mode === 'dark' ? 'neutral.800' : 'neutral.50',
                 }}
             >
-                <Box
-                    sx={{
-                        backgroundColor: (theme) => theme.palette.mode === 'dark'
-                            ? 'neutral.800'
-                            : 'neutral.50',
-                        py: 8
-                    }}
-                >
-                    <Container
-                        maxWidth="md"
-                        sx={{ pl: { lg: 15 } }}
-                    >
-                        <Stack spacing={3}>
-                            <div>
-                                <Link
-                                    color="text.primary"
-                                    component="a"
-                                    href={'/'}
-                                    sx={{
-                                        alignItems: 'center',
-                                        display: 'inline-flex'
-                                    }}
-                                    underline="hover"
-                                >
-                                    <SvgIcon sx={{ mr: 1 }}>
-                                        <ArrowBackIos />
-                                    </SvgIcon>
-                                    <Typography variant="subtitle2">
-                                        Home
-                                    </Typography>
-                                </Link>
-                            </div>
-
-                        </Stack>
-                        <Stack
-                            alignItems="center"
-                            direction="row"
-                            spacing={2}
+                <Container maxWidth="lg">
+                    <Stack spacing={3}>
+                        <Link
+                            color="text.primary"
+                            component="a"
+                            href={'/'}
                             sx={{
-                                mb: 6,
-                                mt: 8
+                                alignItems: 'center',
+                                display: 'inline-flex',
+                                width: 'fit-content'
                             }}
+                            underline="hover"
                         >
-                            <Avatar
-                                sx={{
-                                    backgroundColor: 'primary.main',
-                                    color: 'primary.contrastText'
-                                }}
-                                variant="rounded"
-                            >
-                                <SvgIcon>
-                                    <Mail />
-                                </SvgIcon>
-                            </Avatar>
-                            <Typography variant="overline">
-                                Contato com administrador
+                            <SvgIcon sx={{ mr: 1 }}>
+                                <ArrowBackIos />
+                            </SvgIcon>
+                            <Typography variant="subtitle2">
+                                Voltar para Home
                             </Typography>
-                        </Stack>
-                        <Typography
-                            sx={{ mb: 3 }}
-                            variant="body1"
-                        >
-                            Se tiver algum duvida sobre os objetivos dessa caixinha, voce pode entrar em contato com os membros
-                        </Typography>
-                        <Typography
-                            color="primary"
-                            sx={{ mb: 3 }}
-                            variant="h6"
-                        >
-                            Faca um deposito e se junto a nossa comunidade
-                        </Typography>
-                        <Avatar
-                            src={pix?.url}
-                            variant="square"
-                            sx={{
-                                height: 400,
-                                mb: 2,
-                                width: 400
-                            }}
-                        />
-                        <Typography
-                            color="text.secondary"
-                            variant="body2"
-                        >
-                            Chave pix {pix?.chave}
-                        </Typography>
-                        <Stack
-                            alignItems="center"
-                            direction="row"
-                            flexWrap="wrap"
-                            gap={4}
-                            sx={{
-                                color: 'text.primary',
-                                '& > *': {
-                                    flex: '0 0 auto'
-                                }
-                            }}
-                        >
-                        </Stack>
-                    </Container>
-                </Box>
-                <Box
-                    sx={{
-                        backgroundColor: 'background.paper',
-                        px: 6,
-                        py: 15
-                    }}
-                >
-                    <Container
-                        maxWidth="md"
-                        sx={{
-                            pr: {
-                                lg: 15
-                            }
-                        }}
-                    >
-                        <Typography
-                            sx={{ pb: 3 }}
-                            variant="h6"
-                        >
+                        </Link>
+
+                        <Typography variant="h4" fontWeight={700} gutterBottom>
                             Depositando em {caixinha?.name}
                         </Typography>
-                        <form onSubmit={request}>
-                            <Grid
-                                container
-                                spacing={3}
-                            >
-                                <Grid
-                                    xs={12}
-                                    sm={6}
-                                >
-                                    <FormControl fullWidth>
-                                        <FormLabel
-                                            sx={{
-                                                color: 'text.primary',
-                                                mb: 1
-                                            }}
-                                        >
-                                            Nome
-                                        </FormLabel>
-                                        <OutlinedInput
-                                            required
-                                            name="memberName"
-                                            disabled
-                                            value={solicitacao.memberName}
-                                            defaultValue={solicitacao.memberName}
-                                            onChange={handleChange}
-                                            inputProps={{ "data-testid": "name" }}
-                                        />
-                                    </FormControl>
-                                </Grid>
-                                <Grid
-                                    xs={12}
-                                    sm={6}
-                                >
-                                    <FormControl fullWidth>
-                                        <FormLabel
-                                            sx={{
-                                                color: 'text.primary',
-                                                mb: 1
-                                            }}
-                                        >
-                                            Email
-                                        </FormLabel>
-                                        <OutlinedInput
-                                            required
-                                            name="email"
-                                            type='email'
-                                            disabled
-                                            value={solicitacao.email}
-                                            defaultValue={solicitacao.email}
-                                            onChange={handleChange}
-                                            inputProps={{ "data-testid": "name" }}
-                                        />
-                                    </FormControl>
-                                </Grid>
 
-                                <Grid
-                                    xs={12}
-                                    sm={6}
-                                >
-                                    <FormControl fullWidth>
-                                        <FormLabel
-                                            sx={{
-                                                color: 'text.primary',
-                                                mb: 1
-                                            }}
-                                        >
-                                            Valor *
-                                        </FormLabel>
-                                        <OutlinedInput
-                                            id="outlined-start-adornment"
-                                            defaultValue={solicitacao.valor}
-                                            value={solicitacao.valor}
-                                            onChange={handleChange}
-                                            name='valor'
-                                            type='number'
-                                            sx={{ m: 1, width: '25ch' }}
-                                        />
-                                    </FormControl>
-                                </Grid>
-                                <Grid xs={12}>
-                                    <Box display="row" gap={2}>
-                                        {arquivos.map((item: { name: string, index: Key }) =>
-                                            getChipByItem(item)
-                                        )}
+                        <Grid container spacing={3}>
+                            <Grid xs={12} md={6}>
+                                <Card sx={{ height: '100%', boxShadow: 3, borderRadius: 2 }}>
+                                    <CardContent>
+                                        <Stack spacing={3}>
+                                            <Stack direction="row" alignItems="center" spacing={2}>
+                                                <Avatar sx={{ bgcolor: 'primary.main' }}>
+                                                    <QrCode2 />
+                                                </Avatar>
+                                                <Typography variant="h6">
+                                                    Depósito via PIX
+                                                </Typography>
+                                            </Stack>
 
-                                    </Box>
-                                    <Box display="flex" gap={2}>
+                                            <Box sx={{ 
+                                                display: 'flex', 
+                                                justifyContent: 'center',
+                                                bgcolor: 'background.paper',
+                                                p: 2,
+                                                borderRadius: 2
+                                            }}>
+                                                <Avatar
+                                                    src={pix?.url}
+                                                    variant="square"
+                                                    sx={{
+                                                        height: 300,
+                                                        width: 300,
+                                                        boxShadow: 2
+                                                    }}
+                                                />
+                                            </Box>
 
-                                        <Button
-                                            onClick={addComprovante}
-                                            variant="contained"
-                                            color="secondary"
-                                        >
-                                            Adicionar Comprovante
-                                        </Button>
-                                    </Box>
-                                </Grid>
-                                <Grid xs={12}>
-                                    <FormControl fullWidth>
-                                        <FormLabel
-                                            sx={{
-                                                color: 'text.primary',
-                                                mb: 1
-                                            }}
-                                        >
-                                            Mensagem
-                                        </FormLabel>
-                                        <OutlinedInput
-                                            fullWidth
-                                            name="message"
-                                            multiline
-                                            rows={6}
-                                        />
-                                    </FormControl>
-                                </Grid>
+                                            <Typography variant="subtitle1" align="center" color="text.secondary">
+                                                Chave PIX: {pix?.chave}
+                                            </Typography>
+
+                                            <Stack direction="row" alignItems="center" spacing={2} sx={{ mt: 2 }}>
+                                                <Avatar sx={{ bgcolor: 'primary.main' }}>
+                                                    <Mail />
+                                                </Avatar>
+                                                <Typography variant="body2" color="text.secondary">
+                                                    Em caso de dúvidas, entre em contato com os administradores da caixinha
+                                                </Typography>
+                                            </Stack>
+                                        </Stack>
+                                    </CardContent>
+                                </Card>
                             </Grid>
-                            <Box
-                                sx={{
-                                    display: 'flex',
-                                    justifyContent: 'center',
-                                    mt: 3
-                                }}
-                            >
-                                <Button
-                                    fullWidth
-                                    size="large"
-                                    variant="contained"
-                                    type="submit"
-                                >
-                                    Depositar
-                                </Button>
-                            </Box>
-                            <Typography
-                                color="text.secondary"
-                                sx={{ mt: 3 }}
-                                variant="body2"
-                            >
-                                By submitting this, you agree to the
-                                {' '}
-                                <Link
-                                    color="text.primary"
-                                    href="#"
-                                    underline="always"
-                                    variant="subtitle2"
-                                >
-                                    Privacy Policy
-                                </Link>
-                                {' '}
-                                and
-                                {' '}
-                                <Link
-                                    color="text.primary"
-                                    href="#"
-                                    underline="always"
-                                    variant="subtitle2"
-                                >
-                                    Cookie Policy
-                                </Link>
-                                .
-                            </Typography>
-                        </form>
-                    </Container>
-                </Box>
+
+                            <Grid xs={12} md={6}>
+                                <Card sx={{ height: '100%', boxShadow: 3, borderRadius: 2 }}>
+                                    <CardContent>
+                                        <form onSubmit={request}>
+                                            <Stack spacing={3}>
+                                                <Typography variant="h6" gutterBottom>
+                                                    Informações do Depósito
+                                                </Typography>
+
+                                                <Grid container spacing={2}>
+                                                    <Grid xs={12} sm={6}>
+                                                        <FormControl fullWidth>
+                                                            <FormLabel>Nome</FormLabel>
+                                                            <OutlinedInput
+                                                                required
+                                                                name="memberName"
+                                                                disabled
+                                                                value={solicitacao.memberName}
+                                                                defaultValue={solicitacao.memberName}
+                                                                onChange={handleChange}
+                                                            />
+                                                        </FormControl>
+                                                    </Grid>
+                                                    <Grid xs={12} sm={6}>
+                                                        <FormControl fullWidth>
+                                                            <FormLabel>Email</FormLabel>
+                                                            <OutlinedInput
+                                                                required
+                                                                name="email"
+                                                                type='email'
+                                                                disabled
+                                                                value={solicitacao.email}
+                                                                defaultValue={solicitacao.email}
+                                                                onChange={handleChange}
+                                                            />
+                                                        </FormControl>
+                                                    </Grid>
+                                                </Grid>
+
+                                                <FormControl fullWidth>
+                                                    <FormLabel>Valor do Depósito *</FormLabel>
+                                                    <OutlinedInput
+                                                        required
+                                                        name='valor'
+                                                        type='number'
+                                                        value={solicitacao.valor}
+                                                        onChange={handleChange}
+                                                        startAdornment={<Typography sx={{ mr: 1 }}>R$</Typography>}
+                                                    />
+                                                </FormControl>
+
+                                                <Box>
+                                                    <FormLabel>Comprovante de Pagamento</FormLabel>
+                                                    <Box sx={{ mt: 1, mb: 2 }}>
+                                                        {arquivos.map((item: { name: string, index: Key }) =>
+                                                            getChipByItem(item)
+                                                        )}
+                                                    </Box>
+                                                    <Button
+                                                        onClick={addComprovante}
+                                                        variant="outlined"
+                                                        startIcon={<CloudUploadIcon />}
+                                                    >
+                                                        Adicionar Comprovante
+                                                    </Button>
+                                                </Box>
+
+                                                <FormControl fullWidth>
+                                                    <FormLabel>Mensagem (opcional)</FormLabel>
+                                                    <OutlinedInput
+                                                        fullWidth
+                                                        name="message"
+                                                        multiline
+                                                        rows={4}
+                                                    />
+                                                </FormControl>
+
+                                                <Button
+                                                    fullWidth
+                                                    size="large"
+                                                    variant="contained"
+                                                    type="submit"
+                                                    sx={{ mt: 2 }}
+                                                >
+                                                    Confirmar Depósito
+                                                </Button>
+
+                                                <Typography
+                                                    color="text.secondary"
+                                                    variant="body2"
+                                                    align="center"
+                                                >
+                                                    Ao confirmar, você concorda com nossa{' '}
+                                                    <Link
+                                                        color="primary"
+                                                        href="#"
+                                                        underline="hover"
+                                                    >
+                                                        Política de Privacidade
+                                                    </Link>
+                                                </Typography>
+                                            </Stack>
+                                        </form>
+                                    </CardContent>
+                                </Card>
+                            </Grid>
+                        </Grid>
+                    </Stack>
+                </Container>
             </Box>
         </Layout>
-
     )
 }

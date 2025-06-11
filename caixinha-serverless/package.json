@@ -8,12 +8,12 @@
     "coverage": "jest --coverage",
     "scripts": "node ./scripts/enviar-extrato-por-email.js",
     "scripts-bkp": "node ./scripts/clone-bkp-caixinha-prd.js",
-    "debug-test-script": "npx jest get-meus-pagamentos/func.test.js"
+    "debug-test-script": "npx jest oportunidades-deposito/function.test.js"
   },
   "dependencies": {
     "@sentry/node": "^7.54.0",
     "amqplib": "^0.10.3",
-    "caixinha-core": "1.1.5",
+    "caixinha-core": "1.1.6",
     "moment": "^2.29.4",
     "mongodb": "^5.4.0"
   },
