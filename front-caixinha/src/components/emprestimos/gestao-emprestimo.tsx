@@ -19,7 +19,7 @@ import {
 } from '@mui/material';
 import { LoansForApprove } from '@/types/types';
 import { useCaixinhaSelect } from '@/hooks/useCaixinhaSelect';
-import { aprovarEmprestimo, recusarEmprestimo } from '../../pages/api/api.service';
+import { aprovarEmprestimo, recusarEmprestimo, removerEmprestimo } from '../../pages/api/api.service';
 import CenteredCircularProgress from '@/components/CenteredCircularProgress';
 import { toast } from 'react-hot-toast';
 import { useUserAuth } from '@/hooks/useUserAuth';
@@ -71,6 +71,23 @@ export const GestaoEmprestimo = ({ data }: { data: IGestaoInput }) => {
         })
     }, [caixinha, data, user])
 
+    const remover = useCallback(() => {
+        setLoading(true)
+        removerEmprestimo({
+            name: user.name,
+            email: user.email,
+            caixinhaid: caixinha?.id,
+            emprestimoId: data.emprestimo.uid
+        }).then(() => {
+            setLoading(false)
+            setBlockButtons(true)
+            toast.success('Emprestimo removido')
+        }).catch(e => {
+            setLoading(false)
+            toast.error(e.message)
+        })
+    }, [caixinha, data, user])
+
     const reprovar = useCallback(() => {
         let motivo = prompt('Escreva o motivo da rejeicao');
         let confirmacao = confirm('Voce confirma essa operacao');
@@ -78,17 +95,22 @@ export const GestaoEmprestimo = ({ data }: { data: IGestaoInput }) => {
         if (!confirmacao)
             return;
 
+        if (!caixinha?.id) {
+            toast.error('Nenhuma caixinha selecionada')
+            return
+        }
+
         setLoading(true)
         recusarEmprestimo({
             name: user.name,
             email: user.email,
-            caixinhaid: caixinha?.id,
+            caixinhaid: caixinha.id,
             emprestimoId: data.emprestimo.uid,
             reason: motivo
         }).then(() => {
             setLoading(false)
             setBlockButtons(true)
-            toast.success('Aprovação enviada')
+            toast.success('Emprestimo rejeitado')
         }).catch(e => {
             setLoading(false)
             toast.error(e.message)
@@ -408,7 +430,7 @@ export const GestaoEmprestimo = ({ data }: { data: IGestaoInput }) => {
                             disabled={blockButtons} 
                             variant="contained" 
                             color="info" 
-                            onClick={() => alert('WIP')}
+                            onClick={remover}
                         >
                             Remover o emprestimo
                         </Button>

@@ -189,6 +189,16 @@ export async function recusarEmprestimo(payload: any) {
         payload)
 }
 
+export async function removerEmprestimo(payload: any) {
+    if (dev) {
+        return retornaComAtraso(true)
+    }
+
+    return asyncFetch(`${BASE_URL}/remover-emprestimo`,
+        'POST',
+        payload)
+}
+
 export async function getValorParcelas(params: any) {
     if (dev) {
         return retornaComAtraso([
