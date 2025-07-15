@@ -6,9 +6,9 @@
     "start": "func start",
     "test": "jest --forceExit --detectOpenHandles",
     "coverage": "jest --coverage",
-    "scripts": "node ./scripts/enviar-extrato-por-email.js",
+    "scripts": "node ./scripts/function-runner.js",
     "scripts-bkp": "node ./scripts/clone-bkp-caixinha-prd.js",
-    "debug-test-script": "npx jest oportunidades-deposito/function.test.js"
+    "debug-test-script": "npx jest remover-emprestimo/remover-emprestimo.test.js"
   },
   "dependencies": {
     "@sentry/node": "^7.54.0",
