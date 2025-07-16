@@ -76,8 +76,8 @@ export const GestaoEmprestimo = ({ data }: { data: IGestaoInput }) => {
         removerEmprestimo({
             name: user.name,
             email: user.email,
-            caixinhaid: caixinha?.id,
-            emprestimoId: data.emprestimo.uid
+            caixinhaId: caixinha?.id,
+            emprestimoUid: data.emprestimo.uid
         }).then(() => {
             setLoading(false)
             setBlockButtons(true)
@@ -104,8 +104,8 @@ export const GestaoEmprestimo = ({ data }: { data: IGestaoInput }) => {
         recusarEmprestimo({
             name: user.name,
             email: user.email,
-            caixinhaid: caixinha.id,
-            emprestimoId: data.emprestimo.uid,
+            caixinhaId: caixinha.id,
+            emprestimoUid: data.emprestimo.uid,
             reason: motivo
         }).then(() => {
             setLoading(false)
