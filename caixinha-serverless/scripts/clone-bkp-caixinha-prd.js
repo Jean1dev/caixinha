@@ -39,7 +39,7 @@ async function listCollectionsAndQueryDocuments(client, dbName) {
             results.push({ collectionName, documents });
         }
 
-        console.log('Collections and their documents:', results);
+        console.log('Collections and their documents:', results.length);
         return results;
     } catch (error) {
         console.error('Error listing collections and querying documents:', error);

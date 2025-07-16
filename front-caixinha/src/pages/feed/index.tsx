@@ -28,6 +28,16 @@ export default function Feed() {
 
         getMeuFeed(username)
             .then((data: any) => {
+                if (!data?.data) {
+                    setHasMore(false)
+                    return
+                }
+                
+                if (data.data.length === 0) {
+                    setHasMore(false)
+                    return
+                }
+
                 setPosts(data.data)
                 setHasMore(data.hasMore)
             })

@@ -6,21 +6,21 @@
     "start": "func start",
     "test": "jest --forceExit --detectOpenHandles",
     "coverage": "jest --coverage",
-    "scripts": "node ./scripts/enviar-extrato-por-email.js",
+    "scripts": "node ./scripts/function-runner.js",
     "scripts-bkp": "node ./scripts/clone-bkp-caixinha-prd.js",
-    "debug-test-script": "npx jest oportunidades-deposito/function.test.js"
+    "debug-test-script": "npx jest remover-emprestimo/remover-emprestimo.test.js"
   },
   "dependencies": {
     "@sentry/node": "^7.54.0",
     "amqplib": "^0.10.3",
-    "caixinha-core": "1.1.6",
+    "caixinha-core": "^1.1.7",
     "moment": "^2.29.4",
     "mongodb": "^5.4.0"
   },
   "devDependencies": {
+    "axios": "^1.8.2",
     "jest": "^29.5.0",
     "mongodb-memory-server": "^9.0.1",
-    "pdfkit": "^0.15.0",
-    "axios": "^1.8.2"
+    "pdfkit": "^0.15.0"
   }
 }

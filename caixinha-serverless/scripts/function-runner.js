@@ -1,4 +1,4 @@
-const Function = require('../notificacao-vencimento-emprestimo-timer')
+const Function = require('../remover-emprestimo/index')
 
 function createContext() {
     const context = {
@@ -10,9 +10,16 @@ function createContext() {
 
 async function run() {
     const context = createContext()
-    const params = {}
-    await Function(context, params)  
-    process.exit(0) 
+    const params = {
+        body: {
+            emprestimoUid: 'e3adda67-0775-4df0-9f43-774088c331af',
+            caixinhaId: '646f538de5cd54cc6344ec69',
+            name: 'Jean',
+            email: 'jean'
+        }
+    }
+    await Function(context, params)
+    process.exit(0)
 }
 
 run()
