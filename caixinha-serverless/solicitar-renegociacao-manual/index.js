@@ -1,5 +1,5 @@
 const { Box, Renegotiation } = require('caixinha-core/dist/src')
-const { SuggestRenegotiationSimpleInterest } = require('caixinha-core/dist/src/useCase')
+const { SuggestManualRenegotiation } = require('caixinha-core/dist/src/useCase')
 const middleware = require('../utils/middleware')
 const { connect, getByIdOrThrow, insertDocument } = require('../v2/mongo-operations')
 const dispatch = require('../amqp/events')
@@ -10,7 +10,7 @@ function resolveBSONStructureRenegociacao(reneg) {
 }
 
 async function handle(context, req) {
-    const { caixinhaId, emprestimoUid } = req.body
+    const { caixinhaId, emprestimoUid, juros } = req.body
 
     await connect()
 
@@ -18,7 +18,7 @@ async function handle(context, req) {
     const emprestimo = caixinha.getLoanByUUID(emprestimoUid)
 
     const reneg = Renegotiation.create(emprestimo)
-    const sugestao = SuggestRenegotiationSimpleInterest(reneg)
+    const sugestao = SuggestManualRenegotiation(reneg, juros)
 
     reneg['boxId'] = caixinhaId
     const { insertedId } = await insertDocument('renegociacoes', resolveBSONStructureRenegociacao(reneg))
