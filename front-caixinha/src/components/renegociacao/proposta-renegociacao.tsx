@@ -1,27 +1,22 @@
-import { ArrowRightAltOutlined } from "@mui/icons-material"
+import { ArrowRightAltOutlined, CheckCircle, ContactSupport } from "@mui/icons-material"
 import {
     Box,
     Button,
-    Card,
-    CardContent,
-    CardHeader,
     Container,
     Divider,
     FormControlLabel,
-    List,
-    ListItem,
-    ListItemText,
     Radio,
     RadioGroup,
     Stack,
-    SvgIcon,
-    Typography
+    Typography,
+    Paper
 } from "@mui/material"
 import CenteredCircularProgress from "../CenteredCircularProgress"
 import { useCallback, useMemo, useState } from "react"
 import { aceitarRenegociacao } from "@/pages/api/api.service"
 import { useRouter } from "next/router"
 import { useTranslation } from "react-i18next"
+import { useTheme } from "@mui/material/styles"
 
 export const PropostaRenegociacao = (props: any) => {
     const { renegociacao } = props
@@ -29,6 +24,7 @@ export const PropostaRenegociacao = (props: any) => {
     const [loading, setLoading] = useState(false)
     const router = useRouter()
     const { t } = useTranslation()
+    const theme = useTheme()
 
     const formattedTotalAmount = useMemo(() => {
         return `R$ ${renegociacao.sugestao.newTotalValue.toFixed(2)}`
@@ -38,12 +34,12 @@ export const PropostaRenegociacao = (props: any) => {
         {
             amount: renegociacao.sugestao.newInterestRate,
             color: '#6C76C4',
-            name: 'Total Juros'
+            name: t('renegociacao.total_juros')
         },
         {
             amount: renegociacao.sugestao.newTotalValue,
             color: '#FF4081',
-            name: 'Total'
+            name: t('renegociacao.total')
         }
     ]
 
@@ -69,152 +65,229 @@ export const PropostaRenegociacao = (props: any) => {
     return (
         <Box
             sx={{
-                backgroundColor: (theme) => theme.palette.mode === 'dark'
-                    ? 'neutral.800'
-                    : 'neutral.100',
-                p: 3
+                animation: 'fadeInUp 0.6s ease-out',
+                '@keyframes fadeInUp': {
+                    '0%': {
+                        opacity: 0,
+                        transform: 'translateY(20px)'
+                    },
+                    '100%': {
+                        opacity: 1,
+                        transform: 'translateY(0)'
+                    }
+                }
             }}
         >
-            <Container maxWidth="sm">
-                <Card>
-                    <CardHeader
-                        subheader={(
-                            <Typography variant="h4">
-                                {formattedTotalAmount}
-                            </Typography>
-                        )}
-                        sx={{ pb: 0 }}
-                        title={(
-                            <Typography
-                                color="text.secondary"
-                                variant="overline"
-                            >
-                                {t('renegociacao.proposta')}
-                            </Typography>
-                        )}
-                    />
-                    <CardContent>
-                        <Divider sx={{ mb: 2 }} />
-                        <Typography
-                            color="text.secondary"
-                            variant="overline"
+            <Container maxWidth="md">
+                <Paper 
+                    elevation={3}
+                    sx={{ 
+                        borderRadius: 3,
+                        overflow: 'hidden',
+                        background: theme.palette.mode === 'dark' ? 'neutral.800' : 'background.paper',
+                        border: `1px solid ${theme.palette.divider}`,
+                    }}
+                >
+                    {/* Header com Valor da Proposta */}
+                    <Box sx={{ 
+                        p: 4, 
+                        background: `linear-gradient(135deg, ${theme.palette.primary.main}20, ${theme.palette.primary.main}10)`,
+                        borderBottom: `1px solid ${theme.palette.divider}`,
+                        textAlign: 'center'
+                    }}>
+                        <Typography 
+                            variant="overline" 
+                            color="text.secondary" 
+                            sx={{ fontWeight: 600, fontSize: '0.8rem' }}
                         >
-                            {t('renegociacao.resumo')}
+                            {t('renegociacao.proposta')}
                         </Typography>
-                        <List
-                            disablePadding
-                            sx={{ pt: 2 }}
+                        <Typography 
+                            variant="h3" 
+                            sx={{ 
+                                fontWeight: 700,
+                                color: theme.palette.primary.main,
+                                mt: 1
+                            }}
                         >
-                            {assets.map((currency) => {
-                                const amount = `R$ ${currency.amount}`
+                            {formattedTotalAmount}
+                        </Typography>
+                    </Box>
 
-                                return (
-                                    <ListItem
-                                        disableGutters
-                                        key={currency.name}
-                                        sx={{
-                                            pb: 2,
-                                            pt: 0
-                                        }}
-                                    >
-                                        <ListItemText
-                                            disableTypography
-                                            primary={(
-                                                <Stack
-                                                    alignItems="center"
-                                                    direction="row"
-                                                    justifyContent="space-between"
-                                                    spacing={2}
-                                                >
-                                                    <Stack
-                                                        alignItems="center"
-                                                        direction="row"
-                                                        spacing={2}
-                                                    >
-                                                        <Box
-                                                            sx={{
-                                                                backgroundColor: currency.color,
-                                                                height: 8,
-                                                                width: 8,
-                                                                borderRadius: '50%'
-                                                            }}
-                                                        />
-                                                        <Typography variant="subtitle2">
+                    <Box sx={{ p: 4 }}>
+                        <Stack spacing={4}>
+                            {/* Seção RESUMO */}
+                            <Box>
+                                <Typography 
+                                    variant="overline" 
+                                    color="text.secondary" 
+                                    sx={{ fontWeight: 600, fontSize: '0.8rem' }}
+                                >
+                                    {t('renegociacao.resumo')}
+                                </Typography>
+                                <Stack spacing={2} sx={{ mt: 2 }}>
+                                    {assets.map((currency) => {
+                                        const amount = `R$ ${currency.amount.toFixed(2)}`
+                                        return (
+                                            <Box 
+                                                key={currency.name}
+                                                sx={{ 
+                                                    p: 2, 
+                                                    borderRadius: 2, 
+                                                    background: theme.palette.mode === 'dark' ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.02)',
+                                                    border: `1px solid ${theme.palette.divider}`
+                                                }}
+                                            >
+                                                <Stack direction="row" justifyContent="space-between" alignItems="center">
+                                                    <Stack direction="row" alignItems="center" spacing={2}>
+                                                        <Box sx={{ 
+                                                            width: 12, 
+                                                            height: 12, 
+                                                            borderRadius: '50%', 
+                                                            background: currency.color 
+                                                        }} />
+                                                        <Typography variant="subtitle1" sx={{ fontWeight: 600 }}>
                                                             {currency.name}
                                                         </Typography>
                                                     </Stack>
-                                                    <Typography
-                                                        color="text.secondary"
-                                                        variant="subtitle2"
-                                                    >
+                                                    <Typography variant="h6" sx={{ fontWeight: 700 }}>
                                                         {amount}
                                                     </Typography>
                                                 </Stack>
-                                            )}
-                                        />
-                                    </ListItem>
-                                );
-                            })}
-                        </List>
-                        <Divider sx={{ mb: 2 }} />
-                        <Typography
-                            color="text.secondary"
-                            variant="overline"
-                        >
-                            {t('renegociacao.parcelamento')}
-                        </Typography>
-                        <div>
-                            <RadioGroup
-                                name="Parcelamento"
-                                onChange={e => setParcelamento(Number(e.target.value))}
-                                sx={{ flexDirection: 'row' }}
-                                value={parcelamento}
-                            >
-                                {renegociacao.sugestao.installmentOptions.map((parcela: any) => (
-                                    <FormControlLabel
-                                        control={<Radio />}
-                                        key={parcela}
-                                        label={(
-                                            <Typography variant="body1">
-                                                {parcela}
-                                            </Typography>
-                                        )}
-                                        value={parcela}
-                                    />
-                                ))}
-                            </RadioGroup>
-                        </div>
-                        <Divider />
-                        <Stack
-                            alignItems="flex-start"
-                            spacing={1}
-                            sx={{ mt: 2 }}
-                        >
-                            <Button
-                                color="inherit"
-                                onClick={aceitarProposta}
-                                endIcon={(
-                                    <SvgIcon>
-                                        <ArrowRightAltOutlined />
-                                    </SvgIcon>
-                                )}
-                            >
-                                {t('renegociacao.aceitar')}
-                            </Button>
-                            <Button
-                                color="inherit"
-                                onClick={propostaPersonalizada}
-                                endIcon={(
-                                    <SvgIcon>
-                                        <ArrowRightAltOutlined />
-                                    </SvgIcon>
-                                )}
-                            >
-                                {t('renegociacao.proposta_personalizada')}
-                            </Button>
+                                            </Box>
+                                        )
+                                    })}
+                                </Stack>
+                            </Box>
+
+                            <Divider />
+
+                            {/* Seção PARCELAMENTO */}
+                            <Box>
+                                <Typography 
+                                    variant="overline" 
+                                    color="text.secondary" 
+                                    sx={{ fontWeight: 600, fontSize: '0.8rem' }}
+                                >
+                                    {t('renegociacao.parcelamento')}
+                                </Typography>
+                                <Box sx={{ mt: 2 }}>
+                                    <RadioGroup
+                                        name="Parcelamento"
+                                        onChange={e => setParcelamento(Number(e.target.value))}
+                                        value={parcelamento}
+                                        sx={{ 
+                                            display: 'flex',
+                                            flexDirection: 'row',
+                                            gap: 1,
+                                            flexWrap: 'wrap'
+                                        }}
+                                    >
+                                        {renegociacao.sugestao.installmentOptions.map((parcela: any) => {
+                                            const installmentValue = (renegociacao.sugestao.newTotalValue / parcela).toFixed(2)
+                                            return (
+                                                <FormControlLabel
+                                                    key={parcela}
+                                                    value={parcela}
+                                                    control={
+                                                        <Radio 
+                                                            sx={{
+                                                                '&.Mui-checked': {
+                                                                    color: theme.palette.success.main,
+                                                                }
+                                                            }}
+                                                        />
+                                                    }
+                                                    label={
+                                                        <Box sx={{ textAlign: 'center', minWidth: 80 }}>
+                                                            <Typography variant="body2" fontWeight={600}>
+                                                                {parcela}x
+                                                            </Typography>
+                                                            <Typography variant="caption" color="text.secondary">
+                                                                R$ {installmentValue}
+                                                            </Typography>
+                                                        </Box>
+                                                    }
+                                                    sx={{
+                                                        margin: 0,
+                                                        padding: 2,
+                                                        borderRadius: 2,
+                                                        border: parcelamento === parcela 
+                                                            ? `2px solid ${theme.palette.success.main}` 
+                                                            : `1px solid ${theme.palette.divider}`,
+                                                        background: parcelamento === parcela 
+                                                            ? theme.palette.success.main + '10' 
+                                                            : 'transparent',
+                                                        '&:hover': {
+                                                            background: theme.palette.action.hover,
+                                                        }
+                                                    }}
+                                                />
+                                            )
+                                        })}
+                                    </RadioGroup>
+                                </Box>
+                            </Box>
+
+                            <Divider />
+
+                            {/* Botões de Ação */}
+                            <Stack spacing={2}>
+                                <Button
+                                    variant="contained"
+                                    color="success"
+                                    fullWidth
+                                    startIcon={<CheckCircle />}
+                                    endIcon={<ArrowRightAltOutlined />}
+                                    onClick={aceitarProposta}
+                                    sx={{
+                                        py: 2,
+                                        fontWeight: 600,
+                                        textTransform: 'none',
+                                        borderRadius: 2,
+                                        fontSize: '1.1rem',
+                                        transform: 'scale(1)',
+                                        transition: 'all 0.2s ease-in-out',
+                                        '&:hover': {
+                                            transform: 'scale(1.02)',
+                                        },
+                                        '&:active': {
+                                            transform: 'scale(0.98)',
+                                        }
+                                    }}
+                                >
+                                    {t('renegociacao.aceitar')}
+                                </Button>
+                                
+                                <Button
+                                    variant="outlined"
+                                    color="primary"
+                                    fullWidth
+                                    startIcon={<ContactSupport />}
+                                    endIcon={<ArrowRightAltOutlined />}
+                                    onClick={propostaPersonalizada}
+                                    sx={{
+                                        py: 2,
+                                        fontWeight: 600,
+                                        textTransform: 'none',
+                                        borderRadius: 2,
+                                        fontSize: '1rem',
+                                        transform: 'scale(1)',
+                                        transition: 'all 0.2s ease-in-out',
+                                        '&:hover': {
+                                            transform: 'scale(1.02)',
+                                        },
+                                        '&:active': {
+                                            transform: 'scale(0.98)',
+                                        }
+                                    }}
+                                >
+                                    {t('renegociacao.proposta_personalizada')}
+                                </Button>
+                            </Stack>
                         </Stack>
-                    </CardContent>
-                </Card>
+                    </Box>
+                </Paper>
             </Container>
         </Box>
     );
