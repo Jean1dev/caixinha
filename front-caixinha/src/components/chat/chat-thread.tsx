@@ -117,21 +117,25 @@ const useMessagesScroll = (thread: any) => {
   const messagesRef = useRef(null);
 
   const handleUpdate = useCallback(() => {
-    // Thread does not exist
-    if (!thread) {
-      return;
-    }
+    try {
+      // Thread does not exist
+      if (!thread) {
+        return;
+      }
 
-    // Ref is not used
-    if (!messagesRef.current) {
-      return;
-    }
+      // Ref is not used
+      if (!messagesRef.current) {
+        return;
+      }
 
-    const container: any = messagesRef.current;
-    const scrollElement = container.getScrollElement();
+      const container: any = messagesRef.current;
+      const scrollElement = container.getScrollElement();
 
-    if (scrollElement) {
-      scrollElement.scrollTop = container.el.scrollHeight;
+      if (scrollElement && container.el && typeof scrollElement.scrollTop !== 'undefined') {
+        scrollElement.scrollTop = container.el.scrollHeight;
+      }
+    } catch (error) {
+      console.warn('Error updating scroll position:', error);
     }
   }, [thread]);
 
