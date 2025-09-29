@@ -41,6 +41,7 @@ jobs:
           app-name: 'emprestimo-caixinha'
           slot-name: 'Production'
           package: ${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}
+<<<<<<< Updated upstream
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_7E8669A9E9F842CABB33DF24D1865F5E }}
 
   build-and-deploy-v2:
@@ -71,3 +72,6 @@ jobs:
           slot-name: 'Production'
           package: ${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_7E8669A9E9F842CABB33DF24D1865F5E }}
+=======
+          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_7E8669A9E9F842CABB33DF24D1865F5E }}
+>>>>>>> Stashed changes
