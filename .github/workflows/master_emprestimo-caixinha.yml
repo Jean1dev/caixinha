@@ -44,7 +44,6 @@ jobs:
 <<<<<<< Updated upstream
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_7E8669A9E9F842CABB33DF24D1865F5E }}
 
-  build-and-deploy-v2:
     runs-on: ubuntu-latest
     steps:
       - name: 'Checkout GitHub Action'
