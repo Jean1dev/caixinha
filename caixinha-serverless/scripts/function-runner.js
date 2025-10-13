@@ -1,4 +1,4 @@
-const Function = require('../remover-emprestimo/index')
+const Function = require('../notificacao-vencimento-emprestimo-timer/index')
 
 function createContext() {
     const context = {
