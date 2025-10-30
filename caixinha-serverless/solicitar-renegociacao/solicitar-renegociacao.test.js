@@ -64,4 +64,60 @@ describe('solicitação de renegociacao test', () => {
         const reneg = await getByIdOrThrow(context.res.body.renegId, 'renegociacoes')
         expect(reneg).not.toBeNull()
     }, 30000)
+
+    it('Deve solicitar uma renegociacao para um emprestimo com pagamento parcial', async () => {
+        const member = new Member('joao')
+        const box = new Box()
+        box.joinMember(member)
+        const input = {
+            approved: true,
+            member,
+            date: getDataMenosXDias(31).toString(),
+            totalValue: { value: 10 },
+            valueRequested: { value: 10 },
+            remainingAmount: { value: 10 },
+            fees: { value: 0 },
+            interest: { value: 0 },
+            box,
+            description: 'fake',
+            approvals: 1,
+            memberName: member.memberName,
+            requiredNumberOfApprovals: 0,
+            billingDates: [getDataMenosXDias(31).toString()],
+            uid: 'uid',
+            listOfMembersWhoHaveAlreadyApproved: [member],
+            payments: [{
+                date: getDataMenosXDias(1).toString(),
+                value: { value: 5 },
+                member: {
+                    name: member.name,
+                    email: member.email
+                },
+                description: 'pagamento1'
+            }]
+        }
+
+        box['loans'] = [Loan.fromBox(input)]
+        const { id } = await saveAndReturnCaixinhaIds(box)
+
+        const req = {
+            body: {
+                caixinhaId: id,
+                emprestimoUid: input.uid
+            }
+        }
+
+        const context = {
+            log: jest.fn()
+        }
+
+        await Func(context, req)
+
+        expect(context.res.body).not.toBeNull()
+        expect(context.res.body.renegId).not.toBeNull()
+        expect(context.res.body.sugestao).not.toBeNull()
+
+        const reneg = await getByIdOrThrow(context.res.body.renegId, 'renegociacoes')
+        expect(reneg).not.toBeNull()
+    }, 30000)
 })
