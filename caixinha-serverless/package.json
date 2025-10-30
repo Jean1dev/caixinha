@@ -8,12 +8,12 @@
     "coverage": "jest --coverage",
     "scripts": "node ./scripts/function-runner.js",
     "scripts-bkp": "node ./scripts/clone-bkp-caixinha-prd.js",
-    "debug-test-script": "npx jest remover-emprestimo/remover-emprestimo.test.js"
+    "debug-test-script": "npx jest solicitar-renegociacao/solicitar-renegociacao.test.js"
   },
   "dependencies": {
     "@sentry/node": "^7.54.0",
     "amqplib": "^0.10.3",
-    "caixinha-core": "^1.1.9",
+    "caixinha-core": "^1.2.0",
     "moment": "^2.29.4",
     "mongodb": "^5.4.0"
   },

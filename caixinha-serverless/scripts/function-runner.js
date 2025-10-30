@@ -1,4 +1,4 @@
-const Function = require('../notificacao-vencimento-emprestimo-timer/index')
+const Function = require('../solicitar-renegociacao/index')
 
 function createContext() {
     const context = {
@@ -12,10 +12,8 @@ async function run() {
     const context = createContext()
     const params = {
         body: {
-            emprestimoUid: 'e3adda67-0775-4df0-9f43-774088c331af',
+            emprestimoUid: 'a802224e-d918-4a04-950e-12c894d59074',
             caixinhaId: '646f538de5cd54cc6344ec69',
-            name: 'Jean',
-            email: 'jean'
         }
     }
     await Function(context, params)
