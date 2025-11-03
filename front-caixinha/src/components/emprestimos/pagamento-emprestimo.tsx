@@ -74,6 +74,12 @@ export const PagamentoEmprestimo = ({ data }: { data: IProps }) => {
         input.click()
     }
 
+    function handleOverdueLoanError(e: any) {
+        if (e.message.includes('Cannot make payment on overdue loan')) {
+            window.location.href = "/renegociacao";
+        }
+    }
+
     const pagar = useCallback(() => {
         setLoading(true)
         pagarEmprestimo({
@@ -90,6 +96,7 @@ export const PagamentoEmprestimo = ({ data }: { data: IProps }) => {
         }).catch(e => {
             setLoading(false)
             toast.error(e.message)
+            handleOverdueLoanError(e)
         })
     }, [caixinha, data, valor, user])
 
