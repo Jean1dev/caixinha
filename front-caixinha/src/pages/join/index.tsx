@@ -57,13 +57,13 @@ export default function Join() {
     }, [router.query.id])
 
     useEffect(() => {
-        if (status === 'authenticated') {
+        if (status === 'authenticated' && data?.user) {
             setFormData({
                 nick: data.user?.name as string,
                 email: data.user?.email as string
             })
         }
-    }, [status, data.user?.email, data.user?.name])
+    }, [status, data])
 
     if (loading)
         return <CenteredCircularProgress />
