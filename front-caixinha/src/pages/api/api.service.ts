@@ -143,7 +143,7 @@ export async function doEmprestimo(params: any) {
         return retornaComAtraso(true)
     }
 
-    return asyncFetch(`${BASE_URL}/emprestimo?code=Q47dylJAkJc3xSGB2RNiBkLzLms-lhvWFbyRE4qrlCriAzFuN_CxsA==&clientId=default`,
+    return asyncFetch(`${BASE_URL}/emprestimo?code=ZE1oGnOPHdf4QtEvPpILx97EPHvdjmpw9wbE9P4bvmr6AzFuIbaQtQ==`,
         'POST',
         JSON.stringify(params))
 }
