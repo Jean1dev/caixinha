@@ -1,3 +1,4 @@
+import Image from 'next/image';
 import { RouterLink } from "@/components/RouterLink";
 import { Seo } from "@/components/Seo";
 import Web3Layout from "@/components/Web3-Layoyt"
@@ -82,7 +83,7 @@ const Page = () => {
                 </Container>
                 <div>
                     {nfts.map((nft, index) => (
-                        <img key={index} src={nft.img} alt={`NFT ${index}`} />
+                        <Image key={index} src={nft.img} alt={`NFT ${index}`} width={200} height={200} unoptimized />
                     ))}
                 </div>
             </Box>

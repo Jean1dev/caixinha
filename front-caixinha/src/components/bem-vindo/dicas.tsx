@@ -1,3 +1,4 @@
+import Image from 'next/image';
 import Slider from 'react-slick';
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
@@ -29,7 +30,7 @@ export const Dicas = (props: any) => {
             }}
           >
             <Box sx={{ mb: 6 }}>
-              <img src="/assets/next-tip.svg" />
+              <Image src="/assets/next-tip.svg" alt="" width={80} height={80} />
             </Box>
             <Box
               sx={{

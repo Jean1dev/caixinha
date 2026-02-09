@@ -48,11 +48,11 @@ const Emprestimo = () => {
     })
 
     useEffect(() => {
-        setSolicitacao({
-            ...solicitacao,
+        setSolicitacao((prev) => ({
+            ...prev,
             name: user.name,
             email: user.email
-        })
+        }))
     }, [user])
 
     useEffect(() => {

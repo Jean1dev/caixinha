@@ -52,7 +52,7 @@ export const PropostaRenegociacao = (props: any) => {
         })
         .then(() => router.push('sucesso'))
         .finally(() => setLoading(false))
-    }, [parcelamento, renegociacao])
+    }, [parcelamento, renegociacao, router])
 
     const propostaPersonalizada = useCallback(() => {
         alert(t('renegociacao.proposta_personalizada'))

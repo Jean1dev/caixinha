@@ -57,7 +57,7 @@ export default function useSocket(eventName: string, callback: (...arg0: any[]) 
             console.log('close connection WebSocket') 
             setConnected(false)
         }
-    }, [socket])
+    }, [socket, callback])
 
     return { socket, connected }
 }

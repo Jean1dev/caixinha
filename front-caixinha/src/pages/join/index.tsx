@@ -63,7 +63,7 @@ export default function Join() {
                 email: data.user?.email as string
             })
         }
-    }, [status])
+    }, [status, data.user?.email, data.user?.name])
 
     if (loading)
         return <CenteredCircularProgress />

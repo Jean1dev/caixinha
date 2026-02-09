@@ -102,7 +102,7 @@ const Page = () => {
 
     const updatePage = useCallback((id: string) => {
         router.push(`/web3/nft-market/${id}`)
-    }, [])
+    }, [router])
 
     return (
         <>

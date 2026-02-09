@@ -45,11 +45,11 @@ export default function Deposito() {
     })
 
     useEffect(() => {
-        setSolicitacao({
-            ...solicitacao,
+        setSolicitacao((prev) => ({
+            ...prev,
             memberName: user.name,
             email: user.email
-        })
+        }))
     }, [user])
 
     useEffect(() => {

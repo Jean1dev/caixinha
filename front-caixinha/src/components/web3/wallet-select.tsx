@@ -1,4 +1,5 @@
 //@ts-nocheck
+import Image from 'next/image';
 import {
     Box,
     MenuItem,
@@ -73,13 +74,15 @@ const WalletSelect = () => {
                                     }}
                                 >
                                     <Box>
-                                        <img
+                                        <Image
                                             width={50}
+                                            height={50}
                                             loading="lazy"
                                             src={
                                                 wallet.adapter.icon
                                             }
                                             alt={`${wallet.adapter.name} Icon`}
+                                            unoptimized
                                         />
                                         <span>{wallet.adapter.name}</span>
                                     </Box>

@@ -1,4 +1,5 @@
 import Head from 'next/head';
+import Image from 'next/image';
 import NextLink from 'next/link';
 import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
 import { Box, Button, Container, SvgIcon, Typography } from '@mui/material';
@@ -54,7 +55,7 @@ const SucessoDeposito = () => {
                 textAlign: 'center'
               }}
             >
-              <img src="https://superex-shreethemes.vercel.app/static/media/10.ffe4457cb971da834bae.gif" alt="Ursinho feliz" style={{ width: '200px', height: '200px' }} />
+              <Image src="https://superex-shreethemes.vercel.app/static/media/10.ffe4457cb971da834bae.gif" alt="Ursinho feliz" width={200} height={200} unoptimized />
             </Box>
             <Typography
               align="center"

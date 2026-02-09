@@ -11,7 +11,7 @@ import Stack from '@mui/material/Stack';
 import SvgIcon from '@mui/material/SvgIcon';
 import Tooltip from '@mui/material/Tooltip';
 import Typography from '@mui/material/Typography';
-import { Attachment, Close, Image, Maximize, Minimize } from '@mui/icons-material';
+import { Attachment, Close, Image as ImageIcon, Maximize, Minimize } from '@mui/icons-material';
 import { aportarNoAtivo } from '@/pages/api/api.carteira';
 import { LinearProgress } from '@mui/material';
 
@@ -154,8 +154,8 @@ export const AporteModal = (props: any) => {
                     >
                         <Tooltip title="Attach image">
                             <IconButton size="small">
-                                <SvgIcon>
-                                    <Image />
+                                <SvgIcon aria-hidden>
+                                    <ImageIcon />
                                 </SvgIcon>
                             </IconButton>
                         </Tooltip>

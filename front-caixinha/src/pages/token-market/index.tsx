@@ -1,4 +1,5 @@
 import WalletIcon from '@mui/icons-material/Wallet';
+import Image from 'next/image';
 import Layout from "@/components/Layout";
 import { RouterLink } from "@/components/RouterLink";
 import { Seo } from "@/components/Seo";
@@ -65,7 +66,7 @@ export default function TokenMarket() {
         }).finally(() => {
             setLoading(false);
         });
-    }, [web3Wallet]); 
+    }, [web3Wallet, router, saveData]); 
 
     return (
         <Layout>
@@ -192,9 +193,9 @@ export default function TokenMarket() {
                             md={5}
                         >
                             <div className="media-icon">
-                                <img
+                                <Image
                                     alt="Rocket"
-                                    src={"assets/crypto/images/capicoin.png"}
+                                    src="/assets/crypto/images/capicoin.png"
                                     width={500}
                                     height={500}
                                 />

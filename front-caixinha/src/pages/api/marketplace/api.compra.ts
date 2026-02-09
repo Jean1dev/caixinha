@@ -13,4 +13,5 @@ class CompraApi {
     }
 }
 
-export default new CompraApi();
+const compraApi = new CompraApi();
+export default compraApi;

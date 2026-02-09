@@ -135,7 +135,7 @@ export const ChatSidebar = (props: DefaultProps) => {
     if (user.email) {
       fetchAllContatos()
     }
-  }, [user])
+  }, [user, fetchAllContatos])
 
   const content = (
     <div>

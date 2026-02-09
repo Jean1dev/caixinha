@@ -1,4 +1,4 @@
-export default {
+const meusEmprestimosData = {
     "caixinhas": [
         {
             "currentBalance": 15.89,
@@ -59,4 +59,5 @@ export default {
     "totalPendente": 10.3,
     "totalPago": 0,
     "totalGeral": 10.3
-}
+};
+export default meusEmprestimosData;

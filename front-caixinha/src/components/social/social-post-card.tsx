@@ -58,7 +58,7 @@ export const SocialPostCard = (props: any) => {
       .catch(() => {
         toast.error(t('feed.erro_copiar_link'));
       })
-  }, [postId])
+  }, [postId, t])
 
   return (
     <Card {...other}>

@@ -138,6 +138,7 @@ export const EmprestimoPdf = (props: any) => {
                         <Image
                             source="/assets/logo.jpg"
                             style={styles.brand}
+                            alt=""
                         />
                         <Text style={styles.h6}>
                             https://caixinha-gilt.vercel.app/
