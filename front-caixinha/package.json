@@ -21,7 +21,7 @@
     "@solana/wallet-adapter-wallets": "^0.19.32",
     "@solana/web3.js": "^1.98.0",
     "apexcharts": "^4.4.0",
-    "axios": "^1.12.2",
+    "axios": "^1.13.5",
     "canvas-confetti": "^1.9.3",
     "i18next": "^24.2.2",
     "lodash.isequal": "^4.5.0",
