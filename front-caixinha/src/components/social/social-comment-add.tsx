@@ -1,7 +1,7 @@
 import { useUserAuth } from '@/hooks/useUserAuth';
 import { publicarComentario } from '@/pages/api/api.service';
 import { getInitials } from '@/utils/utils';
-import { Attachment, Face, Image, Link, PlusOne } from '@mui/icons-material';
+import { Attachment, Face, Image as ImageIcon, Link, PlusOne } from '@mui/icons-material';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
@@ -83,8 +83,8 @@ export const SocialCommentAdd = (props: any) => {
                             {smUp && (
                                 <>
                                     <IconButton>
-                                        <SvgIcon>
-                                            <Image />
+                                        <SvgIcon aria-hidden>
+                                            <ImageIcon />
                                         </SvgIcon>
                                     </IconButton>
                                     <IconButton>

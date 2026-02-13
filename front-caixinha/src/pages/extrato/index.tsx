@@ -58,7 +58,7 @@ export default function Extrato() {
                 setData(res)
             })
             .catch(() => router.push('error'))
-    }, [router, emprestimosFiltro, depositosFiltro, somenteMeuFiltro])
+    }, [router, emprestimosFiltro, depositosFiltro, somenteMeuFiltro, user?.user?.name])
 
     return (
         <Layout>

@@ -1,4 +1,5 @@
 //@ts-nocheck
+import Image from 'next/image';
 import Box from '@mui/material/Box';
 import IconButton from '@mui/material/IconButton';
 import Tooltip from '@mui/material/Tooltip';
@@ -34,7 +35,7 @@ export const LanguageSwitch = () => {
                             }
                         }}
                     >
-                        <img src={flag} />
+                        <Image src={flag} alt="" width={28} height={28} unoptimized />
                     </Box>
                 </IconButton>
             </Tooltip>

@@ -73,7 +73,7 @@ export default function MeusAtivos() {
             }).catch(() => {
                 router.push('/carteira')
             })
-    }, [user])
+    }, [user, router])
 
     const reloadData = useCallback((params: MeusAtivosRequestFilter) => {
         getMeusAtivos(params)
@@ -96,7 +96,7 @@ export default function MeusAtivos() {
 
         setUserFilters(filters)
         reloadData({ page: 0, size: 10, carteiras: filters.carteira, tipos: filters.tipo, terms: filters.terms })
-    }, [state])
+    }, [reloadData])
 
     const onPageChange = (_: any, pageNumber: any) => {
         console.log('onPageChange', pageNumber)

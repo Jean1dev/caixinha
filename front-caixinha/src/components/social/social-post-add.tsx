@@ -1,7 +1,7 @@
 import { useUserAuth } from '@/hooks/useUserAuth';
 import { publicarPost, uploadResource } from '@/pages/api/api.service';
 import { getInitials } from '@/utils/utils';
-import { AttachEmail, BrowserUpdated, EmojiEmotions, Image } from '@mui/icons-material';
+import { AttachEmail, BrowserUpdated, EmojiEmotions, Image as ImageIcon } from '@mui/icons-material';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
@@ -99,8 +99,8 @@ export const SocialPostAdd = (props: any) => {
                                     spacing={1}
                                 >
                                     <IconButton onClick={uploadPhoto}>
-                                        <SvgIcon>
-                                            <Image/>
+                                        <SvgIcon aria-hidden>
+                                            <ImageIcon/>
                                         </SvgIcon>
                                     </IconButton>
                                     <IconButton>

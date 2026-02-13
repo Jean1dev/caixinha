@@ -66,7 +66,7 @@ export const AtalhoEmprestimo = (props: any) => {
                 toast.error(e.message)
             })
         }
-    }, [valorPago, user, caixinha]);
+    }, [valorPago, user, caixinha, emprestimo?.uid, t]);
 
     if (ok) {
         return <Ok t={t}/>

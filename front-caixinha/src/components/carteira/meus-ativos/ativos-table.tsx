@@ -18,7 +18,7 @@ import TablePagination from '@mui/material/TablePagination';
 import TableRow from '@mui/material/TableRow';
 import TextField from '@mui/material/TextField';
 import { Scrollbar } from '@/components/scrollbar';
-import { ChevronLeftOutlined, ChevronRight, Image, QueryStats } from '@mui/icons-material';
+import { ChevronLeftOutlined, ChevronRight, Image as ImageIcon, QueryStats } from '@mui/icons-material';
 import Typography from '@mui/material/Typography';
 import { AtivoCarteira } from '@/types/types';
 import { DisplayTipoAtivo } from '../display-tipo-ativo';
@@ -54,7 +54,7 @@ export const AtivosTable = (props: any) => {
         }
 
         window.open(`https://www.fundamentus.com.br/detalhes.php?papel=${ativo.nome}`, "_blank")
-    }, [currentProduct])
+    }, [currentProduct, items])
 
     const handleProductToggle = useCallback((productId: any) => {
         setCurrentProduct((prevProductId: any) => {
@@ -197,8 +197,8 @@ export const AtivosTable = (props: any) => {
                                                                 width: 80
                                                             }}
                                                         >
-                                                            <SvgIcon>
-                                                                <Image />
+                                                            <SvgIcon aria-hidden>
+                                                                <ImageIcon />
                                                             </SvgIcon>
                                                         </Box>
                                                     )}

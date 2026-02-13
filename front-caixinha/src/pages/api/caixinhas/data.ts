@@ -1,4 +1,4 @@
-export default [
+const caixinhasData = [
     {
         "members": [],
         "currentBalance": {
@@ -15,4 +15,5 @@ export default [
         "id": "644ab7f5f10d4800c629a1d3",
         "name": "caixinha do jorge"
     }
-]
+];
+export default caixinhasData;

@@ -1,4 +1,4 @@
-export default {
+const feedData = {
     data: [
         {
             id: '5e887fa38598b6fe61667757',
@@ -96,4 +96,5 @@ export default {
     ],
     length: 3,
     hasMore: true
-}
+};
+export default feedData;

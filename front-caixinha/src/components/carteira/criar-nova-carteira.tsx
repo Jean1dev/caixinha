@@ -1,3 +1,4 @@
+import Image from 'next/image';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
@@ -20,7 +21,7 @@ export const CriarCarteiraNova = (props: any) => (
                     }
                 }}
             >
-                <img src="/assets/iconly/iconly-glass-tick.svg" />
+                <Image src="/assets/iconly/iconly-glass-tick.svg" alt="" width={100} height={100} />
             </Box>
             <Typography
                 align="center"

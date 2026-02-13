@@ -1,3 +1,4 @@
+import Image from 'next/image';
 import { useCallback } from 'react';
 import PropTypes from 'prop-types';
 import { toast } from 'react-hot-toast';
@@ -33,7 +34,7 @@ export const LanguagePopover = (props: any) => {
         onClose?.();
         await i18n.changeLanguage(language);
         toast.success(`Language changed to ${language}`);
-    }, [onClose, t, i18n]);
+    }, [onClose, i18n]);
 
     return (
         <Popover
@@ -68,9 +69,12 @@ export const LanguagePopover = (props: any) => {
                                     }
                                 }}
                             >
-                                <img
+                                <Image
                                     alt={option.label}
                                     src={option.icon}
+                                    width={28}
+                                    height={28}
+                                    unoptimized
                                 />
                             </Box>
                         </ListItemIcon>

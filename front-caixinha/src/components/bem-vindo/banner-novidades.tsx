@@ -1,3 +1,4 @@
+import Image from 'next/image';
 import { useSettings } from '@/hooks/useSettings';
 import { useTranslation } from 'react-i18next';
 import { SettingsApplications } from '@mui/icons-material';
@@ -35,7 +36,7 @@ export const BannerNovidades = (props: any) => {
           }
         }}
       >
-        <img src="/assets/person-standing.png" />
+        <Image src="/assets/person-standing.png" alt="" width={200} height={200} />
       </Box>
       <Box sx={{ flexGrow: 1 }}>
         <Typography

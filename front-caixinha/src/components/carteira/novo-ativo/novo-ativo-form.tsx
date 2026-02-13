@@ -119,7 +119,7 @@ export const NovoAtivoForm = () => {
                 }
             });
         },
-        []
+        [updateSugestaoList]
     );
 
     return (

@@ -28,7 +28,7 @@ const useParticipants = (threadKey: string, userEmail: string) => {
       console.error(err);
       router.push('/chat');
     }
-  }, [router, threadKey]);
+  }, [router, threadKey, userEmail]);
 
   useEffect(() => {
     handleParticipantsGet();
@@ -79,7 +79,7 @@ const useThread = (threadKey: string) => {
       //   }));
     }
 
-  }, [router, threadKey]);
+  }, [router]);
 
   const addMessage = useCallback((message: string, author: any) => {
     setThreads((prevState: any) => {
@@ -207,7 +207,7 @@ export const ChatThread = (props: any) => {
     // Set the new thread as active
 
     // dispatch(thunks.setCurrentThread({ threadId }));
-  }, [participants, thread, user]);
+  }, [participants, thread, user, addMessage]);
 
   // Maybe implement a loading state
 

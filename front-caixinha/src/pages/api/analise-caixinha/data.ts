@@ -1,4 +1,4 @@
-export default {
+const analiseCaixinhaData = {
     info: {
         cdbTaxes: 113,
         evolucaoDepositos: 25,
@@ -41,4 +41,5 @@ export default {
             data: [1500, 463, 505, 505, 909, 1545, 2000, 505, 498, 1997, 1800, 0]
         }
     ]
-}
+};
+export default analiseCaixinhaData;

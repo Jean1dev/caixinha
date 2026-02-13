@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useLocalStorage } from "./useLocalStorage";
 import { IUser } from "@/pages/perfil";
 import { useSession } from "next-auth/react";
@@ -27,9 +27,9 @@ export function useUserAuth() {
     const { data, status } = useSession()
     const [storedUser, setStoredUser] = useLocalStorage<IUser | null>("caixinha-user-stored-v2", null);
 
-    const updateUser = (userAuth: IUser | null) => {
+    const updateUser = useCallback((userAuth: IUser | null) => {
         setStoredUser(userAuth);
-    };
+    }, [setStoredUser]);
 
     useEffect(() => {
         if (status == 'unauthenticated') {

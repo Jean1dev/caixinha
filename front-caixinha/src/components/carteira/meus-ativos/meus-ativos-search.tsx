@@ -63,7 +63,7 @@ export const MeusAtivosSearch = (props: any) => {
 
     useEffect(() => {
         handleFiltersInputsChange();
-    }, [chips]);
+    }, [chips, handleFiltersInputsChange]);
 
     const handleChipDelete = useCallback((deletedChip: ChipType) => {
         setChips((prevChips) => {

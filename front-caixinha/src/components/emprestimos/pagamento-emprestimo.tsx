@@ -98,7 +98,7 @@ export const PagamentoEmprestimo = ({ data }: { data: IProps }) => {
             toast.error(e.message)
             handleOverdueLoanError(e)
         })
-    }, [caixinha, data, valor, user])
+    }, [caixinha, data, valor, user, arquivos])
 
     const uploadItem = (resource: any) => {
         toast.loading('enviando arquivo aguarde')

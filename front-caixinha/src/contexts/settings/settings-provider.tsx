@@ -50,7 +50,7 @@ export const SettingsProvider = (props: any) => {
         isInitialized: true
       }));
     } else {
-      setState({ ...state, isInitialized: true })
+      setState((prevState) => ({ ...prevState, isInitialized: true }))
     }
   }, []);
 

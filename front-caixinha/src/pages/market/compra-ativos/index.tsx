@@ -99,7 +99,7 @@ const useAtivoStore = (searchState: AtivosSearchState) => {
         }
 
         fetchData()
-    }, [searchState])
+    }, [searchState, applyLocalFilters, isMounted])
 
     const removeByKey = useCallback((key: string) => {
         setState((prevState) => ({
@@ -166,7 +166,7 @@ export default function ListagemAtivosCompraPage() {
                 console.error('Error buying ativo:', error);
                 toast.error('Erro ao comprar ativo. Tente novamente mais tarde.');
             });
-    }, [dialog])
+    }, [dialog, ativoStore])
 
     return (
         <Layout>
