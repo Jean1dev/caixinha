@@ -21,9 +21,15 @@ export default function MeusEmprestimos() {
     const router = useRouter()
     const rootRef = useRef(null);
 
-    const [items, setItems] = useState<any>()
+    const emptyItems: IMeusEmprestimos = {
+        caixinhas: [],
+        totalPendente: 0,
+        totalPago: 0,
+        totalGeral: 0
+    }
+    const [items, setItems] = useState<IMeusEmprestimos>(emptyItems)
     const [loading, setLoading] = useState(true)
-    const { data: session } = useSession()
+    const { data: session, status } = useSession()
 
     const [group, setGroup] = useState(true);
 
@@ -43,17 +49,20 @@ export default function MeusEmprestimos() {
     }, []);
 
     useEffect(() => {
-        if (!loading) {
-            setLoading(true)
+        if (status === 'loading') {
+            return
         }
-
-        if (session?.user?.name) {
-             getMeusEmprestimos({ name: session?.user?.name, email: session?.user?.email }).then((data: IMeusEmprestimos) => {
-                setItems(data)
-                setLoading(false)
-            }).catch(() => router.push('error'))   
+        if (!session?.user?.name) {
+            setItems(emptyItems)
+            setLoading(false)
+            return
         }
-    }, [session, loading, router])
+        setLoading(true)
+        getMeusEmprestimos({ name: session.user.name, email: session?.user?.email }).then((data: IMeusEmprestimos) => {
+            setItems(data)
+            setLoading(false)
+        }).catch(() => router.push('error'))
+    }, [session, status, router])
 
     if (loading) {
         return <CenteredCircularProgress/>
@@ -92,7 +101,7 @@ export default function MeusEmprestimos() {
                         onGroupChange={handleGroupChange}
                         open={openSidebar}
                     />
-                    <MeusEmprestmosListContainer open={openSidebar} theme={undefined}>
+                    <MeusEmprestmosListContainer open={openSidebar}>
                         <Stack spacing={4}>
                             <Stack
                                 alignItems="flex-start"
