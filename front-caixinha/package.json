@@ -16,9 +16,9 @@
     "@mui/material": "^5.12.2",
     "@react-pdf/renderer": "3.1.9",
     "@solana/wallet-adapter-base": "^0.9.23",
+    "@solana/wallet-adapter-phantom": "^0.9.28",
     "@solana/wallet-adapter-react": "^0.15.35",
     "@solana/wallet-adapter-react-ui": "^0.9.35",
-    "@solana/wallet-adapter-phantom": "^0.9.28",
     "@solana/wallet-adapter-solflare": "^0.6.31",
     "@solana/web3.js": "^1.98.0",
     "apexcharts": "^4.4.0",
@@ -35,6 +35,7 @@
     "react-i18next": "^15.4.0",
     "react-slick": "^0.30.2",
     "simplebar-react": "^3.2.4",
+    "swr": "^2.4.1",
     "web3-client-lib": "^0.0.4"
   },
   "overrides": {

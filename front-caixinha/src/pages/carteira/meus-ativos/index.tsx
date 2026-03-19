@@ -1,211 +1,125 @@
-import CenteredCircularProgress from "@/components/CenteredCircularProgress";
-import Layout from "@/components/Layout";
-import { RouterLink } from "@/components/RouterLink";
-import { Seo } from "@/components/Seo";
-import { AtivosTable } from "@/components/carteira/meus-ativos/ativos-table";
-import { MeusAtivosSearch } from "@/components/carteira/meus-ativos/meus-ativos-search";
-import { useUserAuth } from "@/hooks/useUserAuth";
-import { AtivoDto, MeusAtivosRequestFilter, SpringPage, getMeusAtivos, getMinhasCarteiras } from "@/pages/api/api.carteira";
-import { AtivoCarteira } from "@/types/types";
-import { PlusOneOutlined } from "@mui/icons-material";
-import {
-    Box,
-    Container,
-    Stack,
-    Typography,
-    Breadcrumbs,
-    Button,
-    SvgIcon,
-    Card
-} from "@mui/material";
-import Link from '@mui/material/Link';
-import { useRouter } from "next/router";
-import { useCallback, useEffect, useState } from "react";
-
-interface MeusAtivoStateType {
-    ativos: AtivoCarteira[]
-    page: number
-    count: number
-    rowsPerPage: number
-}
+import { useState } from 'react'
+import Box from '@mui/material/Box'
+import Breadcrumbs from '@mui/material/Breadcrumbs'
+import Button from '@mui/material/Button'
+import Card from '@mui/material/Card'
+import Container from '@mui/material/Container'
+import Divider from '@mui/material/Divider'
+import Stack from '@mui/material/Stack'
+import SvgIcon from '@mui/material/SvgIcon'
+import Typography from '@mui/material/Typography'
+import MuiLink from '@mui/material/Link'
+import { AddCircleOutline } from '@mui/icons-material'
+import NextLink from 'next/link'
+import Layout from '@/components/Layout'
+import { Seo } from '@/components/Seo'
+import { useCarteiras } from '@/features/carteira/hooks/useCarteiras'
+import { useAtivos } from '@/features/carteira/hooks/useAtivos'
+import { AtivosTable } from '@/features/carteira/components/ativos/AtivosTable'
+import { AtivosFilters } from '@/features/carteira/components/ativos/AtivosFilters'
+import { AtivoFormDrawer } from '@/features/carteira/components/ativos/AtivoFormDrawer'
+import { CarteiraEmptyState } from '@/features/carteira/components/shared/CarteiraEmptyState'
 
 export default function MeusAtivos() {
-    const [state, setstate] = useState<MeusAtivoStateType>({
-        ativos: [],
-        page: 0,
-        count: 10,
-        rowsPerPage: 5
-    })
-    const [loading, setLoading] = useState(true)
-    const [carteiras, setCarteiras] = useState<any>([])
-    const [userFilters, setUserFilters] = useState({
-        carteira: [],
-        search: null,
-        tipo: [],
-        terms: null
-    })
-    const router = useRouter()
-    const { user } = useUserAuth()
+  const { carteiras, isLoading: loadingCarteiras } = useCarteiras()
+  const {
+    ativos,
+    page,
+    totalElements,
+    pageSize,
+    isLoading,
+    applyFilter,
+    changePage,
+    changePageSize,
+    criar,
+    atualizar,
+    remover,
+  } = useAtivos(carteiras.length > 0 ? [carteiras[0].id] : [])
 
-    useEffect(() => {
-        if (!user || !user.name || !user.email) {
-            return
-        }
-        
-        getMinhasCarteiras(user.name, user.email)
-            .then((carteiras: any) => {
-                if (carteiras.length > 0) {
-                    getMeusAtivos({ page: 0, size: 5, carteiras: [carteiras[0]['id']], tipos: null })
-                        .then((page: SpringPage<AtivoDto>) => {
-                            setstate({
-                                ativos: page.content,
-                                page: page.pageable.pageNumber,
-                                count: page.totalElements,
-                                rowsPerPage: page.size
-                            })
+  const [drawerOpen, setDrawerOpen] = useState(false)
 
-                            setCarteiras(carteiras)
-                            setLoading(false)
-                        })
-                } else {
-                    setLoading(false)
-                }
-            }).catch(() => {
-                router.push('/carteira')
-            })
-    }, [user, router])
+  const handleSave = async (payload: any) => {
+    await criar(payload)
+  }
 
-    const reloadData = useCallback((params: MeusAtivosRequestFilter) => {
-        getMeusAtivos(params)
-            .then((page: SpringPage<AtivoDto>) => {
-                setstate({
-                    ativos: page.content,
-                    page: page.pageable.pageNumber,
-                    count: page.totalElements,
-                    rowsPerPage: page.size,
-                })
-            })
-    }, [])
-
-    const onFiltersChange = useCallback((filters: any) => {
-        console.log(filters, new Date().toString())
-        //filters.search eh o termos da busca
-        if (filters.search && filters.search !== '') {
-            filters.terms = filters.search
-        }
-
-        setUserFilters(filters)
-        reloadData({ page: 0, size: 10, carteiras: filters.carteira, tipos: filters.tipo, terms: filters.terms })
-    }, [reloadData])
-
-    const onPageChange = (_: any, pageNumber: any) => {
-        console.log('onPageChange', pageNumber)
-        reloadData({ page: pageNumber, size: state.rowsPerPage, carteiras: userFilters.carteira, tipos: userFilters.tipo, terms: userFilters.terms })
-    }
-
-    const onRowsPerPageChange = (params: any) => {
-        const rows = params.target.value
-        reloadData({ page: state.page, size: rows, carteiras: userFilters.carteira, tipos: userFilters.tipo, terms: userFilters.terms })
-    }
-
-    if (loading) {
-        return <CenteredCircularProgress />
-    }
-
+  if (!loadingCarteiras && carteiras.length === 0) {
     return (
-        <Layout>
-            <Seo title="Meus ativos" />
-            <Box
-                component="main"
-                sx={{
-                    flexGrow: 1,
-                    py: 8
-                }}
-            >
-                <Container maxWidth="xl">
-                    <Stack spacing={4}>
-                        <Stack
-                            direction="row"
-                            justifyContent="space-between"
-                            spacing={4}
-                        >
-                            <Stack spacing={1}>
-                                <Typography variant="h4">
-                                    Meus Ativos
-                                </Typography>
-                                <Breadcrumbs separator={<Box
-                                    sx={{
-                                        backgroundColor: 'neutral.500',
-                                        borderRadius: '50%',
-                                        height: 4,
-                                        width: 4
-                                    }}
-                                />}>
-                                    <Link
-                                        color="text.primary"
-                                        component={RouterLink}
-                                        href={'/'}
-                                        variant="subtitle2"
-                                    >
-                                        Dashboard
-                                    </Link>
-                                    <Link
-                                        color="text.primary"
-                                        component={RouterLink}
-                                        href={'/carteira'}
-                                        variant="subtitle2"
-                                    >
-                                        Carteira
-                                    </Link>
-                                    <Link
-                                        color="text.primary"
-                                        component={RouterLink}
-                                        href={'/market/compra-ativos'}
-                                        variant="subtitle2"
-                                    >
-                                        Comprar ativos
-                                    </Link>
-                                    <Typography
-                                        color="text.secondary"
-                                        variant="subtitle2"
-                                    >
-                                        Ativos
-                                    </Typography>
-                                </Breadcrumbs>
-                            </Stack>
-                            <Stack
-                                alignItems="center"
-                                direction="row"
-                                spacing={3}
-                            >
-                                <Button
-                                    component={RouterLink}
-                                    href={'/carteira/novo-ativo'}
-                                    startIcon={(
-                                        <SvgIcon>
-                                            <PlusOneOutlined />
-                                        </SvgIcon>
-                                    )}
-                                    variant="contained"
-                                >
-                                    Adicionar novo
-                                </Button>
-                            </Stack>
-                        </Stack>
-                        <Card>
-                            <MeusAtivosSearch onFiltersChange={onFiltersChange} carteiras={carteiras} />
-                            <AtivosTable
-                                onPageChange={onPageChange}
-                                onRowsPerPageChange={onRowsPerPageChange}
-                                page={state.page}
-                                items={state.ativos}
-                                count={state.count}
-                                rowsPerPage={state.rowsPerPage}
-                            />
-                        </Card>
-                    </Stack>
-                </Container>
-            </Box>
-        </Layout>
-    );
+      <Layout>
+        <Box component="main" sx={{ flexGrow: 1, py: 8 }}>
+          <Container maxWidth="xl">
+            <CarteiraEmptyState />
+          </Container>
+        </Box>
+      </Layout>
+    )
+  }
+
+  return (
+    <Layout>
+      <Seo title="Meus Ativos" />
+      <Box component="main" sx={{ flexGrow: 1, py: 4 }}>
+        <Container maxWidth="xl">
+          <Stack spacing={3}>
+            {/* Header */}
+            <Stack direction="row" justifyContent="space-between" alignItems="flex-start" flexWrap="wrap" gap={2}>
+              <Stack spacing={0.5}>
+                <Typography variant="h5" fontWeight={700}>
+                  Meus Ativos
+                </Typography>
+                <Breadcrumbs separator="›" sx={{ fontSize: '0.8rem' }}>
+                  <MuiLink component={NextLink} href="/" color="text.secondary" underline="hover">
+                    Dashboard
+                  </MuiLink>
+                  <MuiLink component={NextLink} href="/carteira" color="text.secondary" underline="hover">
+                    Carteira
+                  </MuiLink>
+                  <Typography variant="body2" color="text.primary">
+                    Meus Ativos
+                  </Typography>
+                </Breadcrumbs>
+              </Stack>
+
+              <Button
+                variant="contained"
+                size="small"
+                startIcon={<SvgIcon fontSize="small"><AddCircleOutline /></SvgIcon>}
+                onClick={() => setDrawerOpen(true)}
+                disabled={carteiras.length === 0}
+              >
+                Adicionar ativo
+              </Button>
+            </Stack>
+
+            {/* Table + Filters */}
+            <Card>
+              <AtivosFilters
+                carteiras={carteiras}
+                onFiltersChange={applyFilter}
+              />
+              <Divider />
+              <AtivosTable
+                ativos={ativos}
+                page={page}
+                totalElements={totalElements}
+                pageSize={pageSize}
+                isLoading={isLoading}
+                onPageChange={changePage}
+                onPageSizeChange={changePageSize}
+                onUpdate={atualizar}
+                onDelete={remover}
+              />
+            </Card>
+          </Stack>
+        </Container>
+      </Box>
+
+      {/* Drawer de add/edit */}
+      <AtivoFormDrawer
+        open={drawerOpen}
+        onClose={() => setDrawerOpen(false)}
+        carteiras={carteiras}
+        onSave={handleSave}
+      />
+    </Layout>
+  )
 }
