@@ -13,6 +13,7 @@ import {
 import { useRouter } from 'next/router'
 import { useEffect, useMemo } from 'react'
 import Link from 'next/link'
+import { signIn, useSession } from 'next-auth/react'
 import ArrowBackIos from '@mui/icons-material/ArrowBackIos'
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline'
 import AccountBalanceWalletIcon from '@mui/icons-material/AccountBalanceWallet'
@@ -38,6 +39,7 @@ function saldoFromCaixinha(c: { currentBalance?: unknown }) {
 
 export default function CaixinhaHubPage() {
   const router = useRouter()
+  const { status: sessionStatus } = useSession()
   const { user } = useUserAuth()
   const { setCaixinha, caixinha: selected } = useCaixinhaContext()
   const { caixinhas, isLoading: loadingMinhas } = useMinhasCaixinhas()
@@ -63,7 +65,7 @@ export default function CaixinhaHubPage() {
     }
   }, [error, router])
 
-  if (!router.isReady || loadingMinhas) {
+  if (!router.isReady || sessionStatus === 'loading') {
     return (
       <Layout>
         <CenteredCircularProgress />
@@ -71,16 +73,47 @@ export default function CaixinhaHubPage() {
     )
   }
 
-  if (!id || !user?.name) {
+  if (sessionStatus === 'unauthenticated') {
     return (
       <Layout>
         <Seo title="Caixinha" />
         <Box sx={{ p: 4, textAlign: 'center' }}>
-          <Typography>Caixinha inválida ou sessão expirada.</Typography>
+          <Typography variant="h6" component="p" gutterBottom>
+            Faça login na plataforma para acessar esta caixinha.
+          </Typography>
+          <Button
+            sx={{ mt: 2, mr: 1 }}
+            variant="contained"
+            onClick={() => void signIn(undefined, { callbackUrl: router.asPath })}
+          >
+            Entrar
+          </Button>
+          <Button sx={{ mt: 2 }} component={Link} href="/" variant="outlined">
+            Início
+          </Button>
+        </Box>
+      </Layout>
+    )
+  }
+
+  if (!id) {
+    return (
+      <Layout>
+        <Seo title="Caixinha" />
+        <Box sx={{ p: 4, textAlign: 'center' }}>
+          <Typography>Caixinha inválida.</Typography>
           <Button sx={{ mt: 2 }} component={Link} href="/" variant="contained">
             Início
           </Button>
         </Box>
+      </Layout>
+    )
+  }
+
+  if (!(user?.name && user?.email) || loadingMinhas) {
+    return (
+      <Layout>
+        <CenteredCircularProgress />
       </Layout>
     )
   }

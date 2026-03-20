@@ -17,7 +17,7 @@ import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { joinABox } from "../api/api.service";
 import { Caixinha } from "@/types/types";
-import { useSession } from "next-auth/react";
+import { signIn, useSession } from "next-auth/react";
 import CenteredCircularProgress from "@/components/CenteredCircularProgress";
 import { toast } from "react-hot-toast";
 import DisplayValorMonetario from "@/components/display-valor-monetario";
@@ -72,6 +72,54 @@ export default function Join() {
                 <Box sx={{ p: 4, textAlign: 'center' }}>
                     <Typography>Caixinha não encontrada.</Typography>
                     <Button sx={{ mt: 2 }} variant="contained" onClick={() => router.back()}>Voltar</Button>
+                </Box>
+            </Layout>
+        )
+
+    if (status === 'loading')
+        return (
+            <Layout>
+                <CenteredCircularProgress />
+            </Layout>
+        )
+
+    if (status === 'unauthenticated')
+        return (
+            <Layout>
+                <Seo title="Participar da caixinha" />
+                <Box
+                    sx={{
+                        flexGrow: 1,
+                        minHeight: '70vh',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        p: 2,
+                    }}
+                >
+                    <Card sx={{ maxWidth: 480, width: '100%', p: 2, borderRadius: 4, boxShadow: 6 }}>
+                        <CardContent>
+                            <Stack spacing={2} alignItems="center" textAlign="center">
+                                <Typography variant="h6">
+                                    Faça login na plataforma para participar desta caixinha.
+                                </Typography>
+                                <Typography color="text.secondary" variant="body2">
+                                    {box.name}
+                                </Typography>
+                                <Stack direction="row" spacing={2} justifyContent="center" sx={{ pt: 1 }}>
+                                    <Button variant="outlined" onClick={() => router.back()}>
+                                        Voltar
+                                    </Button>
+                                    <Button
+                                        variant="contained"
+                                        onClick={() => void signIn(undefined, { callbackUrl: router.asPath })}
+                                    >
+                                        Entrar
+                                    </Button>
+                                </Stack>
+                            </Stack>
+                        </CardContent>
+                    </Card>
                 </Box>
             </Layout>
         )

@@ -4,6 +4,15 @@ const nextConfig = {
   typescript: {
     ignoreBuildErrors: true,
   },
+  images: {
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'flagcdn.com',
+        pathname: '/**',
+      },
+    ],
+  },
 }
 
 module.exports = nextConfig

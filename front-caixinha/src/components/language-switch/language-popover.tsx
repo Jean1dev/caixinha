@@ -7,17 +7,16 @@ import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import MenuItem from '@mui/material/MenuItem';
 import Popover from '@mui/material/Popover';
-import Typography from '@mui/material/Typography';
 import { useTranslation } from 'react-i18next';
 
-const languageOptions: { [key: string]: { icon: string, label: string } } = {
+const languageOptions: Record<string, { icon: string; label: string }> = {
     en: {
-        icon: 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a9/Flag_of_the_United_States_%28DoS_ECA_Color_Standard%29.svg/640px-Flag_of_the_United_States_%28DoS_ECA_Color_Standard%29.svg.png',
-        label: 'English'
+        icon: 'https://flagcdn.com/w80/us.png',
+        label: 'English',
     },
     pt: {
-        icon: 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/05/Flag_of_Brazil.svg/1280px-Flag_of_Brazil.svg.png',
-        label: 'Brazil'
+        icon: 'https://flagcdn.com/w80/br.png',
+        label: 'Brazil',
     },
 };
 
@@ -28,7 +27,7 @@ export const LanguagePopover = (props: any) => {
         open = false,
         ...other
     } = props;
-    const { i18n, t } = useTranslation();
+    const { i18n } = useTranslation();
 
     const handleChange = useCallback(async (language: string) => {
         onClose?.();
@@ -79,11 +78,8 @@ export const LanguagePopover = (props: any) => {
                             </Box>
                         </ListItemIcon>
                         <ListItemText
-                            primary={(
-                                <Typography variant="subtitle2">
-                                    {option.label}
-                                </Typography>
-                            )}
+                            primary={option.label}
+                            primaryTypographyProps={{ variant: 'subtitle2' }}
                         />
                     </MenuItem>
                 );
