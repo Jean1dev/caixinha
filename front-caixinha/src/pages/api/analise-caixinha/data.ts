@@ -6,6 +6,7 @@ const analiseCaixinhaData = {
         evolucaoJuros: 2
     },
     saldoTotal: 102,
+    totalDisponivel: 102,
     totalDepositos: 1600,
     totalEmprestimos: 1100,
     totalJuros: 35.2,

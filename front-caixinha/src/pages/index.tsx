@@ -8,14 +8,15 @@ import { useRouter } from "next/router";
 import Grid from '@mui/material/Unstable_Grid2';
 import { Seo } from "@/components/Seo";
 import { getAleatorio } from "@/utils/utils";
-import { useEffect, useState } from "react";
-import { getUltimoEmprestimoPendente } from "./api/api.service";
+import { useUltimoEmprestimoPendente } from "@/features/caixinha/hooks/useUltimoEmprestimoPendente";
 import { useUserAuth } from "@/hooks/useUserAuth";
 import { Footer } from "@/components/footer";
 import { useTranslation } from "react-i18next";
 import SavingsIcon from '@mui/icons-material/Savings';
 import AccountBalanceWalletIcon from '@mui/icons-material/AccountBalanceWallet';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
+import DashboardIcon from '@mui/icons-material/Dashboard';
+import { useCaixinhaSelect } from '@/hooks/useCaixinhaSelect';
 
 const corAleatoriaCombinada = () => {
   const cores = [
@@ -73,20 +74,9 @@ const Page = () => {
   const settings = useSettings()
   const { t } = useTranslation()
 
-  const [ultimoEmprestimoAtalho, setUltimoEmprestimoAtalho] = useState<any | null>(null)
   const { user } = useUserAuth()
-
-  useEffect(() => {
-    if (user.name === '' || !user) {
-      return
-    }
-    getUltimoEmprestimoPendente(user.name, user.email)
-      .then((response) => {
-        if (response.exists) {
-          setUltimoEmprestimoAtalho(response)
-        }
-      })
-  }, [user])
+  const { resultado: ultimoEmprestimoAtalho } = useUltimoEmprestimoPendente()
+  const { caixinha } = useCaixinhaSelect()
 
   return (
     <Box component="main"
@@ -113,7 +103,7 @@ const Page = () => {
           </Grid>
           <Grid xs={12} md={5}>
             {
-              ultimoEmprestimoAtalho?.exists
+              ultimoEmprestimoAtalho && ultimoEmprestimoAtalho.exists
                 ? (
                   <AtalhoEmprestimo emprestimo={ultimoEmprestimoAtalho.data} />
                 )
@@ -138,6 +128,16 @@ const Page = () => {
                 )
             }
           </Grid>
+          {caixinha?.id ? (
+            <Grid xs={12} md={7}>
+              {card(
+                "Minha caixinha",
+                "Resumo, extrato e atalhos",
+                () => { router.push(`/caixinha/${caixinha.id}`) },
+                <DashboardIcon sx={{ color: 'white', fontSize: 36 }} />
+              )}
+            </Grid>
+          ) : null}
           <Grid xs={12} md={7}>
             {card(
               "Caixinhas",

@@ -10,22 +10,18 @@ import {
     Button
 } from "@mui/material";
 import { Scrollbar } from "../scrollbar";
-import { useCallback, useEffect, useState } from "react";
-import { getMinhasCaixinhas } from "@/pages/api/caixinhas-disponiveis";
+import { useCallback } from "react";
 import { sairDaCaixinha } from "@/pages/api/api.service";
 import toast from "react-hot-toast";
 import { useUserAuth } from "@/hooks/useUserAuth";
 import { useTranslation } from "react-i18next";
+import { useMinhasCaixinhas } from "@/features/caixinha/hooks/useMinhasCaixinhas";
+import { invalidateMinhasCaixinhas } from "@/features/caixinha/api/swr-keys";
 
 export const InformacoesCaixinhas = () => {
-    const [caixinhas, setCaixinhas] = useState([])
+    const { caixinhas, refresh } = useMinhasCaixinhas()
     const { user } = useUserAuth()
     const { t } = useTranslation()
-
-    useEffect(() => {
-        getMinhasCaixinhas(user.name, user.email)
-            .then((c) => setCaixinhas(c))
-    }, [user])
 
     const sair = useCallback((caixinhaID: string) => {
         const resposta = confirm(t('operacao_irreversivel'))
@@ -35,11 +31,12 @@ export const InformacoesCaixinhas = () => {
                 name: user.name,
                 email: user.email
             }).then(() => {
-                alert(t('saiu_caixinha'))
-                window.location.reload()
+                toast.success(t('saiu_caixinha'))
+                invalidateMinhasCaixinhas()
+                refresh()
             }).catch((e) => toast.error(e.message))
         }
-    }, [user, t])
+    }, [user, t, refresh])
 
     return (
         <Card>
@@ -55,10 +52,10 @@ export const InformacoesCaixinhas = () => {
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {caixinhas.map((item: any, index: any) => {
+                        {caixinhas.map((item) => {
 
                             return (
-                                <TableRow key={index}>
+                                <TableRow key={item.id}>
                                     <TableCell>
                                         <Typography variant="subtitle2">
                                             {item.name}

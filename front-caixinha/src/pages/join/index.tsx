@@ -21,8 +21,10 @@ import { useSession } from "next-auth/react";
 import CenteredCircularProgress from "@/components/CenteredCircularProgress";
 import { toast } from "react-hot-toast";
 import DisplayValorMonetario from "@/components/display-valor-monetario";
-import { getCaixinhas } from "../api/caixinhas";
 import { Seo } from "@/components/Seo";
+import { useCaixinhasCatalog } from "@/features/caixinha/hooks/useCaixinhasCatalog";
+import { caixinhaCatalogKey, invalidateMinhasCaixinhas } from "@/features/caixinha/api/swr-keys";
+import { mutate } from "swr";
 import GroupIcon from '@mui/icons-material/Group';
 import MonetizationOnIcon from '@mui/icons-material/MonetizationOn';
 import { useTheme } from '@mui/material/styles';
@@ -30,31 +32,26 @@ import { useTheme } from '@mui/material/styles';
 export default function Join() {
     const theme = useTheme();
     const { status, data } = useSession()
-    const [loading, setLoading] = useState(true)
     const [formData, setFormData] = useState({
         nick: '',
         email: ''
     })
-    const [box, setBox] = useState<Caixinha>({
-        members: [],
-        currentBalance: 0,
-        deposits: [],
-        loans: [],
-        id: ''
-    })
+    const [box, setBox] = useState<Caixinha | null>(null)
     const [submitting, setSubmitting] = useState(false)
 
     const router = useRouter()
+    const { catalog, isLoading: catalogLoading } = useCaixinhasCatalog()
 
     useEffect(() => {
-        getCaixinhas().then(caixinhas => {
-            const box = caixinhas.find(c => c.id == router.query.id)
-            if (box) {
-                setBox(box)
-                setLoading(false)
-            }
-        })
-    }, [router.query.id])
+        if (catalogLoading || !router.isReady) return
+        const id = router.query.id
+        if (typeof id !== 'string') {
+            setBox(null)
+            return
+        }
+        const found = catalog.find((c) => c.id === id)
+        setBox(found ?? null)
+    }, [catalog, catalogLoading, router.isReady, router.query.id])
 
     useEffect(() => {
         if (status === 'authenticated' && data?.user) {
@@ -65,8 +62,19 @@ export default function Join() {
         }
     }, [status, data])
 
-    if (loading)
+    if (catalogLoading || !router.isReady)
         return <CenteredCircularProgress />
+
+    if (!box)
+        return (
+            <Layout>
+                <Seo title="Participar da caixinha" />
+                <Box sx={{ p: 4, textAlign: 'center' }}>
+                    <Typography>Caixinha não encontrada.</Typography>
+                    <Button sx={{ mt: 2 }} variant="contained" onClick={() => router.back()}>Voltar</Button>
+                </Box>
+            </Layout>
+        )
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault()
@@ -77,8 +85,10 @@ export default function Join() {
         }
         setSubmitting(true)
         joinABox(payload).then(() => {
-            alert('Você é um membro dessa caixinha agora')
-            router.back()
+            invalidateMinhasCaixinhas()
+            mutate(caixinhaCatalogKey())
+            toast.success('Você é um membro dessa caixinha agora')
+            router.push(`/caixinha/${box.id}`)
         }).catch(err => {
             toast.error(err.message)
             setSubmitting(false)
@@ -91,9 +101,13 @@ export default function Join() {
     }
 
     const back = () => {
-        setLoading(true)
         router.back()
     }
+
+    const saldoExibicao =
+        typeof box.currentBalance === 'object' && box.currentBalance !== null && 'value' in box.currentBalance
+            ? (box.currentBalance as { value: number }).value
+            : box.currentBalance
 
     return (
         <Layout>
@@ -124,14 +138,14 @@ export default function Join() {
                                 <Stack direction="row" alignItems="center" spacing={1}>
                                     <GroupIcon color="action" />
                                     <Typography variant="subtitle1">
-                                        {box.members.length} membros
+                                        {(box.members ?? []).length} membros
                                     </Typography>
                                 </Stack>
                                 <Stack direction="row" alignItems="center" spacing={1}>
                                     <MonetizationOnIcon color="action" />
                                     <Typography variant="subtitle1">
                                         <DisplayValorMonetario>
-                                            {box.currentBalance.value}
+                                            {saldoExibicao as number}
                                         </DisplayValorMonetario>
                                     </Typography>
                                 </Stack>

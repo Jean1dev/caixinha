@@ -125,12 +125,7 @@ export const MeuEmprestimosListTable = (props: any) => {
     const router = useRouter()
 
     const goToDetalhesEmprestimo = (item: LoansForApprove) => {
-        router.push({
-            pathname: 'detalhes-emprestimo',
-            query: {
-                uid: item.uid
-            }
-        })
+        router.push(`/detalhes-emprestimo/${item.uid}`)
     }
 
     let content;

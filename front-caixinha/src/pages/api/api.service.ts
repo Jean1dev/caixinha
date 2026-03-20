@@ -23,13 +23,14 @@ const http = axios.create({
 http.interceptors.response.use((response) => {
     return response
 }, (error) => {
-    console.log(error.response?.data);
-    if (error.response) {
-        debugger
-        throw new Error(error.response.data.message)
+    if (process.env.NODE_ENV === 'development') {
+        console.warn('[http]', error.response?.data ?? error.message)
     }
-
-    throw error
+    if (error.response) {
+        const msg = error.response.data?.message
+        throw new Error(typeof msg === 'string' ? msg : 'Erro na requisição')
+    }
+    throw error instanceof Error ? error : new Error('Erro na requisição')
 })
 
 const state = {
@@ -106,7 +107,7 @@ export async function asyncGetWithParamethers(url: string, params: any) {
             return response.data
         }
 
-        debugger
+        throw new Error('Resposta inválida')
     } catch (error) {
         throw error
     }
@@ -124,290 +125,33 @@ export async function asyncFetch(url: string, method: string, body?: any): Promi
             return response.data
         }
 
-        debugger
+        throw new Error('Resposta inválida')
     } catch (error) {
         throw error
     }
 }
 
-export async function aprovarEmprestimo(payload: any): Promise<any> {
-    if (dev) {
-        return retornaComAtraso(true)
-    }
-
-    return asyncFetch(`${BASE_URL}/aprovar-emprestimo`, 'POST', payload)
-}
-
-export async function doEmprestimo(params: any) {
-    if (dev) {
-        return retornaComAtraso(true)
-    }
-
-    return asyncFetch(`${BASE_URL}/emprestimo?code=ZE1oGnOPHdf4QtEvPpILx97EPHvdjmpw9wbE9P4bvmr6AzFuIbaQtQ==`,
-        'POST',
-        JSON.stringify(params))
-}
-
-export async function doDeposito(params: any) {
-    debugger
-    if (dev) {
-        return retornaComAtraso(true)
-    }
-
-    return asyncFetch(`${BASE_URL}/deposito`,
-        'POST',
-        JSON.stringify(params))
-}
-
-export async function joinABox(params: any) {
-    if (dev) {
-        return retornaComAtraso(true)
-    }
-
-    return asyncFetch(`${BASE_URL}/user-join-caixinha`,
-        'POST',
-        JSON.stringify(params))
-}
-
-export async function pagarEmprestimo(params: any) {
-    if (dev) {
-        return retornaComAtraso(true)
-    }
-
-    return asyncFetch(`${BASE_URL}/pagamento-emprestimo`,
-        'POST',
-        params)
-}
-
-export async function recusarEmprestimo(payload: any) {
-    if (dev) {
-        return retornaComAtraso(true)
-    }
-
-    return asyncFetch(`${BASE_URL}/recusar-emprestimo`,
-        'POST',
-        payload)
-}
-
-export async function removerEmprestimo(payload: any) {
-    if (dev) {
-        return retornaComAtraso(true)
-    }
-
-    return asyncFetch(`${BASE_URL}/remover-emprestimo`,
-        'POST',
-        payload)
-}
-
-export async function getValorParcelas(params: any) {
-    if (dev) {
-        return retornaComAtraso([
-            {
-                "value": 2.58
-            },
-            {
-                "value": 2.58
-            }
-        ])
-    }
-
-    return asyncFetch(`${BASE_URL}/calcular-parcelas`,
-        'POST',
-        params
-    )
-}
-
-export async function getChavesPix(caixinhaID: string) {
-    if (dev) {
-        return retornaComAtraso({
-            "keysPix": [
-                "fe52da16-71c9-47f6-9daa-2e89034f97b0"
-            ],
-            "urlsQrCodePix": [
-                "https://www.imgonline.com.ua/examples/qr-code.png"
-            ]
-        })
-    }
-
-    return asyncFetch(`${BASE_URL}/get-chaves-pix?caixinhaId=${caixinhaID}`, 'GET')
-}
-
-export async function getExtrato(params: any) {
-    if (dev) {
-        return retornaComAtraso([
-            {
-                "id": "64765f0bf72fe795ddd61c34",
-                "tipo": "DEPOSITO",
-                "valor": 25,
-                "nick": "jean",
-                "status": "completed",
-                "date": "30/05/2023"
-            },
-            {
-                "id": "64766bc201dd4e6d382db357",
-                "tipo": "DEPOSITO",
-                "valor": 25.89,
-                "nick": "jean",
-                "status": "completed",
-                "date": "30/05/2023"
-            }
-        ])
-    }
-
-    return asyncGetWithParamethers(`${BASE_URL}/get-extrato`, params)
-}
-
-export async function updatePerfil(body: any) {
-    if (dev) {
-        return retornaComAtraso(true)
-    }
-
-    return asyncFetch(`${BASE_URL}/update-profile-member`, 'POST', body)
-}
-
-export async function getMeusPagamentos(uid: string) {
-    if (dev) {
-        return retornaComAtraso([
-            {
-                caixinha: 'caixinha',
-                description: 'description',
-                value: 25,
-                date: '30/05/2023'
-            }
-        ])
-    }
-
-    return asyncGetWithParamethers(`${BASE_URL}/get-meus-pagamentos`, { uid })
-}
-
-export async function getEmprestimo(uid: string) {
-    if (dev) {
-        return retornaComAtraso({
-            "requiredNumberOfApprovals": 1,
-            "description": "sera que foi mesmo?",
-            "approvals": 1,
-            "interest": 3,
-            "fees": 0,
-            "valueRequested": 5,
-            "date": "17/07/2023",
-            "totalValue": 5.15,
-            "approved": true,
-            "uid": "044b0dd2-a21f-4b6f-b0f1-f93865e0ead0",
-            "memberName": "Jeanluca FP",
-            "parcelas": 0,
-            "billingDates": [
-                {
-                    "valor": 14.80,
-                    "data": "16/08/2023"
-                },
-                {
-                    "valor": 14.80,
-                    "data": "16/08/2023"
-                }
-            ]
-        })
-    }
-
-    return asyncGetWithParamethers(`${BASE_URL}/get-emprestimo`, { uid })
-}
-
-export async function getUltimoEmprestimoPendente(name: string, email: string) {
-    if (dev) {
-        const exists = new Date().getMinutes() % 2 === 0 ? true : false
-        return retornaComAtraso({
-            "exists": exists,
-            "data": {
-                "_id": "6525c854c1f42464218bef74",
-                "approved": true,
-                "member": {
-                    "name": "Jeanluca FP",
-                    "email": "jeanlucafp@gmail.com"
-                },
-                "date": "2023-10-10T21:55:32.544Z",
-                "valueRequested": {
-                    "value": 50
-                },
-                "fees": {
-                    "value": 0
-                },
-                "interest": {
-                    "value": 1
-                },
-                "box": null,
-                "approvals": 1,
-                "description": "Preciso para pagar o Arnaldo",
-                "payments": [],
-                "uid": "068c8030-4f1a-4568-a8f0-38497dbd9da2",
-                "installments": 0,
-                "memberName": "Jeanluca FP",
-                "requiredNumberOfApprovals": 6,
-                "listOfMembersWhoHaveAlreadyApproved": [
-                    {
-                        "name": "Jeanluca FP",
-                        "email": "jeanlucafp@gmail.com"
-                    }
-                ],
-                "billingDates": [
-                    "2023-11-09T21:55:32.544Z"
-                ],
-                "totalValue": {
-                    "value": 50.5
-                },
-                "boxId": "646f538de5cd54cc6344ec69"
-            }
-        })
-    }
-
-    return asyncGetWithParamethers(`${BASE_URL}/get-ultimo-emprestimo-pendente`, { name, email })
-}
-
-export async function sairDaCaixinha(body: any) {
-    if (dev) {
-        return retornaComAtraso(true)
-    }
-
-    return asyncFetch(`${BASE_URL}/remover-membro`, 'POST', body)
-}
-
-export interface IGerarLinkPagamentoBody {
-    name: string
-    email: string
-    valor?: number
-    pix?: string
-}
-
-export async function gerarLinkDePagamento(body: IGerarLinkPagamentoBody) {
-    if (dev) {
-        return retornaComAtraso(true)
-    }
-
-    return asyncFetch(`${BASE_URL}/gerar-link-pagamento`, 'POST', body)
-}
-
-export async function solicitarRenegociacao(body: any) {
-    if (dev) {
-        return retornaComAtraso({
-            sugestao: {
-                installmentOptions: [1, 2, 3, 4, 5],
-                newInterestRate: 3.2,
-                reason: `string`,
-                newTotalValue: 25,
-                id: `string`
-            },
-            renegId: 'id-renegociacao'
-        })
-    }
-
-    return asyncFetch(`${BASE_URL}/solicitar-renegociacao`, 'POST', body)
-}
-
-export async function aceitarRenegociacao(body: any) {
-    if (dev) {
-        return retornaComAtraso(true)
-    }
-
-    return asyncFetch(`${BASE_URL}/renegociar`, 'POST', body)
-}
+export type { IGerarLinkPagamentoBody } from '@/features/caixinha/api/caixinha.types'
+export {
+    aprovarEmprestimo,
+    doEmprestimo,
+    doDeposito,
+    joinABox,
+    pagarEmprestimo,
+    recusarEmprestimo,
+    removerEmprestimo,
+    getValorParcelas,
+    getChavesPix,
+    getExtrato,
+    updatePerfil,
+    getMeusPagamentos,
+    getEmprestimo,
+    getUltimoEmprestimoPendente,
+    sairDaCaixinha,
+    gerarLinkDePagamento,
+    solicitarRenegociacao,
+    aceitarRenegociacao,
+} from '@/features/caixinha/api/caixinha.api'
 
 export async function getPostInfo(postId: string) {
     if (dev) {

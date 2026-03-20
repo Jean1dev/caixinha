@@ -1,4 +1,4 @@
-import React, { useCallback, useRef } from 'react';
+import React, { useCallback } from 'react';
 import Drawer from '@mui/material/Drawer';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import IconButton from '@mui/material/IconButton';
@@ -22,16 +22,17 @@ export const EmprestimosFiltros = (props: any) => {
         open,
         ...other
     } = props;
-    const queryRef = useRef<any>(null);
     const lgUp = useMediaQuery((theme: any) => theme.breakpoints.up('lg'));
 
-    const handleQueryChange = useCallback((event: React.ChangeEvent<HTMLFormElement>) => {
-        event.preventDefault();
-        onFiltersChange?.({
-            ...filters,
-            query: queryRef.current?.value || ''
-        });
-    }, [filters, onFiltersChange]);
+    const handleQueryChange = useCallback(
+        (event: React.ChangeEvent<HTMLInputElement>) => {
+            onFiltersChange?.({
+                ...filters,
+                query: event.target.value,
+            });
+        },
+        [filters, onFiltersChange]
+    );
 
 
     const content = (
@@ -57,21 +58,19 @@ export const EmprestimosFiltros = (props: any) => {
                 spacing={3}
                 sx={{ p: 3 }}
             >
-                <form onSubmit={handleQueryChange}>
-                    <OutlinedInput
-                        defaultValue=""
-                        fullWidth
-                        inputProps={{ ref: queryRef }}
-                        placeholder="Numero do emprestimo"
-                        startAdornment={(
-                            <InputAdornment position="start">
-                                <SvgIcon>
-                                    <Search />
-                                </SvgIcon>
-                            </InputAdornment>
-                        )}
-                    />
-                </form>
+                <OutlinedInput
+                    value={filters.query ?? ''}
+                    fullWidth
+                    onChange={handleQueryChange}
+                    placeholder="Numero do emprestimo"
+                    startAdornment={(
+                        <InputAdornment position="start">
+                            <SvgIcon>
+                                <Search />
+                            </SvgIcon>
+                        </InputAdornment>
+                    )}
+                />
                 {/* <div>
                     <FormLabel
                         sx={{

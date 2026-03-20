@@ -1,5 +1,5 @@
 import { useUserAuth } from "@/hooks/useUserAuth"
-import { getUltimoEmprestimoPendente } from "@/pages/api/api.service"
+import { useUltimoEmprestimoPendente } from "@/features/caixinha/hooks/useUltimoEmprestimoPendente"
 import {
     Button,
     Card,
@@ -10,7 +10,7 @@ import {
     Box,
     Chip
 } from "@mui/material"
-import { useState, useEffect } from "react"
+import { useMemo } from "react"
 import { useTranslation } from "react-i18next"
 import { useTheme } from "@mui/material/styles"
 import AccountBalanceWalletIcon from '@mui/icons-material/AccountBalanceWallet'
@@ -28,28 +28,22 @@ function extractData(data: string[] | null) {
     return ''
 }
 
-export const ListarEmprestimosParaRenegociar = ({ verProposta }: any) => {
-    const [ultimoEmprestimoAtalho, setUltimoEmprestimoAtalho] = useState<any | null>(null)
-    const [loading, setLoading] = useState(true)
+export const ListarEmprestimosParaRenegociar = ({
+    verProposta,
+    solicitando = false,
+}: {
+    verProposta: (uid: string) => void
+    solicitando?: boolean
+}) => {
     const { user } = useUserAuth()
     const { t } = useTranslation()
     const theme = useTheme()
+    const { resultado: ultimoEmprestimoAtalho, isLoading } = useUltimoEmprestimoPendente()
 
-    useEffect(() => {
-        if (user.name === '' || !user) {
-            setLoading(false)
-            return
-        }
-
-        getUltimoEmprestimoPendente(user.name, user.email)
-            .then((response) => {
-                setUltimoEmprestimoAtalho(response)
-            })
-            .finally(() => {
-                setLoading(false)
-            })
-    }, [user])
-
+    const loading = useMemo(
+        () => isLoading && Boolean(user?.name),
+        [isLoading, user?.name]
+    )
 
     if (loading) {
         return (
@@ -279,6 +273,7 @@ export const ListarEmprestimosParaRenegociar = ({ verProposta }: any) => {
                                         <Button
                                             variant="contained"
                                             color="primary"
+                                            disabled={solicitando}
                                             startIcon={<TrendingUpIcon />}
                                             onClick={() => verProposta(ultimoEmprestimoAtalho?.data?.uid)}
                                             sx={{

@@ -1,10 +1,11 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import Button from '@mui/material/Button';
 import Divider from '@mui/material/Divider';
 import Stack from '@mui/material/Stack';
 import SvgIcon from '@mui/material/SvgIcon';
 import Typography from '@mui/material/Typography';
-import { Box } from '@mui/material';
+import { Box, useMediaQuery } from '@mui/material';
+import { useTheme } from '@mui/material/styles';
 import { Filter, PlusOneOutlined } from '@mui/icons-material';
 import Layout from '@/components/Layout';
 import { EmprestimosFiltros } from '@/components/meus-emprestimos/filtros';
@@ -12,29 +13,32 @@ import { MeusEmprestmosListContainer } from '@/components/meus-emprestimos/meu-e
 import { MeusEmprestimosListSummary } from '@/components/meus-emprestimos/meus-emprestimos-list-summary';
 import { MeuEmprestimosListTable } from '@/components/meus-emprestimos/meus-emprestimos-table';
 import { useRouter } from 'next/router';
-import { useSession } from 'next-auth/react';
-import { IMeusEmprestimos } from '@/types/types';
 import CenteredCircularProgress from '@/components/CenteredCircularProgress';
-import { getMeusEmprestimos } from '../api/meus-emprestimos';
+import { useMeusEmprestimos } from '@/features/caixinha/hooks/useMeusEmprestimos';
+import { filterMeusEmprestimos } from '@/features/caixinha/utils/filter-meus-emprestimos';
 
 export default function MeusEmprestimos() {
     const router = useRouter()
+    const theme = useTheme()
     const rootRef = useRef(null);
+    const { items, isLoading, error } = useMeusEmprestimos()
 
-    const emptyItems: IMeusEmprestimos = {
-        caixinhas: [],
-        totalPendente: 0,
-        totalPago: 0,
-        totalGeral: 0
-    }
-    const [items, setItems] = useState<IMeusEmprestimos>(emptyItems)
-    const [loading, setLoading] = useState(true)
-    const { data: session, status } = useSession()
+    const [filters, setFilters] = useState<{ query?: string }>({})
+    const filteredItems = useMemo(
+        () => filterMeusEmprestimos(items, filters.query ?? ''),
+        [items, filters.query]
+    )
 
     const [group, setGroup] = useState(true);
 
-    const lgUp = false
-    const [openSidebar, setOpenSidebar] = useState(lgUp);
+    const lgUp = useMediaQuery(theme.breakpoints.up('lg'))
+    const [openSidebar, setOpenSidebar] = useState(false)
+
+    useEffect(() => {
+        if (lgUp) {
+            setOpenSidebar(true)
+        }
+    }, [lgUp])
 
     const handleGroupChange = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
         setGroup(event.target.checked);
@@ -49,22 +53,12 @@ export default function MeusEmprestimos() {
     }, []);
 
     useEffect(() => {
-        if (status === 'loading') {
-            return
+        if (error) {
+            router.push('/error')
         }
-        if (!session?.user?.name) {
-            setItems(emptyItems)
-            setLoading(false)
-            return
-        }
-        setLoading(true)
-        getMeusEmprestimos({ name: session.user.name, email: session?.user?.email }).then((data: IMeusEmprestimos) => {
-            setItems(data)
-            setLoading(false)
-        }).catch(() => router.push('error'))
-    }, [session, status, router])
+    }, [error, router])
 
-    if (loading) {
+    if (isLoading) {
         return <CenteredCircularProgress/>
     }
 
@@ -94,9 +88,9 @@ export default function MeusEmprestimos() {
 
                     <EmprestimosFiltros
                         container={rootRef.current}
-                        filters={{}}
+                        filters={filters}
                         group={group}
-                        onFiltersChange={() => {}}
+                        onFiltersChange={setFilters}
                         onClose={handleFiltersClose}
                         onGroupChange={handleGroupChange}
                         open={openSidebar}
@@ -147,7 +141,7 @@ export default function MeusEmprestimos() {
                             <MeuEmprestimosListTable
                                 count={0}
                                 group={group}
-                                items={items}
+                                items={filteredItems}
                             />
                         </Stack>
                     </MeusEmprestmosListContainer>

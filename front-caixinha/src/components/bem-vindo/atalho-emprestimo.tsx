@@ -131,7 +131,7 @@ export const AtalhoEmprestimo = (props: any) => {
                     Total = (ValorSolicitado: {emprestimo.valueRequested.value} + Taxas: {emprestimo.fees.value}) *  Juros: {emprestimo.interest.value}
                 </Typography>
                 <Link
-                    href={`https://caixinha-gilt.vercel.app/detalhes-emprestimo?uid=${emprestimo.uid}`}
+                    href={`/detalhes-emprestimo/${emprestimo.uid}`}
                     underline="always"
                     variant="body2"
                 >
