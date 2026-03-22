@@ -1,25 +1,13 @@
-import { useEffect, useState } from "react";
-import { useLocalStorage } from "./useLocalStorage";
-import { Caixinha } from "@/types/types";
+import { useCaixinhaContext } from '@/features/caixinha/context/CaixinhaContext'
+import type { Caixinha } from '@/types/types'
 
 export function useCaixinhaSelect() {
-    const [caixinha, setCaixinha] = useState<Caixinha | null>(null);
-    const [storedCaixinha, setStoredCaixinha] = useLocalStorage<Caixinha | null>("caixinha-select", null);
+  const { caixinha, setCaixinha } = useCaixinhaContext()
 
-    const toggleCaixinha = (caixinha: Caixinha | undefined) => {
-        if (!caixinha)
-            return
+  const toggleCaixinha = (c: Caixinha | undefined) => {
+    if (!c) return
+    setCaixinha(c)
+  }
 
-        setCaixinha(caixinha);
-        setStoredCaixinha(caixinha);
-        window.location.reload();
-    };
-
-    useEffect(() => {
-        if (storedCaixinha) {
-            setCaixinha(storedCaixinha)
-        }
-    }, [storedCaixinha]);
-
-    return { caixinha, toggleCaixinha };
+  return { caixinha, toggleCaixinha }
 }

@@ -1,188 +1,135 @@
-import Layout from "@/components/Layout";
-import { Seo } from "@/components/Seo";
-import { useSettings } from "@/hooks/useSettings";
-import { Box, Container, Stack, Typography, Button, SvgIcon } from "@mui/material";
-import Grid from '@mui/material/Unstable_Grid2';
-import { LowPriority, PlusOne } from "@mui/icons-material";
-import { CarteiraBalanco } from "@/components/carteira/carteira-balanco";
-import { CriarCarteiraNova } from "@/components/carteira/criar-nova-carteira";
-import NextLink from 'next/link';
-import { useCallback, useEffect, useState } from "react";
-import { consolidar, getMinhasCarteiras } from "../api/api.carteira";
-import { useSession } from "next-auth/react";
-import { MinhasCarteirasList } from "@/components/carteira/minhas-carteiras-list";
-import { ResumoMercado } from "@/components/carteira/resumo-mercado";
-import toast from "react-hot-toast";
-import { InfiteSlideDisplayAcoes } from "@/components/carteira/infinite-slide";
+import { useState } from 'react'
+import Box from '@mui/material/Box'
+import Container from '@mui/material/Container'
+import Grid from '@mui/material/Unstable_Grid2'
+import Stack from '@mui/material/Stack'
+import Typography from '@mui/material/Typography'
+import Button from '@mui/material/Button'
+import SvgIcon from '@mui/material/SvgIcon'
+import { AddCircleOutline, AccountBalanceWallet } from '@mui/icons-material'
+import NextLink from 'next/link'
+import Layout from '@/components/Layout'
+import { Seo } from '@/components/Seo'
+import { useSettings } from '@/hooks/useSettings'
+import { useCarteiras } from '@/features/carteira/hooks/useCarteiras'
+import { CarteiraSelector } from '@/features/carteira/components/dashboard/CarteiraSelector'
+import { DistribuicaoChart } from '@/features/carteira/components/dashboard/DistribuicaoChart'
+import { QuotesTicker } from '@/features/carteira/components/dashboard/QuotesTicker'
+import { AporteDrawer } from '@/features/carteira/components/aporte/AporteDrawer'
+import { CarteiraEmptyState } from '@/features/carteira/components/shared/CarteiraEmptyState'
+import { DashboardSkeleton } from '@/features/carteira/components/shared/Skeletons'
+import { ResumoMercado } from '@/components/carteira/resumo-mercado'
 
 export default function Carteira() {
-    const settings = useSettings();
-    const [carteiras, setCarteiras] = useState(null)
-    const data = useSession()
+  const settings = useSettings()
+  const { carteiras, isLoading, consolidarTodas } = useCarteiras()
+  const [selectedCarteiraId, setSelectedCarteiraId] = useState<string | null>(null)
+  const [aporteOpen, setAporteOpen] = useState(false)
 
-    useEffect(() => {
-        getMinhasCarteiras(data.data?.user?.name || '', data.data?.user?.email || '')
-            .then(res => setCarteiras(res))
-    }, [data])
+  const selectedId = selectedCarteiraId ?? carteiras[0]?.id ?? null
 
-    const consolidarCarteiras = useCallback(() => {
-        getMinhasCarteiras(data.data?.user?.name || '', data.data?.user?.email || '')
-            .then(carteiras => {
-                carteiras.forEach((carteira: any) => {
-                    toast.loading(`consolidando carteira ${carteira.nome}`)
-                    consolidar(carteira.id)
-                        .then(() => toast.success(`processo iniciado para ${carteira.nome}`))
-                        .catch(() => toast.error(`nao foi possivel consolidar ${carteira.nome}`))
-                })
-            })
-    }, [data])
+  return (
+    <Layout>
+      <Seo title="Carteira de Investimentos" />
 
-    return (
-        <Layout>
-            <Seo title="Carteira dashboard" />
-            <InfiteSlideDisplayAcoes/>
-            <Box
-                component="main"
-                sx={{
-                    flexGrow: 1,
-                    py: 8
-                }}
-            >
-                <Box
-                    component="main"
-                    sx={{
-                        flexGrow: 1,
-                        py: 4
-                    }}
-                >
-                    <Container maxWidth={settings.stretch ? false : 'xl'}>
-                        <Grid
-                            container
-                            disableEqualOverflow
-                            spacing={{
-                                xs: 3,
-                                lg: 4
-                            }}
-                        >
-                            <Grid xs={12}>
-                                <Stack
-                                    direction="row"
-                                    justifyContent="space-between"
-                                    spacing={4}
-                                >
-                                    <div>
-                                        <Typography variant="h4">
-                                            Overview
-                                        </Typography>
-                                    </div>
-                                    <Stack
-                                        alignItems="center"
-                                        direction="row"
-                                        spacing={2}
-                                    >
-                                        <Button
-                                            onClick={consolidarCarteiras}
-                                            startIcon={(
-                                                <SvgIcon>
-                                                    <LowPriority />
-                                                </SvgIcon>
-                                            )}
-                                            variant="contained"
-                                        >
-                                            Consolidar carteiras
-                                        </Button>
-                                        <Button
-                                            LinkComponent={NextLink}
-                                            href="/carteira/nova-carteira"
-                                            startIcon={(
-                                                <SvgIcon>
-                                                    <PlusOne />
-                                                </SvgIcon>
-                                            )}
-                                            variant="contained"
-                                        >
-                                            Adicionar Carteira
-                                        </Button>
-                                    </Stack>
-                                </Stack>
-                            </Grid>
-                        </Grid>
-                    </Container>
-                </Box>
+      {/* Ticker de cotações */}
+      <QuotesTicker />
+
+      <Box component="main" sx={{ flexGrow: 1, py: 4 }}>
+        <Container maxWidth={settings.stretch ? false : 'xl'}>
+
+          {/* Header */}
+          <Stack
+            direction="row"
+            justifyContent="space-between"
+            alignItems="center"
+            sx={{ mb: 3 }}
+            flexWrap="wrap"
+            gap={2}
+          >
+            <Stack direction="row" alignItems="center" spacing={1.5}>
+              <SvgIcon color="primary" sx={{ fontSize: 32 }}>
+                <AccountBalanceWallet />
+              </SvgIcon>
+              <Box>
+                <Typography variant="h5" fontWeight={700}>
+                  Carteira de Investimentos
+                </Typography>
+                <Typography variant="body2" color="text.secondary">
+                  Acompanhe e gerencie seus ativos
+                </Typography>
+              </Box>
+            </Stack>
+
+            <Stack direction="row" spacing={1.5} flexWrap="wrap" gap={1}>
+              <Button
+                variant="outlined"
+                size="small"
+                onClick={() => setAporteOpen(true)}
+                disabled={carteiras.length === 0}
+              >
+                Novo Aporte
+              </Button>
+              <Button
+                component={NextLink}
+                href="/carteira/meus-ativos"
+                variant="outlined"
+                size="small"
+              >
+                Meus Ativos
+              </Button>
+              <Button
+                component={NextLink}
+                href="/carteira/nova-carteira"
+                variant="contained"
+                size="small"
+                startIcon={<SvgIcon fontSize="small"><AddCircleOutline /></SvgIcon>}
+              >
+                Nova Carteira
+              </Button>
+            </Stack>
+          </Stack>
+
+          {/* Body */}
+          {isLoading ? (
+            <DashboardSkeleton />
+          ) : carteiras.length === 0 ? (
+            <CarteiraEmptyState />
+          ) : (
+            <Grid container spacing={3}>
+              {/* Seletor de carteiras */}
+              <Grid xs={12} md={3}>
+                <CarteiraSelector
+                  carteiras={carteiras}
+                  selectedId={selectedId}
+                  onSelect={setSelectedCarteiraId}
+                  onConsolidar={consolidarTodas}
+                />
+              </Grid>
+
+              {/* Gráfico de distribuição */}
+              <Grid xs={12} md={5}>
+                <DistribuicaoChart carteiraId={selectedId} />
+              </Grid>
+
+              {/* Resumo do mercado */}
+              <Grid xs={12} md={4}>
                 <ResumoMercado />
-                {/* <TradingView/> */}
+              </Grid>
+            </Grid>
+          )}
+        </Container>
+      </Box>
 
-                <Container maxWidth={settings.stretch ? false : 'xl'}>
-
-                    <Grid
-                        xs={12}
-                        md={7}
-                    >
-                        {/* <ResumoMercado /> */}
-
-                        {/* <Stack
-                                direction="row"
-                                spacing={12}
-                            >
-                                
-                                
-                                
-                            </Stack> */}
-                    </Grid>
-                    <Grid
-                        xs={12}
-                        md={5}
-                    >
-                        {!carteiras && <CriarCarteiraNova />}
-                        {/* <CryptoCards
-                                cards={[
-                                    {
-                                        id: '79f8212e4245e4c11952f2cf',
-                                        brand: 'Mastercard',
-                                        cardNumber: '5823 4492 2385 1102',
-                                        expiryDate: '05/28',
-                                        holderName: 'John Carter'
-                                    },
-                                    {
-                                        id: '99f231b1c079b810ba66bef1',
-                                        brand: 'VISA',
-                                        cardNumber: '3455 4562 7710 3507',
-                                        expiryDate: '02/30',
-                                        holderName: 'John Carter'
-                                    }
-                                ]}
-                            /> */}
-                    </Grid>
-                    <Grid
-                        xs={12}
-                        md={8}
-                    >
-                        <Stack
-                            spacing={{
-                                xs: 3,
-                                lg: 4
-                            }}
-                        >
-                            <CarteiraBalanco carteiras={carteiras || []} />
-                            <MinhasCarteirasList carteiras={carteiras || []} />
-                        </Stack>
-                    </Grid>
-                    <Grid
-                        xs={12}
-                        md={4}
-                    >
-                        <Stack
-                            spacing={{
-                                xs: 3,
-                                lg: 4
-                            }}
-                        >
-                            {/* <CryptoOperation />
-                                <CryptoUpgrade /> */}
-                        </Stack>
-                    </Grid>
-                </Container>
-            </Box>
-        </Layout>
-    )
+      {/* Drawer de aporte */}
+      {carteiras.length > 0 && (
+        <AporteDrawer
+          open={aporteOpen}
+          onClose={() => setAporteOpen(false)}
+          carteiras={carteiras}
+          defaultCarteiraId={selectedId ?? undefined}
+        />
+      )}
+    </Layout>
+  )
 }

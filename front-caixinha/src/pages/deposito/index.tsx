@@ -15,6 +15,7 @@ import {
     SvgIcon,
     Typography,
     useTheme,
+    CircularProgress,
 } from "@mui/material"
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import CheckIcon from '@mui/icons-material/Check';
@@ -35,6 +36,7 @@ export default function Deposito() {
     const router = useRouter()
     const theme = useTheme()
     const [isLoading, setLoading] = useState(false)
+    const [uploadingName, setUploadingName] = useState<string | null>(null)
     const [arquivos, setArquivo] = useState<any>([])
     const [pix, setPix] = useState<any>(null)
     const [solicitacao, setSolicitacao] = useState({
@@ -57,7 +59,7 @@ export default function Deposito() {
             return
 
         getBuckets()
-        toast.loading('Carregando informacoes da chave pix')
+        const pixToast = toast.loading('Carregando informacoes da chave pix')
         getChavesPix(caixinha.id).then(res => {
             if (res) {
                 setPix({
@@ -65,6 +67,10 @@ export default function Deposito() {
                     url: res.urlsQrCodePix[0]
                 })
             }
+            toast.dismiss(pixToast)
+        }).catch(() => {
+            toast.dismiss(pixToast)
+            toast.error('Não foi possível carregar o PIX')
         })
     }, [caixinha])
 
@@ -104,15 +110,17 @@ export default function Deposito() {
     }
 
     const uploadItem = (resource: any) => {
-        toast.loading('enviando arquivo aguarde')
-
+        setUploadingName(resource.name)
+        const tid = toast.loading('Enviando arquivo…')
         uploadResource(resource.file).then((fileUrl: string) => {
-            toast.success('Upload realizado')
+            toast.success('Upload realizado', { id: tid })
             const novaLista = arquivos.filter((it: { name: any; }) => it.name !== resource.name)
             novaLista.push({ file: resource, name: resource.name, status: 'success' })
             setArquivo(novaLista)
             setSolicitacao({ ...solicitacao, fileUrl })
-        }).catch(e => toast.error(e.message))
+        }).catch(e => {
+            toast.error(e.message, { id: tid })
+        }).finally(() => setUploadingName(null))
     }
 
     const getChipByItem = (item: any) => {
@@ -131,13 +139,15 @@ export default function Deposito() {
             )
         }
 
+        const uploading = uploadingName === item?.name
         return (
             <Chip 
                 key={item.index} 
                 label={item?.name} 
                 variant="outlined" 
-                onDelete={() => { uploadItem(item) }} 
-                deleteIcon={<CloudUploadIcon />}
+                onDelete={uploading ? undefined : () => { uploadItem(item) }} 
+                deleteIcon={uploading ? <CircularProgress size={16} color="inherit" /> : <CloudUploadIcon />}
+                disabled={uploading}
                 sx={{ m: 0.5 }}
             />
         )

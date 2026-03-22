@@ -17,8 +17,9 @@ import { aceitarRenegociacao } from "@/pages/api/api.service"
 import { useRouter } from "next/router"
 import { useTranslation } from "react-i18next"
 import { useTheme } from "@mui/material/styles"
+import type { SolicitarRenegociacaoResponse } from "@/features/caixinha/api/caixinha.types"
 
-export const PropostaRenegociacao = (props: any) => {
+export const PropostaRenegociacao = (props: { renegociacao: SolicitarRenegociacaoResponse }) => {
     const { renegociacao } = props
     const [parcelamento, setParcelamento] = useState(1)
     const [loading, setLoading] = useState(false)
@@ -50,7 +51,7 @@ export const PropostaRenegociacao = (props: any) => {
             valorProposta: renegociacao.sugestao.newTotalValue,
             parcelas: parcelamento
         })
-        .then(() => router.push('sucesso'))
+        .then(() => router.push('/sucesso'))
         .finally(() => setLoading(false))
     }, [parcelamento, renegociacao, router])
 

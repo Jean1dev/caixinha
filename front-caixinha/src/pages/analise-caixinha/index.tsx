@@ -1,38 +1,28 @@
 import { Box, Button, Card, CardContent, Container, Unstable_Grid2 as Grid, Typography } from '@mui/material';
+import Link from 'next/link';
 import { CardTotal } from '../../components/analise-caixinha/card-total';
 import { GraficoPizzaMembros } from '../../components/analise-caixinha/grafico-pizza-membros';
 import { UltimasMovimentacoes } from '@/components/analise-caixinha/ultimas-movimentacoes';
 import Layout from '@/components/Layout';
 import { useRouter } from 'next/router';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import CenteredCircularProgress from '@/components/CenteredCircularProgress';
 import { EvolucaoPatrimonial } from '@/components/analise-caixinha/evolucao-patrimonial';
 import { Participantes } from '@/components/analise-caixinha/participantes';
-import { getDadosAnaliseCaixinha } from '../api/analise-caixinha';
 import { VerifiedUserSharp, SavingsRounded, AccountBalance, AccountBalanceWallet } from '@mui/icons-material';
+import { useAnaliseCaixinha } from '@/features/caixinha/hooks/useAnaliseCaixinha';
 
 export default function AnaliseCaixinha() {
     const router = useRouter()
-    const [state, setState] = useState<any>({
-        data: null,
-        loading: true
-    })
+    const unique =
+        router.isReady && typeof router.query.unique === 'string' ? router.query.unique : null
+    const { dados, isLoading, error } = useAnaliseCaixinha(unique)
 
     useEffect(() => {
-        const { unique } = router.query
-        if (!unique)
-            return
-
-        getDadosAnaliseCaixinha(unique as string).then(response => {
-            setState({
-                loading: false,
-                data: response
-            })
-        }).catch(() => {
-            router.push('error')
-        })
-
-    }, [router])
+        if (error) {
+            router.push('/error')
+        }
+    }, [error, router])
 
     const join = () => {
         router.push({
@@ -48,9 +38,13 @@ export default function AnaliseCaixinha() {
         })
     }
 
-    if (state.loading) {
+    const hubId = typeof router.query.unique === 'string' ? router.query.unique : null
+
+    if (!router.isReady || isLoading || !dados) {
         return <CenteredCircularProgress />
     }
+
+    const state = { data: dados as Record<string, any> }
 
     return (
         <Layout>
@@ -176,7 +170,7 @@ export default function AnaliseCaixinha() {
                         <Typography variant="h6">Gostou? que tal participar dessa caixinha</Typography>
                     </Box>
 
-                    <Box display="flex" sx={{ my: 2 }} gap={2}>
+                    <Box display="flex" sx={{ my: 2 }} gap={2} flexWrap="wrap">
                         <Button
                             onClick={() => router.back()}
                             color="secondary"
@@ -184,6 +178,15 @@ export default function AnaliseCaixinha() {
                         >
                             Voltar
                         </Button>
+                        {hubId ? (
+                            <Button
+                                component={Link}
+                                href={`/caixinha/${hubId}`}
+                                variant="outlined"
+                            >
+                                Painel da caixinha
+                            </Button>
+                        ) : null}
                         <Button
                             onClick={join}
                             color="primary"

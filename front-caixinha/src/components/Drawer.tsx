@@ -24,8 +24,10 @@ import {
     AccountBalanceWallet,
     EmojiEvents,
     ChatBubble,
+    Dashboard,
 } from '@mui/icons-material';
 import { Chip, Link } from '@mui/material';
+import { useCaixinhaSelect } from '@/hooks/useCaixinhaSelect';
 
 const drawerWidth = 340;
 
@@ -141,6 +143,7 @@ export default function MiniDrawer(props: any) {
         handleDrawerClose,
     } = props
     const theme = useTheme()
+    const { caixinha } = useCaixinhaSelect()
 
     return (
         <Drawer
@@ -163,6 +166,31 @@ export default function MiniDrawer(props: any) {
             </DrawerHeader>
             <Divider />
             <List>
+                {caixinha?.id ? (
+                    <ListItem disablePadding sx={{ display: 'block' }}>
+                        <ListItemButton
+                            LinkComponent={Link}
+                            href={`/caixinha/${caixinha.id}`}
+                            onClick={handleDrawerClose}
+                            sx={{
+                                minHeight: 48,
+                                justifyContent: open ? 'initial' : 'center',
+                                px: 2.5,
+                            }}
+                        >
+                            <ListItemIcon
+                                sx={{
+                                    minWidth: 0,
+                                    mr: open ? 3 : 'auto',
+                                    justifyContent: 'center',
+                                }}
+                            >
+                                <Dashboard />
+                            </ListItemIcon>
+                            <ListItemText primary="Minha caixinha" sx={{ opacity: open ? 1 : 0 }} />
+                        </ListItemButton>
+                    </ListItem>
+                ) : null}
                 {routes.map((it, index) => (
                     <ListItem key={index} disablePadding sx={{ display: 'block' }}>
                         <ListItemButton

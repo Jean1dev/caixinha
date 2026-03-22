@@ -6,7 +6,11 @@ import {
     Stack,
     Typography,
     Paper,
-    CircularProgress
+    LinearProgress,
+    Stepper,
+    Step,
+    StepLabel,
+    Alert,
 } from "@mui/material";
 import { ListarEmprestimosParaRenegociar } from "@/components/renegociacao/listar-emprestimos-para-renegociar";
 import { useCallback, useState } from "react";
@@ -16,32 +20,49 @@ import { solicitarRenegociacao } from "../api/api.service";
 import toast from "react-hot-toast";
 import { useTranslation } from "react-i18next";
 import { useTheme } from "@mui/material/styles";
+import type { SolicitarRenegociacaoResponse } from "@/features/caixinha/api/caixinha.types";
+
+const TOAST_ID = "reneg-solicitacao";
 
 export default function Renegociacao() {
-    const [renegociacao, setRenegociacao] = useState<any | null>(null)
+    const [renegociacao, setRenegociacao] = useState<SolicitarRenegociacaoResponse | null>(null)
     const [loading, setLoading] = useState(false)
+    const [requestError, setRequestError] = useState<string | null>(null)
+    const [activeStep, setActiveStep] = useState(0)
     const { caixinha } = useCaixinhaSelect()
     const { t } = useTranslation()
     const theme = useTheme()
 
     const verProposta = useCallback((uid: string) => {
+        if (!caixinha?.id) {
+            toast.error(t('renegociacao.erro_solicitacao') || 'Selecione uma caixinha.')
+            return
+        }
+        setRequestError(null)
         setLoading(true)
-        toast.success(t('renegociacao.solicitando_renegociacao'))
+        setActiveStep(1)
+        toast.loading(t('renegociacao.solicitando_renegociacao'), { id: TOAST_ID })
         solicitarRenegociacao({
-            caixinhaId: caixinha?.id,
+            caixinhaId: caixinha.id,
             emprestimoUid: uid
-        }).then(res => {
+        }).then((res) => {
             setRenegociacao(res)
-            toast.success(t('renegociacao.proposta_carregada') || 'Proposta carregada com sucesso!')
-        }).catch(error => {
-            console.error('Erro ao solicitar renegociação:', error)
-            toast.error(t('renegociacao.erro_solicitacao') || 'Erro ao solicitar renegociação. Tente novamente.')
+            setActiveStep(2)
+            toast.success(t('renegociacao.proposta_carregada') || 'Proposta carregada com sucesso!', { id: TOAST_ID })
+        }).catch((error: Error) => {
+            setRequestError(error.message)
+            setActiveStep(0)
+            toast.error(t('renegociacao.erro_solicitacao') || error.message, { id: TOAST_ID })
         }).finally(() => {
             setLoading(false)
         })
-        
     }, [caixinha, t])
 
+    const steps = [
+        t('renegociacao.passo_emprestimo') || 'Empréstimo',
+        t('renegociacao.passo_proposta') || 'Proposta',
+        t('renegociacao.passo_conclusao') || 'Conclusão',
+    ]
 
     return (
         <Layout>
@@ -59,24 +80,8 @@ export default function Renegociacao() {
                 }}
             >
                 <Container maxWidth="lg" sx={{ position: 'relative', zIndex: 1 }}>
-                    <Stack 
-                        spacing={4} 
-                        alignItems="center"
-                        sx={{
-                            animation: 'fadeInUp 0.6s ease-out',
-                            '@keyframes fadeInUp': {
-                                '0%': {
-                                    opacity: 0,
-                                    transform: 'translateY(20px)'
-                                },
-                                '100%': {
-                                    opacity: 1,
-                                    transform: 'translateY(0)'
-                                }
-                            }
-                        }}
-                    >
-                            <Stack spacing={1} alignItems="center">
+                    <Stack spacing={4} alignItems="center">
+                            <Stack spacing={1} alignItems="center" sx={{ width: '100%' }}>
                                 <Typography
                                     color="text.secondary"
                                     variant="overline"
@@ -93,30 +98,26 @@ export default function Renegociacao() {
                                     variant="h3" 
                                     fontWeight={700} 
                                     align="center"
-                                    sx={{ 
-                                        color: 'text.primary',
-                                    }}
+                                    sx={{ color: 'text.primary' }}
                                 >
                                     {t('renegociacao.ultimo_emprestimo')}
                                 </Typography>
+                                <Stepper activeStep={activeStep} alternativeLabel sx={{ width: '100%', maxWidth: 560, mt: 2 }}>
+                                    {steps.map((label) => (
+                                        <Step key={label}>
+                                            <StepLabel>{label}</StepLabel>
+                                        </Step>
+                                    ))}
+                                </Stepper>
                             </Stack>
 
-                            <Box 
-                                sx={{ 
-                                    width: '100%',
-                                    animation: 'slideInUp 0.5s ease-out 0.2s both',
-                                    '@keyframes slideInUp': {
-                                        '0%': {
-                                            opacity: 0,
-                                            transform: 'translateY(30px) scale(0.95)'
-                                        },
-                                        '100%': {
-                                            opacity: 1,
-                                            transform: 'translateY(0) scale(1)'
-                                        }
-                                    }
-                                }}
-                            >
+                            {requestError && activeStep === 0 ? (
+                                <Alert severity="error" sx={{ width: '100%', maxWidth: 560 }} onClose={() => setRequestError(null)}>
+                                    {requestError}
+                                </Alert>
+                            ) : null}
+
+                            <Box sx={{ width: '100%' }}>
                                 <Paper 
                                     elevation={3} 
                                     sx={{ 
@@ -128,84 +129,21 @@ export default function Renegociacao() {
                                     }}
                                 >
                                     <Stack spacing={3}>
-                                        {loading ? (
-                                            <Box
-                                                sx={{
-                                                    display: 'flex',
-                                                    flexDirection: 'column',
-                                                    justifyContent: 'center',
-                                                    alignItems: 'center',
-                                                    py: 6,
-                                                    gap: 2,
-                                                    animation: 'fadeIn 0.3s ease-out',
-                                                    '@keyframes fadeIn': {
-                                                        '0%': { opacity: 0 },
-                                                        '100%': { opacity: 1 }
-                                                    }
-                                                }}
-                                            >
-                                                <CircularProgress 
-                                                    size={48} 
-                                                    thickness={4}
-                                                    sx={{ 
-                                                        color: theme.palette.primary.main,
-                                                        '& .MuiCircularProgress-circle': {
-                                                            strokeLinecap: 'round',
-                                                        }
-                                                    }} 
-                                                />
-                                                <Typography 
-                                                    variant="body1" 
-                                                    sx={{ 
-                                                        fontWeight: 500,
-                                                        color: 'text.secondary'
-                                                    }}
-                                                >
-                                                    {t('renegociacao.carregando_proposta') || 'Carregando proposta...'}
-                                                </Typography>
-                                            </Box>
-                                        ) : (
-                                            <Box
-                                                sx={{
-                                                    animation: 'fadeIn 0.4s ease-out',
-                                                    '@keyframes fadeIn': {
-                                                        '0%': { opacity: 0 },
-                                                        '100%': { opacity: 1 }
-                                                    }
-                                                }}
-                                            >
-                                                <ListarEmprestimosParaRenegociar verProposta={verProposta} />
-                                            </Box>
-                                        )}
+                                        {loading ? <LinearProgress /> : null}
+                                        <ListarEmprestimosParaRenegociar verProposta={verProposta} solicitando={loading} />
                                         
                                         {renegociacao && (
-                                            <Box
-                                                sx={{
-                                                    animation: 'slideInUp 0.5s ease-out',
-                                                    '@keyframes slideInUp': {
-                                                        '0%': {
-                                                            opacity: 0,
-                                                            transform: 'translateY(30px) scale(0.95)'
-                                                        },
-                                                        '100%': {
-                                                            opacity: 1,
-                                                            transform: 'translateY(0) scale(1)'
-                                                        }
-                                                    }
+                                            <Paper 
+                                                elevation={1} 
+                                                sx={{ 
+                                                    p: 3, 
+                                                    borderRadius: 2,
+                                                    background: theme.palette.mode === 'dark' ? 'neutral.700' : 'background.paper',
+                                                    border: `1px solid ${theme.palette.primary.main}20`,
                                                 }}
                                             >
-                                                <Paper 
-                                                    elevation={1} 
-                                                    sx={{ 
-                                                        p: 3, 
-                                                        borderRadius: 2,
-                                                        background: theme.palette.mode === 'dark' ? 'neutral.700' : 'background.paper',
-                                                        border: `1px solid ${theme.palette.primary.main}20`,
-                                                    }}
-                                                >
-                                                    <PropostaRenegociacao renegociacao={renegociacao} />
-                                                </Paper>
-                                            </Box>
+                                                <PropostaRenegociacao renegociacao={renegociacao} />
+                                            </Paper>
                                         )}
                                     </Stack>
                                 </Paper>

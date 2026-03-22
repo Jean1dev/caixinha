@@ -15,7 +15,7 @@ import {
     useTheme,
     Chip
 } from "@mui/material";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo } from "react";
 import { GestaoEmprestimo } from "@/components/emprestimos/gestao-emprestimo";
 import { PagamentoEmprestimo } from "@/components/emprestimos/pagamento-emprestimo";
 import { Seo } from "@/components/Seo";
@@ -23,56 +23,34 @@ import { ArrowBackIos, Download, Payment, History } from "@mui/icons-material";
 import { LoansForApprove } from "@/types/types";
 import { EmprestimoPdf } from "@/components/emprestimos/emprestimo-pdsf";
 import { PDFDownloadLink } from "@react-pdf/renderer";
-import { getEmprestimo, getMeusPagamentos } from "../api/api.service";
 import { useRouter } from "next/router";
 import CenteredCircularProgress from "@/components/CenteredCircularProgress";
 import { getInitials } from "@/utils/utils";
 import { useUserAuth } from "@/hooks/useUserAuth";
+import { useEmprestimoDetail, useMeusPagamentos } from "@/features/caixinha/hooks/useEmprestimoDetail";
 
-const DetalhesEmprestimo = () => {
-    const [emprestimo, setEmprestimo] = useState<LoansForApprove | null>(null)
-    const [isMeuEmprestimo, setMeuEmprestimo] = useState(false)
-    const [meusPagamentos, setMeusPagamentos] = useState([])
-    const [totalPagamentos, setTotalPagamentos] = useState(0)
+export function DetalhesEmprestimoContent() {
     const { user } = useUserAuth()
     const router = useRouter()
     const theme = useTheme()
+    const uid = router.isReady && typeof router.query.uid === 'string' ? router.query.uid : null
+    const { emprestimo, isLoading: loadingEmprestimo, error } = useEmprestimoDetail(uid)
+    const isMeuEmprestimo = Boolean(
+        user?.name && emprestimo?.memberName && user.name === emprestimo.memberName
+    )
+    const { pagamentos: meusPagamentos } = useMeusPagamentos(isMeuEmprestimo && uid ? uid : null)
+    const totalPagamentos = useMemo(
+        () => meusPagamentos.reduce((acc, curr) => acc + curr.value, 0),
+        [meusPagamentos]
+    )
 
     useEffect(() => {
-        if (user.name === emprestimo?.memberName) {
-            setMeuEmprestimo(true)
-        } else {
-            setMeuEmprestimo(false)
+        if (error) {
+            router.push('/error')
         }
-    }, [user, emprestimo])
+    }, [error, router])
 
-    useEffect(() => {
-        const { uid } = router.query
-        if (!uid)
-            return
-
-        getEmprestimo(uid as string)
-            .then(res => setEmprestimo(res))
-            .catch(() => router.push('error'))
-    }, [router])
-
-    useEffect(() => {
-        const { uid } = router.query
-        if (!uid)
-            return
-
-        if (isMeuEmprestimo) {
-            getMeusPagamentos(uid as string)
-                .then(res => {
-                    setMeusPagamentos(res)
-                    setTotalPagamentos(res.reduce((acc: number, curr: any) => acc + curr.value, 0))
-                })
-                .catch(() => console.log('error'))
-        }
-
-    }, [isMeuEmprestimo, router])
-
-    if (!emprestimo) {
+    if (!router.isReady || loadingEmprestimo || !emprestimo) {
         return <CenteredCircularProgress />
     }
 
@@ -107,7 +85,7 @@ const DetalhesEmprestimo = () => {
                         </Avatar>
                         <Box minWidth={0}>
                             <Typography variant="h5" sx={{ typography: { xs: 'h6', sm: 'h5', md: 'h4' } }} noWrap>
-                                EMP659-7
+                                {emprestimo.uid ? emprestimo.uid.slice(0, 8).toUpperCase() : '—'}
                             </Typography>
                             <Typography color="text.secondary" variant="body1" noWrap>
                                 {emprestimo.memberName}
@@ -369,7 +347,7 @@ const DetalhesEmprestimo = () => {
 export default function Page() {
     return (
         <Layout>
-            <DetalhesEmprestimo />
+            <DetalhesEmprestimoContent />
         </Layout>
     )
 }

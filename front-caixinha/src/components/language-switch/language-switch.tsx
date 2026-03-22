@@ -1,4 +1,3 @@
-//@ts-nocheck
 import Image from 'next/image';
 import Box from '@mui/material/Box';
 import IconButton from '@mui/material/IconButton';
@@ -9,16 +8,21 @@ import { usePopover } from '@/hooks/usePopover';
 import { useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
-const languages = {
-    en: 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a9/Flag_of_the_United_States_%28DoS_ECA_Color_Standard%29.svg/640px-Flag_of_the_United_States_%28DoS_ECA_Color_Standard%29.svg.png',
-    pt: 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/05/Flag_of_Brazil.svg/1280px-Flag_of_Brazil.svg.png',
-};
+const languages: Record<'en' | 'pt', string> = {
+    en: 'https://flagcdn.com/w80/us.png',
+    pt: 'https://flagcdn.com/w80/br.png',
+}
+
+function resolveLangKey(lng: string | undefined): 'en' | 'pt' {
+    const base = (lng ?? 'pt').split('-')[0]
+    return base === 'en' ? 'en' : 'pt'
+}
 
 export const LanguageSwitch = () => {
     const { i18n } = useTranslation();
     const popover = usePopover();
 
-    const flag = languages[i18n.language];
+    const flag = languages[resolveLangKey(i18n.language)]
 
     return (
         <>
