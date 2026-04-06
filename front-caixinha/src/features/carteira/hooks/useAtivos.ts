@@ -1,5 +1,5 @@
 import useSWR from 'swr'
-import { useCallback, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import {
   getMeusAtivos,
   criarAtivo,
@@ -24,6 +24,16 @@ export function useAtivos(initialCarteiras: string[] = []) {
     tipos: null,
     terms: null,
   })
+
+  const initialCarteirasKey = initialCarteiras.join('|')
+  useEffect(() => {
+    if (!initialCarteirasKey) return
+    const ids = initialCarteirasKey.split('|')
+    setFilter((prev) => {
+      if (prev.carteiras.length > 0) return prev
+      return { ...prev, carteiras: ids, page: 0 }
+    })
+  }, [initialCarteirasKey])
 
   const swrKey = filter.carteiras.length > 0 ? ['ativos', JSON.stringify(filter)] : null
 

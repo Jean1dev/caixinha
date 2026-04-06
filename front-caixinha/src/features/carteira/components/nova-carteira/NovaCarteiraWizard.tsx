@@ -95,7 +95,8 @@ export function NovaCarteiraWizard() {
     try {
       await criarNovaCarteira({
         nome: draft.nome,
-        metaDefinida: draft.perfil ? { tipo: draft.perfil, criterios: [] } : undefined,
+        metaDefinida: draft.perfil ? draft.perfil : undefined,
+        ativos: []
       })
       localStorage.removeItem(STORAGE_KEY)
       invalidateCarteiras()
