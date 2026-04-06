@@ -3,6 +3,7 @@ import { useLocalStorage } from "./useLocalStorage";
 import { IUser } from "@/pages/perfil";
 import { useSession } from "next-auth/react";
 import { setDefaultHeaders } from "@/pages/api/api.carteira";
+import { setDefaultHeaders as setCarteiraFeatureHeaders } from "@/features/carteira/api/carteira.api";
 import { getDadosPerfil } from "@/pages/api/perfil";
 
 function getKeyPix(user: any): string {
@@ -40,6 +41,7 @@ export function useUserAuth() {
         if (storedUser) {
             setUser(storedUser)
             setDefaultHeaders(storedUser.name, storedUser.email)
+            setCarteiraFeatureHeaders(storedUser.name, storedUser.email)
             return
         }
 
@@ -47,6 +49,7 @@ export function useUserAuth() {
 
         if (!storedUser && data) {
             setDefaultHeaders(username, email)
+            setCarteiraFeatureHeaders(username, email)
             getDadosPerfil(email, username)
                 .then((responseUser) => {
                     if (responseUser['_id']) {
