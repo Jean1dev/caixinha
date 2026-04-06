@@ -69,7 +69,12 @@ async function handle(context, req) {
 
     context.res = {
         body: {
-            message: 'emprestimo aprovado com sucesso'
+            emprestimo: {
+                uid: emprestimo.uid,
+                approved: emprestimo.approved,
+                approvals: emprestimo.approvals,
+                listOfMembersWhoHaveAlreadyApproved: emprestimo.listOfMembersWhoHaveAlreadyApproved
+            }
         }
     }
 }
