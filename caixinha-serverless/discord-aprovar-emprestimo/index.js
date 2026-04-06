@@ -69,7 +69,7 @@ async function handle(context, req) {
 
     context.res = {
         body: {
-            emprestimo
+            message: 'emprestimo aprovado com sucesso'
         }
     }
 }

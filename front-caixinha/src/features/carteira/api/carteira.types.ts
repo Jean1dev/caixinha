@@ -8,13 +8,8 @@ export interface Carteira {
 
 export interface CreateCarteiraPayload {
   nome: string
-  metaDefinida?: MetaDefinida
+  metaDefinida?: string
   ativos?: CreateAtivoPayload[]
-}
-
-export interface MetaDefinida {
-  tipo: string
-  criterios: Criterio[]
 }
 
 // ─── Ativo ────────────────────────────────────────────────────────────────────
