@@ -73,6 +73,7 @@ export const pt = {
     ["data"]: "Data",
     ["status"]: "Status",
     ["value"]: "Valor",
+    ["extrato_filtros.movimentacoes"]: "Movimentações",
     ["extrato_filtros.todo_mundo"]: "De todo mundo",
     ["extrato_filtros.somente_meu"]: "Somente meu",
     ["extrato_filtros.remover_depositos"]: "Remover depositos",
