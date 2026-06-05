@@ -3,22 +3,24 @@ import {
     Box,
     Button,
     Card,
-    CardContent,
     Chip,
+    CircularProgress,
+    Collapse,
     Container,
+    Divider,
     FormControl,
     FormLabel,
-    Unstable_Grid2 as Grid,
-    Link,
     OutlinedInput,
     Stack,
-    SvgIcon,
     Typography,
-    useTheme,
-    CircularProgress,
 } from "@mui/material"
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import CheckIcon from '@mui/icons-material/Check';
+import QrCode2Icon from '@mui/icons-material/QrCode2';
+import CreditCardIcon from '@mui/icons-material/CreditCard';
+import ReceiptLongIcon from '@mui/icons-material/ReceiptLong';
+import VerifiedUserIcon from '@mui/icons-material/VerifiedUser';
+import BoltIcon from '@mui/icons-material/Bolt';
 import { FormEvent, Key, useCallback, useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
 import { doDeposito, getBuckets, getChavesPix, uploadResource } from '../api/api.service'
@@ -28,19 +30,29 @@ import CenteredCircularProgress from '@/components/CenteredCircularProgress';
 import toast from 'react-hot-toast';
 import { Seo } from '@/components/Seo';
 import { useUserAuth } from "@/hooks/useUserAuth";
-import { ArrowBackIos, Mail, QrCode2 } from "@mui/icons-material";
+
+const METODOS = [
+    { id: 'pix', icon: <QrCode2Icon />, label: 'Pix', desc: 'Aprovação na hora' },
+    { id: 'cartao', icon: <CreditCardIcon />, label: 'Cartão', desc: 'Crédito ou débito' },
+    { id: 'boleto', icon: <ReceiptLongIcon />, label: 'Boleto', desc: 'Até 1 dia útil' },
+]
+
+const QUICKS = [50, 100, 200, 500]
+
+const brl = (n: number) =>
+    'R$ ' + n.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
 
 export default function Deposito() {
     const { user } = useUserAuth()
     const { caixinha } = useCaixinhaSelect()
     const router = useRouter()
-    const theme = useTheme()
     const [isLoading, setLoading] = useState(false)
     const [uploadingName, setUploadingName] = useState<string | null>(null)
     const [arquivos, setArquivo] = useState<any>([])
     const [pix, setPix] = useState<any>(null)
+    const [metodo, setMetodo] = useState('pix')
     const [solicitacao, setSolicitacao] = useState({
-        valor: 0,
+        valor: 200,
         fileUrl: '',
         memberName: "",
         email: '',
@@ -158,196 +170,261 @@ export default function Deposito() {
     return (
         <Layout>
             <Seo title="Deposito" />
-            <Box
-                component="main"
-                sx={{
-                    flexGrow: 1,
-                    py: 8,
-                    background: theme.palette.mode === 'dark' ? 'neutral.800' : 'neutral.50',
-                }}
-            >
-                <Container maxWidth="lg">
-                    <Stack spacing={3}>
-                        <Link
-                            color="text.primary"
-                            component="a"
-                            href={'/'}
-                            sx={{
-                                alignItems: 'center',
-                                display: 'inline-flex',
-                                width: 'fit-content'
-                            }}
-                            underline="hover"
+            <Box component="main" sx={{ flexGrow: 1, py: 8 }}>
+                <Container maxWidth="md">
+                    <Box sx={{ mb: 3 }}>
+                        <Typography
+                            variant="overline"
+                            color="text.secondary"
+                            sx={{ fontSize: 12, fontWeight: 600, letterSpacing: '0.5px', lineHeight: 2 }}
                         >
-                            <SvgIcon sx={{ mr: 1 }}>
-                                <ArrowBackIos />
-                            </SvgIcon>
-                            <Typography variant="subtitle2">
-                                Voltar para Home
-                            </Typography>
-                        </Link>
-
-                        <Typography variant="h4" fontWeight={700} gutterBottom>
-                            Depositando em {caixinha?.name}
+                            Minha caixinha
                         </Typography>
+                        <Typography variant="h4" fontWeight={700} sx={{ mt: 0.5 }}>
+                            Novo depósito {caixinha?.name ? `em ${caixinha.name}` : ''}
+                        </Typography>
+                    </Box>
 
-                        <Grid container spacing={3}>
-                            <Grid xs={12} md={6}>
-                                <Card sx={{ height: '100%', boxShadow: 3, borderRadius: 2 }}>
-                                    <CardContent>
-                                        <Stack spacing={3}>
-                                            <Stack direction="row" alignItems="center" spacing={2}>
-                                                <Avatar sx={{ bgcolor: 'primary.main' }}>
-                                                    <QrCode2 />
-                                                </Avatar>
-                                                <Typography variant="h6">
-                                                    Depósito via PIX
-                                                </Typography>
-                                            </Stack>
+                    <form onSubmit={request}>
+                        <Box
+                            sx={{
+                                display: 'grid',
+                                gridTemplateColumns: { xs: '1fr', md: '1.3fr 1fr' },
+                                gap: 3,
+                                alignItems: 'start',
+                            }}
+                        >
+                            {/* Card esquerdo — formulário */}
+                            <Card sx={{ p: 3, borderRadius: 5, boxShadow: '0 5px 22px rgba(0,0,0,0.08)' }}>
+                                <Stack spacing={3}>
+                                    {/* Valor */}
+                                    <Box>
+                                        <Typography
+                                            variant="overline"
+                                            color="text.secondary"
+                                            sx={{ fontSize: 12, fontWeight: 600, letterSpacing: '0.5px' }}
+                                        >
+                                            Valor do depósito
+                                        </Typography>
+                                        <Box
+                                            sx={{
+                                                display: 'flex',
+                                                alignItems: 'center',
+                                                gap: 1,
+                                                border: '2px solid',
+                                                borderColor: 'primary.main',
+                                                borderRadius: 2,
+                                                px: 2,
+                                                py: 1.5,
+                                                mt: 1,
+                                                boxShadow: (t) => `0 0 0 3px ${t.palette.primary.main}18`,
+                                            }}
+                                        >
+                                            <Typography variant="h5" fontWeight={700} color="text.secondary">
+                                                R$
+                                            </Typography>
+                                            <OutlinedInput
+                                                required
+                                                name='valor'
+                                                type='number'
+                                                value={solicitacao.valor}
+                                                onChange={handleChange}
+                                                sx={{
+                                                    border: 'none',
+                                                    '& fieldset': { border: 'none' },
+                                                    '& input': { fontSize: 28, fontWeight: 700, p: 0 },
+                                                    flex: 1,
+                                                }}
+                                            />
+                                        </Box>
+                                        {/* Valores rápidos */}
+                                        <Stack direction="row" spacing={1} sx={{ mt: 1.5 }}>
+                                            {QUICKS.map((q) => (
+                                                <Button
+                                                    key={q}
+                                                    size="small"
+                                                    variant={solicitacao.valor === q ? 'contained' : 'outlined'}
+                                                    onClick={() => setSolicitacao((prev) => ({ ...prev, valor: q }))}
+                                                    sx={{ flex: 1, borderRadius: 2.5, fontWeight: 600 }}
+                                                >
+                                                    +{q}
+                                                </Button>
+                                            ))}
+                                        </Stack>
+                                    </Box>
 
-                                            <Box sx={{ 
-                                                display: 'flex', 
-                                                justifyContent: 'center',
-                                                bgcolor: 'background.paper',
-                                                p: 2,
-                                                borderRadius: 2
-                                            }}>
+                                    {/* Método de pagamento */}
+                                    <Box>
+                                        <Typography
+                                            variant="overline"
+                                            color="text.secondary"
+                                            sx={{ fontSize: 12, fontWeight: 600, letterSpacing: '0.5px' }}
+                                        >
+                                            Forma de pagamento
+                                        </Typography>
+                                        <Stack spacing={1} sx={{ mt: 1 }}>
+                                            {METODOS.map((m) => {
+                                                const ativo = metodo === m.id
+                                                return (
+                                                    <Box
+                                                        key={m.id}
+                                                        onClick={() => setMetodo(m.id)}
+                                                        sx={{
+                                                            display: 'flex',
+                                                            alignItems: 'center',
+                                                            gap: 1.5,
+                                                            p: 1.5,
+                                                            borderRadius: 3,
+                                                            cursor: 'pointer',
+                                                            border: '1px solid',
+                                                            borderColor: ativo ? 'primary.main' : 'divider',
+                                                            bgcolor: ativo ? 'primary.lightest' : 'background.paper',
+                                                            transition: 'all 0.15s',
+                                                        }}
+                                                    >
+                                                        <Avatar
+                                                            sx={{
+                                                                width: 40,
+                                                                height: 40,
+                                                                bgcolor: ativo ? 'primary.main' : 'neutral.100',
+                                                                color: ativo ? '#fff' : 'text.secondary',
+                                                            }}
+                                                        >
+                                                            {m.icon}
+                                                        </Avatar>
+                                                        <Box sx={{ flex: 1 }}>
+                                                            <Typography variant="body2" fontWeight={600}>{m.label}</Typography>
+                                                            <Typography variant="caption" color="text.secondary">{m.desc}</Typography>
+                                                        </Box>
+                                                        <Box
+                                                            sx={{
+                                                                width: 20, height: 20, borderRadius: '50%',
+                                                                border: '2px solid', borderColor: ativo ? 'primary.main' : 'divider',
+                                                                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                                                            }}
+                                                        >
+                                                            {ativo && (
+                                                                <Box sx={{ width: 10, height: 10, borderRadius: '50%', bgcolor: 'primary.main' }} />
+                                                            )}
+                                                        </Box>
+                                                    </Box>
+                                                )
+                                            })}
+                                        </Stack>
+
+                                        {/* QR Code PIX — expande quando Pix está selecionado */}
+                                        <Collapse in={metodo === 'pix'}>
+                                            <Box sx={{ mt: 2, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 1 }}>
                                                 <Avatar
                                                     src={pix?.url}
                                                     variant="square"
-                                                    sx={{
-                                                        height: 300,
-                                                        width: 300,
-                                                        boxShadow: 2
-                                                    }}
+                                                    sx={{ height: 200, width: 200, borderRadius: 2, boxShadow: 2 }}
                                                 />
+                                                {pix?.chave && (
+                                                    <Typography variant="caption" color="text.secondary" align="center">
+                                                        Chave PIX: {pix.chave}
+                                                    </Typography>
+                                                )}
                                             </Box>
+                                        </Collapse>
+                                    </Box>
 
-                                            <Typography variant="subtitle1" align="center" color="text.secondary">
-                                                Chave PIX: {pix?.chave}
-                                            </Typography>
+                                    {/* Comprovante */}
+                                    <Box>
+                                        <FormLabel sx={{ fontSize: 12, fontWeight: 600, letterSpacing: '0.5px', textTransform: 'uppercase', color: 'text.secondary' }}>
+                                            Comprovante de pagamento
+                                        </FormLabel>
+                                        <Box sx={{ mt: 1, mb: 1 }}>
+                                            {arquivos.map((item: { name: string, index: Key }) =>
+                                                getChipByItem(item)
+                                            )}
+                                        </Box>
+                                        <Button
+                                            onClick={addComprovante}
+                                            variant="outlined"
+                                            size="small"
+                                            startIcon={<CloudUploadIcon />}
+                                            sx={{ borderRadius: 2 }}
+                                        >
+                                            Adicionar comprovante
+                                        </Button>
+                                    </Box>
+                                </Stack>
+                            </Card>
 
-                                            <Stack direction="row" alignItems="center" spacing={2} sx={{ mt: 2 }}>
-                                                <Avatar sx={{ bgcolor: 'primary.main' }}>
-                                                    <Mail />
-                                                </Avatar>
-                                                <Typography variant="body2" color="text.secondary">
-                                                    Em caso de dúvidas, entre em contato com os administradores da caixinha
-                                                </Typography>
-                                            </Stack>
-                                        </Stack>
-                                    </CardContent>
-                                </Card>
-                            </Grid>
+                            {/* Card direito — resumo */}
+                            <Card sx={{ p: 3, borderRadius: 5, boxShadow: '0 5px 22px rgba(0,0,0,0.08)', position: { md: 'sticky' }, top: { md: 88 } }}>
+                                <Typography variant="h6" fontWeight={700} sx={{ mb: 2 }}>
+                                    Resumo
+                                </Typography>
+                                <Stack spacing={0}>
+                                    {[
+                                        ['Caixinha', caixinha?.name ?? '—'],
+                                        ['Valor', brl(solicitacao.valor || 0)],
+                                        ['Taxa', 'Grátis'],
+                                    ].map(([label, value]) => (
+                                        <Box
+                                            key={label}
+                                            sx={{ display: 'flex', justifyContent: 'space-between', py: 1.25 }}
+                                        >
+                                            <Typography variant="body2" color="text.secondary">{label}</Typography>
+                                            <Typography variant="body2" fontWeight={600} align="right">{value}</Typography>
+                                        </Box>
+                                    ))}
+                                    <Divider sx={{ my: 1 }} />
+                                    <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', py: 1 }}>
+                                        <Typography fontWeight={700}>Total</Typography>
+                                        <Typography variant="h5" fontWeight={700} color="primary">{brl(solicitacao.valor || 0)}</Typography>
+                                    </Box>
+                                </Stack>
 
-                            <Grid xs={12} md={6}>
-                                <Card sx={{ height: '100%', boxShadow: 3, borderRadius: 2 }}>
-                                    <CardContent>
-                                        <form onSubmit={request}>
-                                            <Stack spacing={3}>
-                                                <Typography variant="h6" gutterBottom>
-                                                    Informações do Depósito
-                                                </Typography>
+                                {/* Badge de proteção */}
+                                <Box
+                                    sx={{
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        gap: 1,
+                                        bgcolor: 'success.lightest',
+                                        borderRadius: 2.5,
+                                        px: 1.5,
+                                        py: 1.25,
+                                        my: 2,
+                                    }}
+                                >
+                                    <VerifiedUserIcon sx={{ fontSize: 18, color: 'success.dark' }} />
+                                    <Typography variant="caption" color="success.dark" fontWeight={500}>
+                                        Transação protegida e registrada na caixinha.
+                                    </Typography>
+                                </Box>
 
-                                                <Grid container spacing={2}>
-                                                    <Grid xs={12} sm={6}>
-                                                        <FormControl fullWidth>
-                                                            <FormLabel>Nome</FormLabel>
-                                                            <OutlinedInput
-                                                                required
-                                                                name="memberName"
-                                                                disabled
-                                                                value={solicitacao.memberName}
-                                                                defaultValue={solicitacao.memberName}
-                                                                onChange={handleChange}
-                                                            />
-                                                        </FormControl>
-                                                    </Grid>
-                                                    <Grid xs={12} sm={6}>
-                                                        <FormControl fullWidth>
-                                                            <FormLabel>Email</FormLabel>
-                                                            <OutlinedInput
-                                                                required
-                                                                name="email"
-                                                                type='email'
-                                                                disabled
-                                                                value={solicitacao.email}
-                                                                defaultValue={solicitacao.email}
-                                                                onChange={handleChange}
-                                                            />
-                                                        </FormControl>
-                                                    </Grid>
-                                                </Grid>
+                                <FormControl fullWidth sx={{ mb: 2 }}>
+                                    <FormLabel sx={{ fontSize: 11, fontWeight: 600, letterSpacing: '0.5px', textTransform: 'uppercase', color: 'text.secondary', mb: 0.5 }}>
+                                        Nome
+                                    </FormLabel>
+                                    <OutlinedInput
+                                        required
+                                        name="memberName"
+                                        disabled
+                                        size="small"
+                                        value={solicitacao.memberName}
+                                        onChange={handleChange}
+                                        sx={{ borderRadius: 2 }}
+                                    />
+                                </FormControl>
 
-                                                <FormControl fullWidth>
-                                                    <FormLabel>Valor do Depósito *</FormLabel>
-                                                    <OutlinedInput
-                                                        required
-                                                        name='valor'
-                                                        type='number'
-                                                        value={solicitacao.valor}
-                                                        onChange={handleChange}
-                                                        startAdornment={<Typography sx={{ mr: 1 }}>R$</Typography>}
-                                                    />
-                                                </FormControl>
-
-                                                <Box>
-                                                    <FormLabel>Comprovante de Pagamento</FormLabel>
-                                                    <Box sx={{ mt: 1, mb: 2 }}>
-                                                        {arquivos.map((item: { name: string, index: Key }) =>
-                                                            getChipByItem(item)
-                                                        )}
-                                                    </Box>
-                                                    <Button
-                                                        onClick={addComprovante}
-                                                        variant="outlined"
-                                                        startIcon={<CloudUploadIcon />}
-                                                    >
-                                                        Adicionar Comprovante
-                                                    </Button>
-                                                </Box>
-
-                                                <FormControl fullWidth>
-                                                    <FormLabel>Mensagem (opcional)</FormLabel>
-                                                    <OutlinedInput
-                                                        fullWidth
-                                                        name="message"
-                                                        multiline
-                                                        rows={4}
-                                                    />
-                                                </FormControl>
-
-                                                <Button
-                                                    fullWidth
-                                                    size="large"
-                                                    variant="contained"
-                                                    type="submit"
-                                                    sx={{ mt: 2 }}
-                                                >
-                                                    Confirmar Depósito
-                                                </Button>
-
-                                                <Typography
-                                                    color="text.secondary"
-                                                    variant="body2"
-                                                    align="center"
-                                                >
-                                                    Ao confirmar, você concorda com nossa{' '}
-                                                    <Link
-                                                        color="primary"
-                                                        href="#"
-                                                        underline="hover"
-                                                    >
-                                                        Política de Privacidade
-                                                    </Link>
-                                                </Typography>
-                                            </Stack>
-                                        </form>
-                                    </CardContent>
-                                </Card>
-                            </Grid>
-                        </Grid>
-                    </Stack>
+                                <Button
+                                    fullWidth
+                                    size="large"
+                                    variant="contained"
+                                    type="submit"
+                                    startIcon={<BoltIcon />}
+                                    sx={{ borderRadius: 3 }}
+                                >
+                                    Depositar {brl(solicitacao.valor || 0)}
+                                </Button>
+                            </Card>
+                        </Box>
+                    </form>
                 </Container>
             </Box>
         </Layout>

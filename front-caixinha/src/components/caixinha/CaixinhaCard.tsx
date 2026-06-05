@@ -1,22 +1,22 @@
 import { Caixinha } from '@/types/types';
 import { InfoOutlined, PeopleAltOutlined } from '@mui/icons-material';
-import { Box, Button, Card, CardContent, CardMedia, Divider, IconButton, Stack, SvgIcon, Typography } from '@mui/material';
+import { Box, Button, Card, Divider, Stack, Typography } from '@mui/material';
 import { useRouter } from 'next/router';
 import DisplayValorMonetario from '../display-valor-monetario';
 import { getAleatorio } from '@/utils/utils';
 
-const images = [
-    'https://static.vecteezy.com/system/resources/previews/001/759/904/original/crowdfunding-isometric-web-banner-vector.jpg',
-    'https://www.siteware.com.br/wp-content/uploads/2018/07/colaboracao-ambiente-de-trabalho.png',
-    'https://www.siteware.com.br/wp-content/uploads/2018/12/colaboracao-corporativa.png',
-    'https://www.napratica.org.br/wp-content/uploads/2020/07/btg.jpg',
-    'https://i.pinimg.com/736x/e7/5f/ce/e75fcea304308f2718b188c027a58a2d.jpg',
-    'https://www.comececomopedireito.com.br/blog/wp-content/uploads/2021/03/Investimentos-para-empresas.jpg'
+const GRADIENTS = [
+    'linear-gradient(135deg,#5475B8,#7691C6)',
+    'linear-gradient(135deg,#9176C6,#C7B9E1)',
+    'linear-gradient(135deg,#7A86B2,#A2A9CD)',
+    'linear-gradient(135deg,#6B82A3,#B3B1D4)',
+    'linear-gradient(135deg,#868DB6,#C8C4E5)',
+    'linear-gradient(135deg,#8988B8,#AFAEE1)',
 ]
 
 export const CaixinhaCard = ({ caixinha }: { caixinha: Caixinha }) => {
     const router = useRouter()
-    const imagemAleatoria = getAleatorio(images)
+    const gradient = getAleatorio(GRADIENTS)
 
     const join = () => {
         router.push({
@@ -37,78 +37,66 @@ export const CaixinhaCard = ({ caixinha }: { caixinha: Caixinha }) => {
             sx={{
                 display: 'flex',
                 flexDirection: 'column',
-                height: '100%'
+                height: '100%',
+                borderRadius: 5,
+                boxShadow: '0 5px 22px rgba(0,0,0,0.08)',
+                overflow: 'hidden',
+                transition: 'transform 0.2s, box-shadow 0.2s',
+                '&:hover': {
+                    transform: 'translateY(-4px)',
+                    boxShadow: '0 10px 32px rgba(0,0,0,0.14)',
+                },
             }}
         >
-            <CardMedia
-                image={imagemAleatoria}
-                sx={{ height: 180 }}
-            />
-            <CardContent>
-              
+            {/* Gradient header — replaces random external image */}
+            <Box sx={{ height: 140, background: gradient }} />
+
+            <Box sx={{ p: 3, textAlign: 'center' }}>
                 <DisplayValorMonetario
                     align="center"
                     gutterBottom
                     variant="h5"
+                    sx={{ fontWeight: 700 }}
                 >
                     {caixinha.currentBalance.value.toFixed(2)}
                 </DisplayValorMonetario>
-                <Typography
-                    align="center"
-                    variant="body1"
-                >
+                <Typography align="center" variant="body1" color="text.primary">
                     {caixinha.name}
                 </Typography>
-            </CardContent>
+            </Box>
+
             <Box sx={{ flexGrow: 1 }} />
             <Divider />
+
             <Stack
                 alignItems="center"
                 direction="row"
                 justifyContent="space-between"
-                spacing={2}
-                sx={{ p: 2 }}
+                sx={{ px: 2, py: 1.5 }}
             >
-                <Stack
-                    alignItems="center"
-                    direction="row"
-                    spacing={1}
+                <Button
+                    size="small"
+                    color="inherit"
+                    startIcon={<InfoOutlined fontSize="small" />}
+                    onClick={detalhes}
+                    sx={{ color: 'text.secondary', textTransform: 'none', fontSize: 13 }}
                 >
-                    <IconButton onClick={detalhes}>
-                        <SvgIcon
-                            color="action"
-                            fontSize="small"
-                        >
-                            <InfoOutlined />
-                        </SvgIcon>
-                        <Typography
-                            color="text.secondary"
-                            display="inline"
-                            variant="body2"
-                        >
-                             Detalhes
+                    Detalhes
+                </Button>
+
+                <Stack alignItems="center" direction="row" spacing={1.5}>
+                    <Stack alignItems="center" direction="row" spacing={0.5}>
+                        <PeopleAltOutlined sx={{ fontSize: 18, color: 'text.secondary' }} />
+                        <Typography color="text.secondary" variant="body2">
+                            {caixinha.members.length}
                         </Typography>
-                    </IconButton>
-                </Stack>
-                <Stack
-                    alignItems="center"
-                    direction="row"
-                    spacing={1}
-                >
-                    <SvgIcon
-                        color="action"
-                        fontSize="small"
-                    >
-                        <PeopleAltOutlined />
-                    </SvgIcon>
-                    <Typography
-                        color="text.secondary"
-                        display="inline"
-                        variant="body2"
-                    >
-                        {caixinha.members.length} Participantes
-                    </Typography>
-                    <Button onClick={join}
+                    </Stack>
+                    <Button
+                        size="small"
+                        variant="text"
+                        color="primary"
+                        onClick={join}
+                        sx={{ textTransform: 'none', fontWeight: 600 }}
                     >
                         Participar
                     </Button>

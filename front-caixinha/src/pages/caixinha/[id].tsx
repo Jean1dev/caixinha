@@ -157,7 +157,7 @@ export default function CaixinhaHubPage() {
   return (
     <Layout>
       <Seo title={nome} />
-      <Box component="main" sx={{ flexGrow: 1, py: { xs: 3, md: 6 } }}>
+      <Box component="main" sx={{ flexGrow: 1, py: { xs: 5, md: 8 } }}>
         <Container maxWidth="lg">
           <Stack spacing={3}>
             <Button
@@ -169,15 +169,19 @@ export default function CaixinhaHubPage() {
             >
               Início
             </Button>
-            <Stack spacing={1}>
-              <Typography variant="h4" fontWeight={700}>
+            <Box>
+              <Typography
+                variant="overline"
+                color="text.secondary"
+                sx={{ fontSize: 12, fontWeight: 600, letterSpacing: '0.5px', lineHeight: 2 }}
+              >
+                Minha caixinha
+              </Typography>
+              <Typography variant="h4" fontWeight={700} sx={{ mt: 0.5 }}>
                 {nome}
               </Typography>
-              <Typography color="text.secondary" variant="body1">
-                Saldo na caixinha (cadastro): {saldoFromCaixinha(mine)}
-              </Typography>
-            </Stack>
-            <Stack direction="row" flexWrap="wrap" gap={1}>
+            </Box>
+            <Stack direction="row" flexWrap="wrap" gap={1.5}>
               <Button
                 variant="contained"
                 startIcon={<AccountBalanceWalletIcon />}

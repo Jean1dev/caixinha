@@ -3,9 +3,8 @@ import { BannerNovidades } from "@/components/bem-vindo/banner-novidades";
 import { Dicas } from "@/components/bem-vindo/dicas";
 import { AtalhoEmprestimo } from "@/components/bem-vindo/atalho-emprestimo";
 import { useSettings } from "@/hooks/useSettings";
-import { Box, Card, CardContent, Container, Typography, Stack } from "@mui/material";
+import { Box, Container, Typography } from "@mui/material";
 import { useRouter } from "next/router";
-import Grid from '@mui/material/Unstable_Grid2';
 import { Seo } from "@/components/Seo";
 import { getAleatorio } from "@/utils/utils";
 import { useUltimoEmprestimoPendente } from "@/features/caixinha/hooks/useUltimoEmprestimoPendente";
@@ -17,55 +16,64 @@ import AccountBalanceWalletIcon from '@mui/icons-material/AccountBalanceWallet';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import DashboardIcon from '@mui/icons-material/Dashboard';
 import { useCaixinhaSelect } from '@/hooks/useCaixinhaSelect';
+import { SvgIconComponent } from '@mui/icons-material';
 
-const corAleatoriaCombinada = () => {
-  const cores = [
-    "#5475B8-#7691C6",
-    "#9176C6-#C7B9E1",
-    "#7A86B2-#A2A9CD",
-    "#6B82A3-#B3B1D4",
-    "#868DB6-#C8C4E5",
-    "#9599BA-#D0D2EA",
-    "#8988B8-#AFAEE1"
-  ]
-  return getAleatorio(cores)
+const GRADIENTS = [
+  'linear-gradient(135deg,#5475B8,#7691C6)',
+  'linear-gradient(135deg,#9176C6,#C7B9E1)',
+  'linear-gradient(135deg,#7A86B2,#A2A9CD)',
+  'linear-gradient(135deg,#6B82A3,#B3B1D4)',
+  'linear-gradient(135deg,#868DB6,#C8C4E5)',
+  'linear-gradient(135deg,#8988B8,#AFAEE1)',
+]
+
+const corAleatoriaCombinada = () => getAleatorio(GRADIENTS)
+
+interface GradientCardProps {
+  title: string
+  description: string
+  action: () => void
+  Icon: SvgIconComponent
 }
 
-const card = (title: string, description: string, action: any, icon: any) => {
-  const cor = corAleatoriaCombinada().split('-')
+const GradientCard = ({ title, description, action, Icon }: GradientCardProps) => {
+  const grad = corAleatoriaCombinada()
   return (
-    <Card
+    <Box
       onClick={action}
-      variant="elevation"
       sx={{
-        background: `linear-gradient(135deg, ${cor[0]}, ${cor[1]})`,
-        boxShadow: 6,
+        background: grad,
         borderRadius: 4,
-        cursor: 'pointer',
-        transition: 'transform 0.2s, box-shadow 0.2s',
-        '&:hover': {
-          transform: 'translateY(-4px) scale(1.03)',
-          boxShadow: 12,
-          opacity: 0.95
-        },
-        p: 2,
+        boxShadow: '0 6px 30px rgba(0,0,0,.12)',
+        px: 3,
+        py: 3.5,
         minHeight: 140,
+        color: '#fff',
+        cursor: 'pointer',
         display: 'flex',
         flexDirection: 'column',
         justifyContent: 'center',
-      }}>
-      <CardContent>
-        <Stack direction="row" alignItems="center" spacing={2} mb={1}>
-          {icon}
-          <Typography variant="h5" component="div" fontWeight={700} color="white">
-            {title}
-          </Typography>
-        </Stack>
-        <Typography variant="body2" color="white">
-          {description}
-        </Typography>
-      </CardContent>
-    </Card>
+        transition: 'transform 0.2s, box-shadow 0.2s, opacity 0.2s',
+        '&:hover': {
+          transform: 'translateY(-4px) scale(1.03)',
+          boxShadow: '0 12px 40px rgba(0,0,0,.18)',
+          opacity: 0.96,
+        },
+      }}
+    >
+      <Icon sx={{ color: '#fff', fontSize: 36 }} />
+      <Typography
+        variant="h5"
+        fontWeight={700}
+        color="white"
+        sx={{ mt: 1.5 }}
+      >
+        {title}
+      </Typography>
+      <Typography variant="body2" color="white" sx={{ mt: 0.5, opacity: 0.92 }}>
+        {description}
+      </Typography>
+    </Box>
   )
 }
 
@@ -78,91 +86,93 @@ const Page = () => {
   const { resultado: ultimoEmprestimoAtalho } = useUltimoEmprestimoPendente()
   const { caixinha } = useCaixinhaSelect()
 
+  const quickCards: GradientCardProps[] = [
+    ...(caixinha?.id ? [{
+      title: 'Minha caixinha',
+      description: 'Resumo, extrato e atalhos',
+      action: () => router.push(`/caixinha/${caixinha.id}`),
+      Icon: DashboardIcon,
+    }] : []),
+    {
+      title: 'Caixinhas',
+      description: t('listar_caixinha_disponiveis'),
+      action: () => router.push('caixinhas-disponiveis'),
+      Icon: SavingsIcon,
+    },
+    {
+      title: 'Depositar',
+      description: t('depositar'),
+      action: () => router.push('deposito'),
+      Icon: AccountBalanceWalletIcon,
+    },
+    {
+      title: 'Pedir empréstimo',
+      description: t('emprestimo.solicitar_emprestimo'),
+      action: () => router.push('emprestimo'),
+      Icon: AddCircleOutlineIcon,
+    },
+  ]
+
   return (
-    <Box component="main"
-      sx={{
-        flexGrow: 1,
-        minHeight: '100vh',
-        py: 8,
-      }}>
+    <Box
+      component="main"
+      sx={{ flexGrow: 1, minHeight: '100vh', py: 8 }}
+    >
       <Container maxWidth={settings.stretch ? false : 'xl'}>
-        <Stack spacing={4} alignItems="center" mb={4}>
-          <Typography variant="h3" fontWeight={700} align="center">
-            Bem-vindo à Caixinha!
-          </Typography>
-        </Stack>
-        <Grid
-          container
-          spacing={{
-            xs: 3,
-            lg: 4
+        <Typography
+          variant="h3"
+          fontWeight={700}
+          align="center"
+          sx={{ mb: 4 }}
+        >
+          Bem-vindo à Caixinha!
+        </Typography>
+
+        {/* Banner + Dicas — proporção 1.4fr / 1fr
+            minmax(0,Xfr) é necessário para evitar overflow do react-slick */}
+        <Box
+          sx={{
+            display: 'grid',
+            gridTemplateColumns: { xs: '1fr', md: 'minmax(0, 1.4fr) minmax(0, 1fr)' },
+            gap: 3,
+            alignItems: 'stretch',
+            mb: 3,
+            '& > *': { minWidth: 0 },
           }}
         >
-          <Grid xs={12} md={7}>
-            <BannerNovidades />
-          </Grid>
-          <Grid xs={12} md={5}>
-            {
-              ultimoEmprestimoAtalho && ultimoEmprestimoAtalho.exists
-                ? (
-                  <AtalhoEmprestimo emprestimo={ultimoEmprestimoAtalho.data} />
-                )
-                : (
-                  <Dicas
-                    sx={{ height: '100%' }}
-                    tips={[
-                      {
-                        title: t('dicas.0.title'),
-                        content: t('dicas.0.content'),
-                        link: {
-                          href: '/token-market',
-                          label: t('dicas.0.link_label')
-                        }
-                      },
-                      {
-                        title: t('dicas.1.title'),
-                        content: t('dicas.1.content')
-                      }
-                    ]}
-                  />
-                )
-            }
-          </Grid>
-          {caixinha?.id ? (
-            <Grid xs={12} md={7}>
-              {card(
-                "Minha caixinha",
-                "Resumo, extrato e atalhos",
-                () => { router.push(`/caixinha/${caixinha.id}`) },
-                <DashboardIcon sx={{ color: 'white', fontSize: 36 }} />
-              )}
-            </Grid>
-          ) : null}
-          <Grid xs={12} md={7}>
-            {card(
-              "Caixinhas",
-              t('listar_caixinha_disponiveis'),
-              () => { router.push('caixinhas-disponiveis') },
-              <SavingsIcon sx={{ color: 'white', fontSize: 36 }} />
-            )}
-          </Grid>
-          <Grid xs={12} md={7}>
-            {card(
-              "Depositar",
-              t('depositar'),
-              () => { router.push('deposito') },
-              <AccountBalanceWalletIcon sx={{ color: 'white', fontSize: 36 }} />
-            )}
-          </Grid>
-          <Grid xs={12} md={7}>
-            {card(
-              "Pedir emprestimo",
-              t('emprestimo.solicitar_emprestimo'),
-              () => { router.push('emprestimo') },
-              <AddCircleOutlineIcon sx={{ color: 'white', fontSize: 36 }} />
-            )}
-          </Grid>
-        </Grid>
+          <BannerNovidades />
+          {ultimoEmprestimoAtalho?.exists ? (
+            <AtalhoEmprestimo emprestimo={ultimoEmprestimoAtalho.data} />
+          ) : (
+            <Dicas
+              sx={{ height: '100%' }}
+              tips={[
+                {
+                  title: t('dicas.0.title'),
+                  content: t('dicas.0.content'),
+                  link: { href: '/token-market', label: t('dicas.0.link_label') },
+                },
+                {
+                  title: t('dicas.1.title'),
+                  content: t('dicas.1.content'),
+                },
+              ]}
+            />
+          )}
+        </Box>
+
+        {/* Atalhos rápidos — grid auto-fit */}
+        <Box
+          sx={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))',
+            gap: 3,
+          }}
+        >
+          {quickCards.map((c) => (
+            <GradientCard key={c.title} {...c} />
+          ))}
+        </Box>
       </Container>
     </Box>
   )
