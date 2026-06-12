@@ -32,7 +32,7 @@ export default function TokenMarket() {
             toast('Carteira já criada');
             toast.loading('Redirecionando em 2 segundos')
             setTimeout(() => {
-                router.push('web3/defi-market');
+                router.push('/web3/defi-market');
             }, 2000);
 
             return;

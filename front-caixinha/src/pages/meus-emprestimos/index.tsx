@@ -125,7 +125,7 @@ export default function MeusEmprestimos() {
                                         Filtros
                                     </Button>
                                     <Button
-                                        onClick={() => router.push('emprestimo')}
+                                        onClick={() => router.push('/emprestimo')}
                                         startIcon={(
                                             <SvgIcon>
                                                 <PlusOneOutlined />

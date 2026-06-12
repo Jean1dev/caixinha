@@ -96,19 +96,19 @@ const Page = () => {
     {
       title: 'Caixinhas',
       description: t('listar_caixinha_disponiveis'),
-      action: () => router.push('caixinhas-disponiveis'),
+      action: () => router.push('/caixinhas-disponiveis'),
       Icon: SavingsIcon,
     },
     {
       title: 'Depositar',
       description: t('depositar'),
-      action: () => router.push('deposito'),
+      action: () => router.push('/deposito'),
       Icon: AccountBalanceWalletIcon,
     },
     {
       title: 'Pedir empréstimo',
       description: t('emprestimo.solicitar_emprestimo'),
-      action: () => router.push('emprestimo'),
+      action: () => router.push('/emprestimo'),
       Icon: AddCircleOutlineIcon,
     },
   ]
