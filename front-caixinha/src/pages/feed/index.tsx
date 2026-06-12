@@ -82,27 +82,26 @@ export default function Feed() {
             <Seo title={t('feed.seo')} />
             <Box
                 component="main"
-                sx={{
-                    flexGrow: 1,
-                    py: 8
-                }}
+                sx={{ flexGrow: 1, py: 8 }}
             >
-                <Container maxWidth="lg">
-                    <Stack spacing={1}>
+                <Container maxWidth="sm">
+                    <Box sx={{ mb: 3 }}>
                         <Typography
-                            color="text.secondary"
                             variant="overline"
+                            color="text.secondary"
+                            sx={{ fontSize: 12, fontWeight: 600, letterSpacing: '0.5px', lineHeight: 2 }}
                         >
                             {t('feed.title')}
                         </Typography>
-                        <Typography variant="h4">
+                        <Typography variant="h4" fontWeight={700} sx={{ mt: 0.5 }}>
                             {t('feed.headlines')}
                         </Typography>
-                    </Stack>
-                    <Stack
-                        spacing={3}
-                        sx={{ mt: 3 }}
-                    >
+                        <Typography variant="body1" color="text.secondary" sx={{ mt: 0.5 }}>
+                            Aqui está o que suas conexões postaram
+                        </Typography>
+                    </Box>
+
+                    <Stack spacing={3}>
                         <SocialPostAdd />
                         {posts.map((post: any) => (
                             <SocialPostCard
@@ -116,20 +115,14 @@ export default function Feed() {
                                 likes={post.likes}
                                 media={post.media}
                                 message={post.message}
-
                                 addCommentView={addCommentView}
                             />
                         ))}
                     </Stack>
+
                     {hasMore && (
-                        <Box
-                            sx={{
-                                display: 'flex',
-                                justifyContent: 'center',
-                                mt: 3
-                            }}
-                        >
-                            <Button variant="outlined" onClick={loadMore}>
+                        <Box sx={{ display: 'flex', justifyContent: 'center', mt: 4 }}>
+                            <Button variant="outlined" onClick={loadMore} sx={{ borderRadius: 3 }}>
                                 {t('loadmore')} ...
                             </Button>
                         </Box>

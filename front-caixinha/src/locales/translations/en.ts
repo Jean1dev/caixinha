@@ -73,6 +73,7 @@ export const en = {
     ["data"]: "Date",
     ["status"]: "Status",
     ["value"]: "Value",
+    ["extrato_filtros.movimentacoes"]: "Movements",
     ["extrato_filtros.todo_mundo"]: "From everyone",
     ["extrato_filtros.somente_meu"]: "Only mine",
     ["extrato_filtros.remover_depositos"]: "Remove deposits",
