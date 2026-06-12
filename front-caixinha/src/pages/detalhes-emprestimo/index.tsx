@@ -54,7 +54,7 @@ export function DetalhesEmprestimoContent() {
         return <CenteredCircularProgress />
     }
 
-    const backHref = isMeuEmprestimo ? 'meus-emprestimos' : 'meus-emprestimos'
+    const backHref = isMeuEmprestimo ? '/meus-emprestimos' : '/meus-emprestimos'
     const backLabel = isMeuEmprestimo ? 'Voltar para seus empréstimos' : 'Voltar para empréstimos'
 
     const headerCard = (
