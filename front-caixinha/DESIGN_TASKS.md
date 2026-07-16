@@ -21,6 +21,44 @@ Raio de card: 20px | sombra: `0 5px 22px rgba(0,0,0,0.08)` | botão: radius 12px
 | 05 | Depósito | `src/pages/deposito/index.tsx` | ✅ concluído |
 | 06 | Extrato | `src/pages/extrato/index.tsx` | ✅ concluído |
 | 07 | Feed | `src/pages/feed/index.tsx` | ✅ concluído |
+| 08 | Onboarding / Boas-vindas (gate deslogados) | `src/components/bem-vindo/onboarding.tsx` + `src/pages/index.tsx` | ✅ concluído |
+| 09 | Meus empréstimos (master-detail) | `src/pages/meus-emprestimos/index.tsx` | ✅ concluído |
+| 10 | Menu lateral (Drawer indigo) | `src/components/Drawer.tsx` | ✅ concluído |
+
+---
+
+## TASK-08 — Onboarding / Boas-vindas
+
+**Arquivos:** `src/components/bem-vindo/onboarding.tsx` (novo), `src/pages/index.tsx` (gate).
+Ref. design: `indigo/new-screens.jsx → OnboardingScreen`.
+
+- Tela standalone (fora do `Layout`, com `ThemeProvider` indigo próprio) mostrada quando `useSession().status === 'unauthenticated'`.
+- Card 880px: painel esquerdo com `person-standing.png` + pill "CapiCoin chegou"; direito com logo, título "Bem-vindo à Caixinha!", 3 features e CTAs.
+- CTAs "Começar agora" / "Já tenho conta" → `signIn()` (fluxo next-auth preservado).
+- Logado: Home dashboard intacta. Loading: `CenteredCircularProgress`.
+
+## TASK-09 — Meus empréstimos (master-detail)
+
+**Arquivo:** `src/pages/meus-emprestimos/index.tsx`.
+Ref. design: `indigo/meus-emprestimos.jsx`. Novos componentes em `src/components/meus-emprestimos/`:
+`stat-card.tsx`, `emprestimo-list-item.tsx`, `emprestimo-detail.tsx`, `loan-progress.tsx`, `loan-status.tsx`.
+Util novo: `src/features/caixinha/utils/flatten-emprestimos.ts` (mapeia `LoansForApprove` → view-model + status).
+
+- 3 `StatCard` (Total emprestado = `totalGeral`, Em aberto = nº não-quitados, Pendente aprovação = `totalPendente`).
+- Grid `360px minmax(0,1fr)`: lista de cards clicáveis + busca à esquerda, `EmprestimoDetail` à direita.
+- Mobile (`< lg`): só a lista; clique navega para `/detalhes-emprestimo/{uid}`.
+- Preservado: `useMeusEmprestimos`, `filterMeusEmprestimos`, loading/error (`/error`), navegação real
+  ("Pagar parcela"/"Ver detalhes" → `/detalhes-emprestimo/{uid}`, "Renegociar" → `/renegociacao`, "Novo empréstimo" → `/emprestimo`).
+- Componentes antigos (`filtros`, `meus-emprestimos-table`, `meus-emprestimos-list-summary`, `meu-emprestimos-list-container`) deixaram de ser referenciados (não deletados).
+
+## TASK-10 — Menu lateral (Drawer indigo)
+
+**Arquivo:** `src/components/Drawer.tsx`.
+Ref. design: `indigo/shell.jsx → Drawer/DrawerItem`.
+
+- Header com avatar `primary.light` + `capicoin.png` + wordmark "Caixinha".
+- Itens `borderRadius 12`, item da rota atual (via `router.pathname`) destacado (`primary.light` / `primary.dark`), hover suave, chips New/Beta à direita.
+- Preservado: todas as rotas/hrefs, `CustomChips`, item condicional `caixinha?.id` → "Minha caixinha", `open`/`handleDrawerClose`.
 
 ---
 

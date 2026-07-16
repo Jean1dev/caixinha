@@ -1,4 +1,7 @@
 import Layout from "@/components/Layout";
+import { Onboarding } from "@/components/bem-vindo/onboarding";
+import CenteredCircularProgress from "@/components/CenteredCircularProgress";
+import { useSession } from "next-auth/react";
 import { BannerNovidades } from "@/components/bem-vindo/banner-novidades";
 import { Dicas } from "@/components/bem-vindo/dicas";
 import { AtalhoEmprestimo } from "@/components/bem-vindo/atalho-emprestimo";
@@ -179,6 +182,16 @@ const Page = () => {
 }
 
 export default function Home() {
+  const { status } = useSession()
+
+  if (status === 'loading') {
+    return <CenteredCircularProgress />
+  }
+
+  if (status === 'unauthenticated') {
+    return <Onboarding />
+  }
+
   return (
     <Layout>
       <>
