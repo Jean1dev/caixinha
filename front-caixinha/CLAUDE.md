@@ -13,6 +13,18 @@ npm start        # Start production server
 
 There is no test runner configured — no Jest or Vitest setup exists.
 
+## Gotchas & conventions
+
+- **Auth is OAuth-only** (Keycloak + Google, `src/pages/api/auth/[...nextauth].ts`). Logged-in screens can't be reached in local dev without real credentials — verify authenticated UI via `npm run build` + code review; only logged-out routes (e.g. `/` onboarding) are browser-drivable locally.
+- **`next build` rewrites `tsconfig.json`** (`moduleResolution: node → bundler`). Revert it (`git checkout tsconfig.json`) after building.
+- **`CenteredCircularProgress` triggers a benign hydration warning** — it picks a random capicoin image at render (SSR/CSR mismatch). Pre-existing; not a regression.
+
+## Visual redesign (Indigo)
+
+- `DESIGN_TASKS.md` tracks the Indigo redesign screen-by-screen; update it when redesigning a screen.
+- Default theme preset is `indigo` (`#6366F1`, `src/theme/colors.ts`); `h1`–`h6` use Plus Jakarta Sans via `theme/base/create-typography.ts`.
+- Redesign idiom: MUI components + inline `sx` (theme palette keys like `primary.lightest`/`success.dark`, plus hardcoded hex where needed). Card radius `5` (borderRadius) / shadow `0 5px 22px rgba(0,0,0,0.08)`; reuse the `GRADIENTS` array (see `src/pages/index.tsx`, `src/components/caixinha/CaixinhaCard.tsx`).
+
 ## Architecture Overview
 
 **Next.js 16 + TypeScript** app using file-based routing under `src/pages/`. UI is built with **Material-UI (MUI) 5**. Data fetching uses **Axios** + **SWR** for caching. Auth is handled by **next-auth**.
