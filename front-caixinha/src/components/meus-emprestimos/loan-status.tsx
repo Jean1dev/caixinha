@@ -2,9 +2,10 @@ import { Box } from '@mui/material';
 import type { LoanStatus } from '@/features/caixinha/utils/flatten-emprestimos';
 
 // palette key per status (uses Devias palette shades: main / lightest)
-const PALETTE: Record<LoanStatus, 'warning' | 'success' | 'primary'> = {
+const PALETTE: Record<LoanStatus, 'warning' | 'success' | 'primary' | 'error'> = {
     Pendente: 'warning',
     'Em dia': 'success',
+    Atrasado: 'error',
     Quitado: 'primary',
 }
 

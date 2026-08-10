@@ -1,6 +1,6 @@
-const moment = require('moment')
 const middleware = require('../utils/middleware')
 const { connect, find } = require('../v2/mongo-operations')
+const mapLoan = require('../utils/map-loan')
 
 function somenteOsQueNaoEstaoAprovados(emprestimo) {
     if (!emprestimo.approved) {
@@ -18,34 +18,6 @@ function somenteOsQueAindaFaltamPagar(emprestimo) {
     return true
 }
 
-function mapItem(item, caixinha) {
-    return {
-        requiredNumberOfApprovals: item.requiredNumberOfApprovals,
-        description: item.description,
-        approvals: item.approvals,
-        interest: item.interest.value,
-        fees: item.fees.value,
-        valueRequested: item.valueRequested.value,
-        date: moment(item.date).format('DD/MM/YYYY'),
-        totalValue: item.totalValue?.value,
-        approved: item.approved,
-        uid: item.uid,
-        memberName: item.memberName,
-        totalValue: item?.totalValue?.value,
-        remainingAmount: item?.remainingAmount?.value,
-        isPaidOff: item.isPaidOff,
-        caixinha: caixinha.name,
-        parcelas: item.installments,
-        billingDates: item.billingDates.map(payday => {
-            const valor = Number((item.totalValue.value / item.installments).toFixed(2))
-            return {
-                valor,
-                data: moment(payday).format('DD/MM/YYYY')
-            }
-        })
-    }
-}
-
 async function meusEmprestimos(context, req) {
     const { name, email } = req.query
     const collectionName = 'caixinhas'
@@ -61,15 +33,15 @@ async function meusEmprestimos(context, req) {
             meusEmprestimosQuitados: c.loans
                 .filter(l => l.memberName === name)
                 .filter(l => l.isPaidOff)
-                .map(item => (mapItem(item, c))),
+                .map(item => mapLoan(item, c)),
             meusEmprestimos: c.loans
                 .filter(l => l.memberName === name)
                 .filter(somenteOsQueAindaFaltamPagar)
-                .map(item => (mapItem(item, c))),
+                .map(item => mapLoan(item, c)),
             emprestimosParaAprovar: c.loans
                 .filter(l => l.memberName != name)
                 .filter(somenteOsQueNaoEstaoAprovados)
-                .map(item => (mapItem(item, c))),
+                .map(item => mapLoan(item, c)),
         }))
     }
 

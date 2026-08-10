@@ -1,6 +1,6 @@
 import type { IMeusEmprestimos, LoansForApprove, IBillingDate } from '@/types/types'
 
-export type LoanStatus = 'Pendente' | 'Em dia' | 'Quitado'
+export type LoanStatus = 'Pendente' | 'Em dia' | 'Atrasado' | 'Quitado'
 
 export interface EmprestimoView {
   uid: string
@@ -18,26 +18,41 @@ export interface EmprestimoView {
 }
 
 function paidCount(loan: LoansForApprove): number {
-  const dates = loan.billingDates ?? []
-  if (dates.length) {
-    return dates.filter((b) => b.valor != null).length
-  }
-  return loan.isPaidOff ? loan.parcelas : 0
+  if (loan.paidInstallments != null) return loan.paidInstallments
+  if (loan.isPaidOff) return loan.parcelas || loan.billingDates?.length || 1
+
+  const parcelas = loan.parcelas || loan.billingDates?.length || 1
+  const totalValue = loan.totalValue ?? loan.valueRequested
+  if (totalValue <= 0) return 0
+  const totalPaid = loan.totalPaid ?? (
+    loan.remainingAmount != null ? Math.max(totalValue - loan.remainingAmount, 0) : 0
+  )
+  return Math.min(Math.floor((totalPaid * parcelas + 0.001) / totalValue), parcelas)
 }
 
-function nextDueDate(loan: LoansForApprove): string | null {
+function nextDueDate(loan: LoansForApprove, pagas: number): string | null {
+  if (loan.nextBillingDate !== undefined) return loan.nextBillingDate
   const dates = loan.billingDates ?? []
-  const next = dates.find((b) => b.valor == null)
+  const next = dates.some((b) => b.status != null)
+    ? dates.find((b) => b.status !== 'paid')
+    : dates[pagas]
   return next?.data ?? null
 }
 
 function toView(loan: LoansForApprove, status: LoanStatus): EmprestimoView {
   const parcelas = loan.parcelas || (loan.billingDates?.length ?? 1) || 1
-  const pagas = status === 'Quitado' ? parcelas : paidCount(loan)
+  const resolvedStatus: LoanStatus = status === 'Quitado'
+    ? 'Quitado'
+    : status === 'Pendente'
+      ? 'Pendente'
+      : loan.isOverdue
+        ? 'Atrasado'
+        : 'Em dia'
+  const pagas = resolvedStatus === 'Quitado' ? parcelas : paidCount(loan)
   const totalValue = loan.totalValue ?? loan.valueRequested
   const valorParcela = parcelas > 0 ? totalValue / parcelas : totalValue
   const restante =
-    loan.remainingAmount ?? Math.max(valorParcela * (parcelas - pagas), 0)
+    loan.remainingAmount ?? Math.max(totalValue - (loan.totalPaid ?? valorParcela * pagas), 0)
 
   return {
     uid: loan.uid,
@@ -45,11 +60,11 @@ function toView(loan: LoansForApprove, status: LoanStatus): EmprestimoView {
     valor: loan.valueRequested,
     parcelas,
     pagas,
-    proxima: status === 'Quitado' ? null : nextDueDate(loan),
+    proxima: resolvedStatus === 'Quitado' ? null : nextDueDate(loan, pagas),
     valorParcela,
     totalValue,
     restante,
-    status,
+    status: resolvedStatus,
     billingDates: loan.billingDates ?? [],
     raw: loan,
   }

@@ -17,30 +17,32 @@ function authorizedSubscribers(subscriberID) {
 module.exports = function dispatchEvent(message, subscriberID) {
     if (!subscriberID || !authorizedSubscribers(subscriberID)) {
         console.log('subscriber not authorized')
-        return
+        return Promise.resolve(false)
     }
 
-    amqp.connect(process.env.AMQP, (error, connection) => {
-        if (error) {
-            return handleAMQPError(error)
-        }
-
-        connection.createChannel((channelError, channel) => {
-            if (channelError) {
-                return handleAMQPError(channelError)
-            }
-
-            if (Array.isArray(message)) {
-                for (const key of message) {
-                    channel.sendToQueue(DEFAULT_QUEUE, Buffer.from(JSON.stringify(key)))
-                    console.log(" [x] Sent %s", message);
-                }
-
+    return new Promise(resolve => {
+        amqp.connect(process.env.AMQP, (error, connection) => {
+            if (error) {
+                handleAMQPError(error)
+                resolve(false)
                 return
             }
 
-            channel.sendToQueue(DEFAULT_QUEUE, Buffer.from(JSON.stringify(message)))
-            console.log(" [x] Sent %s", message);
+            connection.createChannel((channelError, channel) => {
+                if (channelError) {
+                    handleAMQPError(channelError)
+                    connection.close(() => resolve(false))
+                    return
+                }
+
+                const messages = Array.isArray(message) ? message : [message]
+                for (const item of messages) {
+                    channel.sendToQueue(DEFAULT_QUEUE, Buffer.from(JSON.stringify(item)))
+                    console.log(" [x] Sent %s", item)
+                }
+
+                channel.close(() => connection.close(() => resolve(true)))
+            })
         })
     })
 }

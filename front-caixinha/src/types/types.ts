@@ -35,6 +35,10 @@ export interface LoansForApprove {
   uid: string
   memberName: string
   remainingAmount?: number
+  totalPaid?: number
+  paidInstallments?: number
+  nextBillingDate?: string | null
+  isOverdue?: boolean
   isPaidOff?: boolean
   caixinha?: string
   billingDates: IBillingDate[]
@@ -44,6 +48,8 @@ export interface LoansForApprove {
 export interface IBillingDate {
   data: string
   valor: number | null
+  paidAmount?: number
+  status?: 'paid' | 'partial' | 'pending' | 'overdue'
 }
 
 export interface AtivoCarteira {
