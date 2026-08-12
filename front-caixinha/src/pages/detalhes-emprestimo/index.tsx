@@ -40,8 +40,8 @@ export function DetalhesEmprestimoContent() {
     )
     const { pagamentos: meusPagamentos } = useMeusPagamentos(isMeuEmprestimo && uid ? uid : null)
     const totalPagamentos = useMemo(
-        () => meusPagamentos.reduce((acc, curr) => acc + curr.value, 0),
-        [meusPagamentos]
+        () => emprestimo?.totalPaid ?? meusPagamentos.reduce((acc, curr) => acc + curr.value, 0),
+        [emprestimo?.totalPaid, meusPagamentos]
     )
 
     useEffect(() => {
@@ -224,7 +224,7 @@ export function DetalhesEmprestimoContent() {
                                                     Valor Total
                                                 </Typography>
                                                 <Typography variant="h5">
-                                                    R$ {Number(emprestimo.valueRequested).toFixed(2)}
+                                                    R$ {Number(emprestimo.totalValue ?? emprestimo.valueRequested).toFixed(2)}
                                                 </Typography>
                                             </Stack>
                                             <Stack spacing={1}>
@@ -240,7 +240,7 @@ export function DetalhesEmprestimoContent() {
                                                     Saldo Restante
                                                 </Typography>
                                                 <Typography variant="h5" color="error.main">
-                                                    R$ {(Number(emprestimo.valueRequested) - totalPagamentos).toFixed(2)}
+                                                    R$ {Number(emprestimo.remainingAmount ?? Math.max(Number(emprestimo.totalValue ?? emprestimo.valueRequested) - totalPagamentos, 0)).toFixed(2)}
                                                 </Typography>
                                             </Stack>
                                         </Stack>

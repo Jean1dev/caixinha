@@ -19,6 +19,8 @@ interface ParcelaRow {
     label: string
     valor: number
     paid: boolean
+    paidAmount: number
+    status?: 'paid' | 'partial' | 'pending' | 'overdue'
 }
 
 function buildParcelas(e: EmprestimoView): ParcelaRow[] {
@@ -26,13 +28,16 @@ function buildParcelas(e: EmprestimoView): ParcelaRow[] {
         return e.billingDates.map((b, i) => ({
             label: b.data || `Parcela ${i + 1}`,
             valor: b.valor ?? e.valorParcela,
-            paid: b.valor != null,
+            paid: b.status ? b.status === 'paid' : i < e.pagas,
+            paidAmount: b.paidAmount ?? (i < e.pagas ? (b.valor ?? e.valorParcela) : 0),
+            status: b.status,
         }))
     }
     return Array.from({ length: e.parcelas }).map((_, i) => ({
         label: `Parcela ${i + 1}`,
         valor: e.valorParcela,
         paid: i < e.pagas,
+        paidAmount: i < e.pagas ? e.valorParcela : 0,
     }))
 }
 
@@ -98,16 +103,17 @@ export const EmprestimoDetail = ({ e, compact, onDetails, onRenegociar }: Props)
                             borderColor: 'divider',
                         }}
                     >
-                        <Avatar sx={{ width: 30, height: 30, bgcolor: p.paid ? 'success.lightest' : '#F3F4F6' }}>
+                        <Avatar sx={{ width: 30, height: 30, bgcolor: p.paid ? 'success.lightest' : p.status === 'overdue' ? 'error.lightest' : '#F3F4F6' }}>
                             {p.paid ? (
                                 <Check sx={{ fontSize: 16, color: 'success.dark' }} />
                             ) : (
-                                <Schedule sx={{ fontSize: 16, color: 'text.secondary' }} />
+                                <Schedule sx={{ fontSize: 16, color: p.status === 'overdue' ? 'error.main' : 'text.secondary' }} />
                             )}
                         </Avatar>
                         <Typography sx={{ flex: 1, fontSize: 13.5 }}>{p.label}</Typography>
                         <Typography sx={{ fontSize: 13.5, fontWeight: 600, color: p.paid ? 'success.dark' : 'text.secondary' }}>
                             {brl(p.valor)}
+                            {!p.paid && p.paidAmount > 0 && ` (pago ${brl(p.paidAmount)})`}
                         </Typography>
                     </Stack>
                 ))}
