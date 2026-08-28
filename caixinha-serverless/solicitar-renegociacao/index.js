@@ -3,6 +3,9 @@ const { SuggestRenegotiationSimpleInterest } = require('caixinha-core/dist/src/u
 const middleware = require('../utils/middleware')
 const { connect, getByIdOrThrow, insertDocument } = require('../v2/mongo-operations')
 const dispatch = require('../amqp/events')
+const coreVersion = require('caixinha-core/package.json').version
+
+const RISK_CALCULATION_ERROR = 'RENEGOTIATION_RISK_CALCULATION_FAILED'
 
 function resolveBSONStructureRenegociacao(reneg) {
     reneg['oldLoan']['box'] = null
@@ -28,7 +31,34 @@ async function handle(context, req) {
     }
 
     const reneg = Renegotiation.create(emprestimo)
-    const sugestao = SuggestRenegotiationSimpleInterest(reneg)
+    let sugestao
+    try {
+        sugestao = SuggestRenegotiationSimpleInterest(reneg)
+    } catch (error) {
+        error.code = RISK_CALCULATION_ERROR
+        context.log({
+            event: 'renegotiation_proposal_failed',
+            caixinhaId,
+            emprestimoUid,
+            coreVersion,
+            isOverdue: emprestimo.isOverdue,
+            overdueDays: emprestimo.calculateOverdueDays(),
+            nextUnpaidBillingDate: emprestimo.nextUnpaidBillingDate?.toISOString() || null,
+            errorName: error.name,
+            errorMessage: error.message,
+            stack: error.stack
+        })
+        throw error
+    }
+
+    context.log({
+        event: 'renegotiation_proposal_generated',
+        caixinhaId,
+        emprestimoUid,
+        coreVersion,
+        overdueDays: emprestimo.calculateOverdueDays(),
+        nextUnpaidBillingDate: emprestimo.nextUnpaidBillingDate?.toISOString() || null
+    })
 
     reneg['boxId'] = caixinhaId
     const { insertedId } = await insertDocument('renegociacoes', resolveBSONStructureRenegociacao(reneg))

@@ -121,6 +121,55 @@ describe('solicitação de renegociacao test', () => {
         expect(reneg).not.toBeNull()
     }, 30000)
 
+    it('Deve renegociar quando uma parcela anterior venceu e a ultima ainda esta no futuro', async () => {
+        const member = new Member('joao-parcelado')
+        const box = new Box()
+        box.joinMember(member)
+        const futureBillingDate = new Date()
+        futureBillingDate.setDate(futureBillingDate.getDate() + 30)
+        const input = {
+            approved: true,
+            member,
+            date: getDataMenosXDias(31).toString(),
+            totalValue: { value: 100 },
+            valueRequested: { value: 100 },
+            remainingAmount: { value: 100 },
+            fees: { value: 0 },
+            interest: { value: 0 },
+            box,
+            description: 'emprestimo parcelado',
+            approvals: 1,
+            memberName: member.memberName,
+            requiredNumberOfApprovals: 0,
+            billingDates: [getDataMenosXDias(2).toString(), futureBillingDate.toString()],
+            uid: 'uid-overdue-first-installment',
+            listOfMembersWhoHaveAlreadyApproved: [member],
+            payments: []
+        }
+
+        box['loans'] = [Loan.fromBox(input)]
+        const { id } = await saveAndReturnCaixinhaIds(box)
+        const context = { log: jest.fn() }
+
+        await Func(context, {
+            body: { caixinhaId: id, emprestimoUid: input.uid }
+        })
+
+        expect(context.res.status).not.toBe(400)
+        expect(context.res.body.sugestao.newInterestRate).toBeGreaterThan(0)
+        expect(context.res.body.sugestao.newTotalValue).toBeGreaterThan(100)
+        expect(context.log).toHaveBeenCalledWith(expect.objectContaining({
+            event: 'renegotiation_proposal_generated',
+            caixinhaId: id,
+            emprestimoUid: input.uid,
+            coreVersion: expect.any(String),
+            overdueDays: expect.any(Number)
+        }))
+
+        const reneg = await getByIdOrThrow(context.res.body.renegId, 'renegociacoes')
+        expect(reneg).not.toBeNull()
+    }, 30000)
+
     it.each([
         {
             cenario: 'nao aprovado',
