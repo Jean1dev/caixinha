@@ -76,7 +76,7 @@ export const PagamentoEmprestimo = ({ data }: { data: IProps }) => {
 
     function handleOverdueLoanError(e: any) {
         if (e.message.includes('Cannot make payment on overdue loan')) {
-            window.location.href = "/renegociacao";
+            window.location.href = `/renegociacao?emprestimoUid=${encodeURIComponent(data.emprestimo.uid)}`;
         }
     }
 

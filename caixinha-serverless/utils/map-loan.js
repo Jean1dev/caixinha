@@ -23,6 +23,7 @@ function mapLoan(item, caixinha, options) {
         isOverdue: schedule.isOverdue,
         isPaidOff: item.isPaidOff,
         caixinha: caixinha?.name,
+        caixinhaId: caixinha?._id?.toString?.() || caixinha?.id?.toString?.(),
         parcelas: item.installments,
         billingDates: schedule.installments.map(installment => ({
             valor: installment.value,

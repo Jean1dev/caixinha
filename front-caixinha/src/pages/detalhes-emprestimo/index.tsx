@@ -209,7 +209,19 @@ export function DetalhesEmprestimoContent() {
                             </Typography>
                         </Link>
 
-                        {headerCard}
+                            {headerCard}
+                            {emprestimo.isOverdue && emprestimo.approved ? (
+                                <Button
+                                    variant="outlined"
+                                    onClick={() => router.push({
+                                        pathname: '/renegociacao',
+                                        query: { emprestimoUid: emprestimo.uid },
+                                    })}
+                                    sx={{ alignSelf: 'flex-start', textTransform: 'none' }}
+                                >
+                                    Renegociar empréstimo
+                                </Button>
+                            ) : null}
 
                         <Grid container spacing={3}>
                             <Grid xs={12} md={6} lg={4}>

@@ -15,12 +15,13 @@ import {
 import { ListarEmprestimosParaRenegociar } from "@/components/renegociacao/listar-emprestimos-para-renegociar";
 import { useCallback, useState } from "react";
 import { PropostaRenegociacao } from "@/components/renegociacao/proposta-renegociacao";
-import { useCaixinhaSelect } from "@/hooks/useCaixinhaSelect";
 import { solicitarRenegociacao } from "../api/api.service";
 import toast from "react-hot-toast";
 import { useTranslation } from "react-i18next";
 import { useTheme } from "@mui/material/styles";
 import type { SolicitarRenegociacaoResponse } from "@/features/caixinha/api/caixinha.types";
+import type { EmprestimoView } from "@/features/caixinha/utils/flatten-emprestimos";
+import { useRouter } from "next/router";
 
 const TOAST_ID = "reneg-solicitacao";
 
@@ -29,22 +30,22 @@ export default function Renegociacao() {
     const [loading, setLoading] = useState(false)
     const [requestError, setRequestError] = useState<string | null>(null)
     const [activeStep, setActiveStep] = useState(0)
-    const { caixinha } = useCaixinhaSelect()
     const { t } = useTranslation()
     const theme = useTheme()
+    const router = useRouter()
+    const emprestimoUidInicial = router.isReady && typeof router.query.emprestimoUid === 'string'
+        ? router.query.emprestimoUid
+        : null
 
-    const verProposta = useCallback((uid: string) => {
-        if (!caixinha?.id) {
-            toast.error(t('renegociacao.erro_solicitacao') || 'Selecione uma caixinha.')
-            return
-        }
+    const verProposta = useCallback((emprestimo: EmprestimoView) => {
         setRequestError(null)
+        setRenegociacao(null)
         setLoading(true)
         setActiveStep(1)
         toast.loading(t('renegociacao.solicitando_renegociacao'), { id: TOAST_ID })
         solicitarRenegociacao({
-            caixinhaId: caixinha.id,
-            emprestimoUid: uid
+            caixinhaId: emprestimo.caixinhaId,
+            emprestimoUid: emprestimo.uid
         }).then((res) => {
             setRenegociacao(res)
             setActiveStep(2)
@@ -56,7 +57,7 @@ export default function Renegociacao() {
         }).finally(() => {
             setLoading(false)
         })
-    }, [caixinha, t])
+    }, [t])
 
     const steps = [
         t('renegociacao.passo_emprestimo') || 'Empréstimo',
@@ -100,7 +101,7 @@ export default function Renegociacao() {
                                     align="center"
                                     sx={{ color: 'text.primary' }}
                                 >
-                                    {t('renegociacao.ultimo_emprestimo')}
+                                    {t('renegociacao.selecione_emprestimo')}
                                 </Typography>
                                 <Stepper activeStep={activeStep} alternativeLabel sx={{ width: '100%', maxWidth: 560, mt: 2 }}>
                                     {steps.map((label) => (
@@ -130,7 +131,11 @@ export default function Renegociacao() {
                                 >
                                     <Stack spacing={3}>
                                         {loading ? <LinearProgress /> : null}
-                                        <ListarEmprestimosParaRenegociar verProposta={verProposta} solicitando={loading} />
+                                        <ListarEmprestimosParaRenegociar
+                                            emprestimoUidInicial={emprestimoUidInicial}
+                                            verProposta={verProposta}
+                                            solicitando={loading}
+                                        />
                                         
                                         {renegociacao && (
                                             <Paper 

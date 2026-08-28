@@ -5,6 +5,7 @@ export type LoanStatus = 'Pendente' | 'Em dia' | 'Atrasado' | 'Quitado'
 export interface EmprestimoView {
   uid: string
   caixinha: string
+  caixinhaId: string
   valor: number
   parcelas: number
   pagas: number
@@ -57,6 +58,7 @@ function toView(loan: LoansForApprove, status: LoanStatus): EmprestimoView {
   return {
     uid: loan.uid,
     caixinha: loan.caixinha ?? 'Caixinha',
+    caixinhaId: loan.caixinhaId ?? '',
     valor: loan.valueRequested,
     parcelas,
     pagas,
