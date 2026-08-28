@@ -3,7 +3,6 @@ const { SuggestRenegotiationSimpleInterest } = require('caixinha-core/dist/src/u
 const middleware = require('../utils/middleware')
 const { connect, getByIdOrThrow, insertDocument } = require('../v2/mongo-operations')
 const dispatch = require('../amqp/events')
-const { calculateLoanSchedule } = require('../utils/loan-schedule')
 
 function resolveBSONStructureRenegociacao(reneg) {
     reneg['oldLoan']['box'] = null
@@ -24,7 +23,7 @@ async function handle(context, req) {
     if (emprestimo.isPaidOff) {
         throw new Error('Emprestimos quitados nao podem ser renegociados')
     }
-    if (!calculateLoanSchedule(emprestimo).isOverdue) {
+    if (!emprestimo.isOverdue) {
         throw new Error('Somente emprestimos atrasados podem ser renegociados')
     }
 
