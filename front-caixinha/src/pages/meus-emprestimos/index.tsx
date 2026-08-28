@@ -66,7 +66,10 @@ const Page = () => {
     const selectedLoan = filteredLoans.find((l) => l.uid === selected) ?? filteredLoans[0] ?? null
 
     const goToDetalhes = (uid: string) => router.push(`/detalhes-emprestimo/${uid}`)
-    const goToRenegociar = (_uid: string) => router.push('/renegociacao')
+    const goToRenegociar = (uid: string) => router.push({
+        pathname: '/renegociacao',
+        query: { emprestimoUid: uid },
+    })
     const onItemClick = (uid: string) => {
         if (lgUp) {
             setSelected(uid)

@@ -41,6 +41,7 @@ export interface LoansForApprove {
   isOverdue?: boolean
   isPaidOff?: boolean
   caixinha?: string
+  caixinhaId?: string
   billingDates: IBillingDate[]
   parcelas: number
 }

@@ -16,6 +16,7 @@ describe('get-emprestimo contract', () => {
 
     it('reads the canonical loan from the box and returns the same schedule fields', async () => {
         mockFindWithLimit.mockResolvedValue([{
+            _id: { toString: () => 'box-1' },
             name: 'Caixinha',
             loans: [{
                 uid: 'loan-1',
@@ -38,6 +39,7 @@ describe('get-emprestimo contract', () => {
         expect(mockFindWithLimit).toHaveBeenCalledWith('caixinhas', { 'loans.uid': 'loan-1' }, 1)
         expect(context.res.body).toMatchObject({
             uid: 'loan-1',
+            caixinhaId: 'box-1',
             totalPaid: 100,
             paidInstallments: 1,
             nextBillingDate: '01/08/2026',

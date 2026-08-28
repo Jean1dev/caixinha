@@ -132,8 +132,10 @@ export async function fetchEmprestimo(uid: string): Promise<LoansForApprove> {
       totalValue: 5.15,
       approved: true,
       uid: '044b0dd2-a21f-4b6f-b0f1-f93865e0ead0',
+      caixinhaId: '646f538de5cd54cc6344ec69',
       memberName: 'Jeanluca FP',
       parcelas: 0,
+      isOverdue: true,
       billingDates: [
         { valor: 14.8, data: '16/08/2023' },
         { valor: 14.8, data: '16/08/2023' },

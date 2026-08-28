@@ -45,6 +45,7 @@ describe('meus-emprestimos contract', () => {
 
     it('returns payment progress and overdue state from real payments', async () => {
         mockBoxes = [{
+            _id: { toString: () => 'box-1' },
             name: 'Caixinha principal',
             currentBalance: { value: 1000 },
             loans: [reportedLoan()]
@@ -55,6 +56,7 @@ describe('meus-emprestimos contract', () => {
 
         const result = context.res.body.caixinhas[0].meusEmprestimos[0]
         expect(result).toMatchObject({
+            caixinhaId: 'box-1',
             totalPaid: 1591.3,
             paidInstallments: 2,
             nextBillingDate: '16/07/2026',

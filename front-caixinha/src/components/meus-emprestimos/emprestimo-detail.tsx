@@ -129,14 +129,16 @@ export const EmprestimoDetail = ({ e, compact, onDetails, onRenegociar }: Props)
                     >
                         Pagar parcela
                     </Button>
-                    <Button
-                        variant="outlined"
-                        fullWidth
-                        onClick={() => onRenegociar(e.uid)}
-                        sx={{ borderRadius: 3, textTransform: 'none', fontWeight: 600 }}
-                    >
-                        Renegociar
-                    </Button>
+                    {e.status === 'Atrasado' && e.raw.approved ? (
+                        <Button
+                            variant="outlined"
+                            fullWidth
+                            onClick={() => onRenegociar(e.uid)}
+                            sx={{ borderRadius: 3, textTransform: 'none', fontWeight: 600 }}
+                        >
+                            Renegociar
+                        </Button>
+                    ) : null}
                 </Stack>
             ) : (
                 <Button

@@ -120,4 +120,57 @@ describe('solicitação de renegociacao test', () => {
         const reneg = await getByIdOrThrow(context.res.body.renegId, 'renegociacoes')
         expect(reneg).not.toBeNull()
     }, 30000)
+
+    it.each([
+        {
+            cenario: 'nao aprovado',
+            override: { approved: false },
+            mensagem: 'Somente emprestimos aprovados podem ser renegociados'
+        },
+        {
+            cenario: 'quitado',
+            override: { isPaidOff: true },
+            mensagem: 'Emprestimos quitados nao podem ser renegociados'
+        },
+        {
+            cenario: 'em dia',
+            override: { billingDates: [new Date(Date.now() + 86400000).toString()] },
+            mensagem: 'Somente emprestimos atrasados podem ser renegociados'
+        }
+    ])('Deve rejeitar emprestimo $cenario', async ({ override, mensagem }) => {
+        const member = new Member('maria')
+        const box = new Box()
+        box.joinMember(member)
+        const input = {
+            approved: true,
+            member,
+            date: getDataMenosXDias(31).toString(),
+            totalValue: { value: 10 },
+            valueRequested: { value: 10 },
+            remainingAmount: { value: 10 },
+            fees: { value: 0 },
+            interest: { value: 0 },
+            box,
+            description: 'fake',
+            approvals: 1,
+            memberName: member.memberName,
+            requiredNumberOfApprovals: 0,
+            billingDates: [getDataMenosXDias(31).toString()],
+            uid: `uid-${override.approved === false ? 'unapproved' : override.isPaidOff ? 'paid' : 'current'}`,
+            listOfMembersWhoHaveAlreadyApproved: [member],
+            payments: [],
+            ...override
+        }
+
+        box['loans'] = [Loan.fromBox(input)]
+        const { id } = await saveAndReturnCaixinhaIds(box)
+        const context = { log: jest.fn() }
+
+        await Func(context, {
+            body: { caixinhaId: id, emprestimoUid: input.uid }
+        })
+
+        expect(context.res.status).toBe(400)
+        expect(context.res.body.message).toBe(mensagem)
+    }, 30000)
 })

@@ -15,9 +15,11 @@ const meusEmprestimosData = {
                     "totalValue": 5.15,
                     "approved": true,
                     "uid": "ef1f02e3-f6bf-4570-b50f-e581d41f3b08",
+                    "caixinhaId": "646f538de5cd54cc6344ec69",
                     "memberName": "jean",
                     "remainingAmount": 0,
                     "isPaidOff": null,
+                    "isOverdue": true,
                     "caixinha": "teste",
                     "parcelas": 2,
                     "billingDates": [
@@ -42,7 +44,9 @@ const meusEmprestimosData = {
                     "totalValue": 5.15,
                     "approved": true,
                     "uid": "3bce4d18-8af8-4db2-a7a5-03b67d455ad6",
+                    "caixinhaId": "646f538de5cd54cc6344ec69",
                     "memberName": "jean",
+                    "isOverdue": true,
                     "caixinha": "teste",
                     "parcelas": 0,
                     "billingDates": [
