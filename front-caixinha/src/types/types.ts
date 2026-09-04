@@ -5,6 +5,12 @@ export interface Caixinha {
   loans: any[]
   id: string
   name?: string
+  balances?: {
+    cashBalance: number
+    reservedBalance: number
+    availableBalance: number
+  }
+  maxLoanAmount?: number
 }
 
 export interface IMeusEmprestimos {

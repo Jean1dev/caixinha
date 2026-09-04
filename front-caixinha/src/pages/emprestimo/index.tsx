@@ -24,6 +24,7 @@ import CenteredCircularProgress from '@/components/CenteredCircularProgress'
 import toast from 'react-hot-toast'
 import { Seo } from '@/components/Seo'
 import { useUserAuth } from "@/hooks/useUserAuth";
+import { useAnaliseCaixinha } from '@/features/caixinha/hooks/useAnaliseCaixinha'
 
 const PARCELAS = [2, 3, 6, 12]
 const TAXA = 0.018
@@ -35,6 +36,7 @@ const Emprestimo = () => {
     const { user } = useUserAuth()
     const router = useRouter()
     const { caixinha } = useCaixinhaSelect()
+    const { dados: dadosCaixinha } = useAnaliseCaixinha(caixinha?.id ?? null)
     const [isLoading, setLoading] = useState(false)
     const [motivoTemp, setMotivoTemp] = useState('')
     const [solicitacao, setSolicitacao] = useState({
@@ -49,6 +51,15 @@ const Emprestimo = () => {
         data: [],
         loading: false
     })
+    const availableBalance = Number(
+        dadosCaixinha?.availableBalance ??
+        dadosCaixinha?.totalDisponivel ??
+        caixinha?.balances?.availableBalance ??
+        caixinha?.maxLoanAmount ??
+        0
+    )
+    const sliderMaximum = Math.max(100, Math.floor(availableBalance / 100) * 100)
+    const canRequestLoan = availableBalance >= 100 && solicitacao.valor <= availableBalance
 
     useEffect(() => {
         setSolicitacao((prev) => ({
@@ -57,6 +68,14 @@ const Emprestimo = () => {
             email: user.email
         }))
     }, [user])
+
+    useEffect(() => {
+        if (availableBalance <= 0 || solicitacao.valor <= availableBalance) return
+        setSolicitacao((prev) => ({
+            ...prev,
+            valor: Math.max(100, Math.floor(availableBalance / 100) * 100)
+        }))
+    }, [availableBalance, solicitacao.valor])
 
     useEffect(() => {
         if (!solicitacao.parcela) return
@@ -136,14 +155,18 @@ const Emprestimo = () => {
                                         </Typography>
                                         <Slider
                                             min={100}
-                                            max={5000}
+                                            max={sliderMaximum}
                                             step={100}
+                                            disabled={availableBalance < 100}
                                             value={solicitacao.valor}
                                             onChange={(_, v) =>
                                                 setSolicitacao((prev) => ({ ...prev, valor: v as number }))
                                             }
                                             sx={{ mt: 1.5, color: 'primary.main' }}
                                         />
+                                        <Typography variant="caption" color="text.secondary">
+                                            DisponÃ­vel para novos emprÃ©stimos: {brl(availableBalance)}
+                                        </Typography>
                                     </Box>
 
                                     {/* Parcelas */}
@@ -269,6 +292,7 @@ const Emprestimo = () => {
                                     size="large"
                                     variant="contained"
                                     type="submit"
+                                    disabled={!canRequestLoan}
                                     sx={{ mt: 2, borderRadius: 3 }}
                                 >
                                     Solicitar empréstimo

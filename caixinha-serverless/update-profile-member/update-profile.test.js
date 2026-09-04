@@ -16,7 +16,7 @@ describe('deve testar a funcao de update profile', () => {
     let mongod
 
     beforeAll(async () => {
-        mongod = await MongoMemoryServer.create()
+        mongod = await MongoMemoryServer.create({ instance: { ip: '127.0.0.1' } })
         await makeNewClient(mongod.getUri())
     })
 

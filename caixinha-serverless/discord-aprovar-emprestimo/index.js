@@ -1,79 +1,44 @@
-const { resolveCircularStructureBSON } = require('../utils')
-const { Box, Member } = require('caixinha-core/dist/src')
-const { connect, getByIdOrThrow, replaceDocumentById, upsert } = require('../v2/mongo-operations')
 const middleware = require('../utils/middleware')
-const dispatch = require('../amqp/events')
+const { connect, getByIdOrThrow } = require('../v2/mongo-operations')
+const aprovarEmprestimo = require('../aprovar-emprestimo')
 
 async function handle(context, req) {
-    context.log(`function run ${new Date().toString()}`)
     const { caixinhaId, emprestimoUid } = req.body
-
     await connect()
-
-    context.log(`conectado no mongo`)
-    const caixinha = Box.fromJson(await getByIdOrThrow(caixinhaId))
-    context.log(`caixinha com ${caixinha.totalMembers} membros encontrada`)
-
-    const emprestimo = caixinha.getLoanByUUID(emprestimoUid)
-
-    if (emprestimo.isApproved) {
-        context.res = {
-            status: 400,
-            body: {
-                message: `emprestimo ja foi aprovado`
-            }
-        }
-
+    const box = await getByIdOrThrow(caixinhaId)
+    const loan = box.loans.find(item => item.uid === emprestimoUid)
+    if (!loan) throw new Error('Loan not found')
+    if (loan.approved) {
+        context.res = { status: 400, body: { message: 'emprestimo ja foi aprovado' } }
         return
     }
-    if (emprestimo['refusedReason']) {
-        context.res = {
-            status: 400,
-            body: {
-                message: `esse emprestimo foi rejeitado`
-            }
-        }
-
+    if (loan.refusedReason) {
+        context.res = { status: 400, body: { message: 'esse emprestimo foi rejeitado' } }
         return
     }
 
-    context.log(`emprestimo encontrado ${emprestimo.UUID}`)
-    caixinha['members']
-        .map(member => Member.build({ name: member.name, email: member.email }))
-        .forEach(member => {
-            try {
-                emprestimo.addApprove(member)
-            } catch (error) {
-                context.log(`error ir try catch ${error.message}`)
-            }
-        });
-
-    caixinha['loans'] = caixinha._loans.filter(loan => {
-        if (loan.UUID === emprestimoUid && !loan.isApproved)
-            return false
-
-        return true
-    })
-
-    caixinha['loans'].pop()
-    await replaceDocumentById(caixinhaId, 'caixinhas', resolveCircularStructureBSON(caixinha))
-    await upsert('emprestimos', { approved: true }, { uid: emprestimo.UUID })
-    dispatch({
-        type: 'EMPRESTIMO_APROVADO',
-        data: {
-            memberName: emprestimo._member.memberName,
-            emprestimoId: emprestimoUid,
-            caixinhaid: caixinhaId
+    const approvedNames = new Set(
+        (loan.listOfMembersWhoHaveAlreadyApproved || []).map(member => member.name)
+    )
+    for (const member of box.members.filter(item => !approvedNames.has(item.name))) {
+        const approvalContext = { log: context.log }
+        await aprovarEmprestimo(approvalContext, {
+            body: { memberName: member.name, emprestimoId: emprestimoUid, caixinhaid: caixinhaId }
+        })
+        if (approvalContext.res?.status >= 400) {
+            context.res = approvalContext.res
+            return
         }
-    }, caixinhaId)
-
+    }
+    const updatedBox = await getByIdOrThrow(caixinhaId)
+    const updatedLoan = updatedBox.loans.find(item => item.uid === emprestimoUid)
     context.res = {
         body: {
             emprestimo: {
-                uid: emprestimo.uid,
-                approved: emprestimo.approved,
-                approvals: emprestimo.approvals,
-                listOfMembersWhoHaveAlreadyApproved: emprestimo.listOfMembersWhoHaveAlreadyApproved
+                uid: updatedLoan.uid,
+                approved: updatedLoan.approved,
+                approvals: updatedLoan.approvals,
+                listOfMembersWhoHaveAlreadyApproved: updatedLoan.listOfMembersWhoHaveAlreadyApproved
             }
         }
     }

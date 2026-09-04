@@ -4,6 +4,7 @@ const middleware = require('../utils/middleware')
 const { ObjectId } = require('mongodb')
 const moment = require('moment')
 const { connect, getByIdOrThrow, find, findOrderByDesc } = require("../v2/mongo-operations");
+const { getPublicBalances } = require('../utils/safe-balance')
 
 function groupElementsByMemberName(deposits) {
     const groupedElements = {};
@@ -52,6 +53,7 @@ async function dadosAnalise(context, req) {
 
     await connect()
     const boxEntity = await getByIdOrThrow(caixinhaId, 'caixinhas')
+    const balances = await getPublicBalances(boxEntity)
     const calculoPercentuais = CalculatePercentDevlopment(Box.fromJson(boxEntity))
     const depositos = await findOrderByDesc({ idCaixinha: new ObjectId(caixinhaId) }, 'depositos')
     const patrimonio = await find('evolucaoPatrimonial', { idCaixinha: new ObjectId(caixinhaId) })
@@ -111,7 +113,9 @@ async function dadosAnalise(context, req) {
     }
 
     const result = {
-        totalDisponivel: boxEntity.currentBalance.value,
+        totalDisponivel: balances.availableBalance,
+        ...balances,
+        maxLoanAmount: balances.availableBalance,
         totalDepositos,
         totalJuros,
         totalEmprestimos,

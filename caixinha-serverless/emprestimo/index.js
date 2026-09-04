@@ -1,8 +1,12 @@
 const { resolveCircularStructureBSON } = require('../utils')
 const middleware = require('../utils/middleware')
 const { Member, Box, Loan } = require('caixinha-core/dist/src')
-const { connect, replaceDocumentById, insertDocument, getByIdOrThrow } = require('../v2/mongo-operations')
+const { connect, replaceDocumentById, insertDocument, getByIdOrThrow, withTransaction = async work => work() } = require('../v2/mongo-operations')
 const dispatchEvent = require('../amqp/events')
+const { assertAvailableBalance, getSafeAvailableBalance } = require('../utils/safe-balance')
+const { appendLedgerEntry } = require('../v2/ledger-operations')
+const { ENTRY_TYPES } = require('../v2/balance-ledger')
+const { toCents } = require('../utils/money')
 
 function getTodosRemetentesDaCaixinha(caixinha) {
     return caixinha._members.map(member => member._email)
@@ -15,34 +19,34 @@ async function emprestimo(context, req) {
     const interest = Number(juros)
 
     await connect()
-    const member = Member.build({ name, email })
-    const boxEntity = await getByIdOrThrow(caixinhaID, 'caixinhas')
+    const { member, box, emprestimo } = await withTransaction(async session => {
+        const member = Member.build({ name, email })
+        const boxEntity = await getByIdOrThrow(caixinhaID, 'caixinhas', { session })
+        assertAvailableBalance(await getSafeAvailableBalance(boxEntity, { session }), valueRequested)
+        const box = Box.fromJson(boxEntity)
+        const emprestimo = new Loan({
+            box, member, valueRequested, interest, fees: fees || 0,
+            description: motivo, installments: parcela
+        })
+        emprestimo.addApprove(member)
+        if (!emprestimo.isApproved) box['loans'].push(emprestimo)
 
-    const box = Box.fromJson(boxEntity)
-    const emprestimo = new Loan({
-        box,
-        member,
-        valueRequested,
-        interest,
-        fees: fees || 0,
-        description: motivo,
-        installments: parcela
+        const document = resolveCircularStructureBSON(box)
+        await appendLedgerEntry(boxEntity, document, {
+            operationId: `loan:${emprestimo.UUID}:${emprestimo.isApproved ? 'disbursement' : 'reservation'}`,
+            type: emprestimo.isApproved ? ENTRY_TYPES.LOAN_DISBURSEMENT : ENTRY_TYPES.LOAN_RESERVATION,
+            cashDeltaCents: emprestimo.isApproved ? -toCents(valueRequested) : 0,
+            reservedDeltaCents: emprestimo.isApproved ? 0 : toCents(valueRequested),
+            occurredAt: new Date()
+        }, session)
+        await replaceDocumentById(boxEntity._id, 'caixinhas', document, {
+            expectedVersion: boxEntity._version, session
+        })
+        emprestimo['box'] = undefined
+        emprestimo['boxId'] = caixinhaID
+        await insertDocument('emprestimos', emprestimo, { session })
+        return { member, box, emprestimo }
     })
-
-    emprestimo.addApprove(member)
-    /**
-     * TODO: Provavel q vai ter um bug aqui
-     * analisar se correto seria fazer essa logica dentro do core
-     * cenario ao abrir um emprestimo com 1 membro ele acaba duplicando o emprestimo
-     */
-    if (!emprestimo.isApproved) {
-        emprestimo['box'] = null
-        box['loans'].push(emprestimo)
-    }
-
-    await replaceDocumentById(boxEntity._id, 'caixinhas', resolveCircularStructureBSON(box))
-    emprestimo['boxId'] = caixinhaID
-    await insertDocument('emprestimos', emprestimo)
 
     context.res = {
         body: emprestimo.UUID

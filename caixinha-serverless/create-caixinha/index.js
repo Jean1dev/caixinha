@@ -7,6 +7,14 @@ async function createCaixinha(context, req) {
     await connect()
     const box = new Box()
     box['name'] = name
+    box['balances'] = {
+        ledgerActive: true,
+        balanceVersion: 0,
+        cashBalanceCents: 0,
+        reservedBalanceCents: 0,
+        availableBalanceCents: 0
+    }
+    box['_version'] = 0
     const result = await insertDocument('caixinhas', box)
     context.res = {
         body: result
