@@ -123,7 +123,7 @@ describe('Get Ultimo Emprestimo test', () => {
     let mongod
 
     beforeAll(async () => {
-        mongod = await MongoMemoryServer.create()
+        mongod = await MongoMemoryServer.create({ instance: { ip: '127.0.0.1' } })
         await makeNewClient(mongod.getUri())
         await insertDocument('emprestimos', mockData[0])
         await insertDocument('emprestimos', mockData[1])

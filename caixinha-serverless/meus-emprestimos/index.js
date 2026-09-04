@@ -1,6 +1,7 @@
 const middleware = require('../utils/middleware')
 const { connect, find } = require('../v2/mongo-operations')
 const mapLoan = require('../utils/map-loan')
+const { getPublicBalances } = require('../utils/safe-balance')
 
 function somenteOsQueNaoEstaoAprovados(emprestimo) {
     if (!emprestimo.approved) {
@@ -28,8 +29,11 @@ async function meusEmprestimos(context, req) {
     })
 
     const returnData = {
-        caixinhas: caixinhas.map(c => ({
-            currentBalance: c.currentBalance.value,
+        caixinhas: await Promise.all(caixinhas.map(async c => {
+            const balances = await getPublicBalances(c)
+            return {
+            currentBalance: balances.availableBalance,
+            balances,
             meusEmprestimosQuitados: c.loans
                 .filter(l => l.memberName === name)
                 .filter(l => l.isPaidOff)
@@ -42,7 +46,7 @@ async function meusEmprestimos(context, req) {
                 .filter(l => l.memberName != name)
                 .filter(somenteOsQueNaoEstaoAprovados)
                 .map(item => mapLoan(item, c)),
-        }))
+        }}))
     }
 
     const totalPendente = returnData.caixinhas

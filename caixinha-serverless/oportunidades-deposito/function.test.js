@@ -45,7 +45,7 @@ describe('Oportunidades de deposito test', () => {
     let mongod
 
     beforeAll(async () => {
-        mongod = await MongoMemoryServer.create()
+        mongod = await MongoMemoryServer.create({ instance: { ip: '127.0.0.1' } })
         await makeNewClient(mongod.getUri())
         await insertDocument('membros', {
             name: 'jean',
@@ -132,4 +132,4 @@ describe('Oportunidades de deposito test', () => {
 
         expect(dispatchEvent).not.toHaveBeenCalled()
     })
-}) 
+})

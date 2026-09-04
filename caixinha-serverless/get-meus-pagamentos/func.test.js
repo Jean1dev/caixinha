@@ -91,7 +91,7 @@ describe('get meus pagamentos test', () => {
     let mongod
 
     beforeAll(async () => {
-        mongod = await MongoMemoryServer.create()
+        mongod = await MongoMemoryServer.create({ instance: { ip: '127.0.0.1' } })
         await makeNewClient(mongod.getUri())
         await insertDocument('caixinhas', mockData[0])
         await insertDocument('caixinhas', mockData[1])

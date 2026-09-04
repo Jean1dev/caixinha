@@ -9,12 +9,12 @@ describe('Renegociacao teste test', () => {
     let mongod
 
     beforeAll(async () => {
-        mongod = await MongoMemoryServer.create()
+        mongod = await MongoMemoryServer.create({ instance: { ip: '127.0.0.1' } })
         await makeNewClient(mongod.getUri())
     })
 
     afterAll(async () => {
-        await mongod.stop()
+        if (mongod) await mongod.stop()
     })
 
     it('Deve renegociar com sucesso', async () => {
@@ -81,6 +81,7 @@ describe('Renegociacao teste test', () => {
         expect(emprestimosRegistrados[0].uid).toBe(reneg.newLoan.uid)
 
         const caixinhaAtualizada = await getByIdOrThrow(id, 'caixinhas')
+        expect(caixinhaAtualizada.currentBalance.value).toBe(0)
         expect(caixinhaAtualizada.loans.length).toBe(1)
         expect(caixinhaAtualizada.loans[0].installments).toBe(2)
         expect(caixinhaAtualizada.loans[0].uid).toBe(reneg.newLoan.uid)

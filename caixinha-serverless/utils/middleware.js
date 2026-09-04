@@ -17,7 +17,7 @@ async function middleware(context, req, nextFunction) {
         }
 
         context.res = {
-            status: 400,
+            status: error.status || (error.code === 'INSUFFICIENT_AVAILABLE_BALANCE' ? 409 : 400),
             body: {
                 message: error.message,
                 ...(error.code ? { code: error.code } : {})

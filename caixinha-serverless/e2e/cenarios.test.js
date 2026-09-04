@@ -27,6 +27,12 @@ jest.mock('../v2/mongo-operations.js', () => {
         },
         upsert: function (collection, document, filter) {
             console.log('upsert mock')
+        },
+        find: function () {
+            return []
+        },
+        withTransaction: function (work) {
+            return work(undefined)
         }
     }
 })
@@ -65,6 +71,14 @@ describe('Teste end to end', () => {
             "loans": [],
             "loockedForNewMembers": false,
             "name": "e2e-test",
+            "balances": {
+                "ledgerActive": true,
+                "balanceVersion": 0,
+                "cashBalanceCents": 0,
+                "reservedBalanceCents": 0,
+                "availableBalanceCents": 0
+            },
+            "_version": 0,
             "_id": "646e588a78404a6458745770"
         }).toStrictEqual(JSON.parse(result))
 
@@ -226,6 +240,10 @@ describe('Teste end to end', () => {
                     "totalValue": {
                         "value": 5.1,
                     },
+                    "remainingAmount": {
+                        "value": 5.1
+                    },
+                    "disbursed": false,
                     "listOfMembersWhoHaveAlreadyApproved": [
                         {
                             "name": "jean",
@@ -326,8 +344,9 @@ describe('Teste end to end', () => {
                         "value": 5.1
                     },
                     "remainingAmount": {
-                        "value": 0
-                    }
+                        "value": 5.1
+                    },
+                    "disbursed": true
                 }
             ],
             "loockedForNewMembers": false,
@@ -432,7 +451,8 @@ describe('Teste end to end', () => {
                     },
                     "remainingAmount": {
                         "value": 0
-                    }
+                    },
+                    "disbursed": true
                 }
             ],
             "loockedForNewMembers": false,

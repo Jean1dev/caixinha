@@ -1,8 +1,12 @@
 const middleware = require('../utils/middleware')
 const { Box, Deposit, Member } = require('caixinha-core/dist/src')
-const { connect, getByIdOrThrow, replaceDocumentById, insertDocument } = require('../v2/mongo-operations')
+const { connect, getByIdOrThrow, replaceDocumentById, insertDocument, withTransaction = async work => work() } = require('../v2/mongo-operations')
 const { resolveCircularStructureBSON } = require('../utils')
 const dispatchEvent = require('../amqp/events')
+const { appendLedgerEntry } = require('../v2/ledger-operations')
+const { ENTRY_TYPES } = require('../v2/balance-ledger')
+const { toCents } = require('../utils/money')
+const { randomUUID } = require('crypto')
 
 async function deposito(_context, req) {
     const { caixinhaId, valor, name, email, comprovante } = req.body
@@ -10,20 +14,24 @@ async function deposito(_context, req) {
     const valorNumber = Number(valor)
 
     await connect()
-    const boxEntity = await getByIdOrThrow(caixinhaId, collection)
-    const box = Box.fromJson(boxEntity)
-    const deposit = new Deposit({
-        value: valorNumber,
-        member: Member.build({ name, email })
+    const operationId = `deposit:${randomUUID()}`
+    const deposit = await withTransaction(async session => {
+        const boxEntity = await getByIdOrThrow(caixinhaId, collection, { session })
+        const box = Box.fromJson(boxEntity)
+        const deposit = new Deposit({ value: valorNumber, member: Member.build({ name, email }) })
+        if (comprovante) deposit.addProofReceipt(comprovante)
+        box.deposit(deposit)
+        const document = resolveCircularStructureBSON(box)
+        await appendLedgerEntry(boxEntity, document, {
+            operationId, type: ENTRY_TYPES.DEPOSIT,
+            cashDeltaCents: toCents(valorNumber), reservedDeltaCents: 0, occurredAt: new Date()
+        }, session)
+        await replaceDocumentById(caixinhaId, collection, document, {
+            expectedVersion: boxEntity._version, session
+        })
+        await insertDocument('depositos', { idCaixinha: boxEntity._id, ...deposit }, { session })
+        return deposit
     })
-
-    if (comprovante) {
-        deposit.addProofReceipt(comprovante)
-    }
-
-    box.deposit(deposit)
-    await replaceDocumentById(caixinhaId, collection, resolveCircularStructureBSON(box))
-    await insertDocument('depositos', { idCaixinha: boxEntity._id, ...deposit })
 
     const events = [
         {
