@@ -3,7 +3,6 @@
   "version": "1.0.0",
   "description": "",
   "scripts": {
-    "postinstall": "patch-package",
     "start": "func start",
     "test": "jest --forceExit --detectOpenHandles",
     "coverage": "jest --coverage",
@@ -14,7 +13,7 @@
   "dependencies": {
     "@sentry/node": "^7.54.0",
     "amqplib": "^0.10.3",
-    "caixinha-core": "1.2.4",
+    "caixinha-core": "1.2.5",
     "moment": "^2.29.4",
     "mongodb": "^5.4.0"
   },
@@ -22,7 +21,6 @@
     "axios": "^1.18.0",
     "jest": "^29.5.0",
     "mongodb-memory-server": "^9.0.1",
-    "patch-package": "^8.0.1",
     "pdfkit": "^0.15.0"
   }
 }
