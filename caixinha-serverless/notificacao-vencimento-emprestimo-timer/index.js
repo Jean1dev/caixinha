@@ -1,16 +1,22 @@
 const { connect, find } = require('../v2/mongo-operations')
 const dispatchEvent = require('../amqp/events')
 const { calculateLoanSchedule, DEFAULT_TIME_ZONE, formatDate } = require('../utils/loan-schedule')
+const { toCents, fromCents } = require('../utils/money')
 
-function reminderMessage(name, dueDate, daysUntilDue) {
+function formatBRL(value) {
+    return `R$ ${value.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`
+}
+
+function reminderMessage(name, dueDate, daysUntilDue, pendingValue) {
     const formattedDate = formatDate(dueDate, DEFAULT_TIME_ZONE)
+    const pending = pendingValue == null ? '' : `, valor pendente ${formatBRL(pendingValue)}`
     if (daysUntilDue < 0) {
-        return `${name}, seu emprestimo esta atrasado desde ${formattedDate}`
+        return `${name}, seu emprestimo esta atrasado desde ${formattedDate}${pending}`
     }
     if (daysUntilDue === 0) {
-        return `${name}, seu emprestimo vence hoje, ${formattedDate}`
+        return `${name}, seu emprestimo vence hoje, ${formattedDate}${pending}`
     }
-    return `${name}, seu emprestimo vence em ${daysUntilDue} dia(s), em ${formattedDate}`
+    return `${name}, seu emprestimo vence em ${daysUntilDue} dia(s), em ${formattedDate}${pending}`
 }
 
 async function enviarEvento(loan, nextInstallment) {
@@ -18,7 +24,8 @@ async function enviarEvento(loan, nextInstallment) {
     const email = loan.member?.email || loan.member?._email
     if (!name || !email) return false
 
-    const message = reminderMessage(name, nextInstallment.billingDate, nextInstallment.daysUntilDue)
+    const pendingValue = fromCents(toCents(nextInstallment.value) - toCents(nextInstallment.paidAmount))
+    const message = reminderMessage(name, nextInstallment.billingDate, nextInstallment.daysUntilDue, pendingValue)
     await dispatchEvent([
         {
             type: 'NOTIFICACAO',

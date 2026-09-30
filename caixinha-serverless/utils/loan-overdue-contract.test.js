@@ -47,7 +47,9 @@ describe('loan overdue definition contract', () => {
     it.each([
         { name: 'unpaid overdue installment', paid: 0, expected: true },
         { name: 'partially paid overdue installment', paid: 100, expected: true },
-        { name: 'overdue installment fully covered', paid: 150, expected: false }
+        { name: 'overdue installment fully covered', paid: 150, expected: false },
+        { name: 'overdue installment short within the cent tolerance', paid: 149.22, expected: false },
+        { name: 'overdue installment short beyond the cent tolerance', paid: 148.99, expected: true }
     ])('keeps core and presentation schedule aligned for $name', ({ paid, expected }) => {
         const { domainLoan, scheduleLoan } = buildLoan({
             billingDates: [overdueDate, futureDate],
@@ -68,5 +70,15 @@ describe('loan overdue definition contract', () => {
 
         expect(domainLoan.calculateOverdueDays(now)).toBe(0)
         expect(calculateLoanSchedule(scheduleLoan, { now }).isOverdue).toBe(false)
+    })
+
+    it('requires the full remaining amount on an overdue last installment in both implementations', () => {
+        const { domainLoan, scheduleLoan } = buildLoan({
+            billingDates: [new Date(now.getTime() - 40 * DAY_IN_MS), overdueDate],
+            paid: 299.22
+        })
+
+        expect(domainLoan.calculateOverdueDays(now)).toBeGreaterThan(0)
+        expect(calculateLoanSchedule(scheduleLoan, { now }).isOverdue).toBe(true)
     })
 })

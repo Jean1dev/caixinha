@@ -47,6 +47,43 @@ describe('calculateLoanSchedule', () => {
         expect(result.installments.reduce((sum, item) => sum + item.value, 0)).toBeCloseTo(3182.61, 2)
     })
 
+    it('treats an installment paid within the cent tolerance as paid, keeping the difference outstanding', () => {
+        const renegotiatedLoan = {
+            totalValue: { value: 1478.87808 },
+            installments: 5,
+            billingDates: [
+                '2026-09-28T22:20:00.461Z',
+                '2026-10-28T22:20:00.461Z',
+                '2026-11-27T22:20:00.461Z',
+                '2026-12-27T22:20:00.461Z',
+                '2027-01-26T22:20:00.461Z'
+            ],
+            payments: [payment(295)]
+        }
+
+        const result = calculateLoanSchedule(renegotiatedLoan, { now: atNoonUtc('2026-09-30') })
+
+        expect(result.isOverdue).toBe(false)
+        expect(result.installments[0]).toMatchObject({ value: 295.78, paidAmount: 295, status: 'paid' })
+        expect(result.paidInstallments).toBe(1)
+        expect(result.nextBillingDate).toBe('2026-10-28T22:20:00.461Z')
+        expect(result.remainingAmount).toBe(1183.88)
+    })
+
+    it('keeps an installment short by more than the cent tolerance overdue', () => {
+        const result = calculateLoanSchedule(loan({ payments: [payment(98.99)] }), { now: atNoonUtc('2026-05-02') })
+
+        expect(result.installments[0]).toMatchObject({ paidAmount: 98.99, status: 'overdue' })
+        expect(result.isOverdue).toBe(true)
+    })
+
+    it('requires the full amount on the last installment', () => {
+        const result = calculateLoanSchedule(loan({ payments: [payment(399.5)] }), { now: atNoonUtc('2026-08-02') })
+
+        expect(result.installments[3]).toMatchObject({ paidAmount: 99.5, status: 'overdue' })
+        expect(result.isOverdue).toBe(true)
+    })
+
     it('treats a non-installment loan as one installment', () => {
         const result = calculateLoanSchedule(loan({
             installments: 0,

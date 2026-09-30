@@ -34,6 +34,11 @@ export const PagamentoEmprestimo = ({ data }: { data: IProps }) => {
     const [blockButtons, setBlockButtons] = useState(false)
 
     const [valor, setValor] = useState(() => {
+        const proximaParcela = data.emprestimo.billingDates?.find(parcela => parcela.status && parcela.status !== 'paid')
+        if (proximaParcela?.valor != null) {
+            return Math.round((proximaParcela.valor - (proximaParcela.paidAmount ?? 0)) * 100) / 100
+        }
+
         if (data.emprestimo.totalValue) {
             return data.emprestimo.totalValue
         }
