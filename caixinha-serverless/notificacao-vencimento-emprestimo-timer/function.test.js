@@ -78,6 +78,19 @@ describe('notificacao-vencimento-emprestimo-timer', () => {
         expect(mockDispatch.mock.calls[0][0][0].data.message).toContain('13/08/2026')
     })
 
+    it('includes the outstanding amount of the installment in the reminder', async () => {
+        await runAt('2026-08-14', [makeLoan({ payments: [payment(50)] })])
+
+        expect(mockDispatch.mock.calls[0][0][0].data.message).toContain('valor pendente R$ 50,00')
+        expect(mockDispatch.mock.calls[0][0][1].data.message).toContain('valor pendente R$ 50,00')
+    })
+
+    it('does not notify an overdue installment paid within the cent tolerance', async () => {
+        await runAt('2026-08-14', [makeLoan({ payments: [payment(99.22)] })])
+
+        expect(mockDispatch).not.toHaveBeenCalled()
+    })
+
     it('does not notify paid-off or unapproved loans', async () => {
         await runAt('2026-08-14', [
             makeLoan({ uid: 'paid', isPaidOff: true }),

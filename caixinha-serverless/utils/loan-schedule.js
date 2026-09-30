@@ -1,3 +1,5 @@
+const { INSTALLMENT_SHORTFALL_TOLERANCE_IN_CENTS } = require('caixinha-core/dist/src')
+
 const DEFAULT_TIME_ZONE = 'America/Sao_Paulo'
 const DAY_IN_MS = 24 * 60 * 60 * 1000
 
@@ -79,7 +81,9 @@ function calculateLoanSchedule(loan, options = {}) {
 
         const billingDate = dates[index]?.data || dates[index] || null
         const dueDay = billingDate == null ? null : dayNumber(billingDate, timeZone)
-        const fullyPaid = paidAmountCents >= valueCents
+        const fullyPaid = isLast
+            ? paidAmountCents >= valueCents
+            : paidAmountCents >= valueCents - INSTALLMENT_SHORTFALL_TOLERANCE_IN_CENTS
         const overdue = !fullyPaid && dueDay != null && today != null && dueDay < today
         const status = fullyPaid
             ? 'paid'

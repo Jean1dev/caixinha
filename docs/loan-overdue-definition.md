@@ -6,6 +6,7 @@ Um empréstimo está atrasado quando a primeira parcela ainda não integralmente
 
 - Pagamentos são alocados cronologicamente, começando pela parcela mais antiga.
 - Uma parcela parcialmente paga continua sendo a próxima parcela não quitada.
+- Tolerância de centavos: uma parcela que não é a última é considerada paga quando falta no máximo R$ 1,00 (`INSTALLMENT_SHORTFALL_TOLERANCE_IN_CENTS`, exportada pelo `caixinha-core`). A diferença continua no saldo devedor e é cobrada na última parcela, que só é quitada com o valor integral restante.
 - Parcelas futuras não anulam o atraso de uma parcela anterior.
 - Uma parcela que vence hoje ainda está em dia; o atraso começa no próximo dia civil.
 - Empréstimos integralmente quitados não estão atrasados.
