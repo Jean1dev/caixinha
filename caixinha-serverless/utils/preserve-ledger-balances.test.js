@@ -34,6 +34,7 @@ describe('preserveLedgerBalances', () => {
         const serialized = { currentBalance: { value: 999 } }
         const boxEntity = {
             _id: 'box-1',
+            _version: 7,
             balances: {
                 ledgerActive: true,
                 availableBalanceCents: 165453,
@@ -48,5 +49,6 @@ describe('preserveLedgerBalances', () => {
         expect(serialized.balances).toEqual(boxEntity.balances)
         expect(serialized.currentBalance.value).toBe(1654.53)
         expect(serialized._id).toBe('box-1')
+        expect(serialized._version).toBe(7)
     })
 })

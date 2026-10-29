@@ -21,8 +21,11 @@ jest.mock('../v2/mongo-operations.js', () => {
             const result = fs.readFileSync(`${collection}.json`)
             return JSON.parse(result)
         },
-        replaceDocumentById: function (id, fileName, document) {
+        replaceDocumentById: function (id, fileName, document, options = {}) {
             const fs = require('fs')
+            if (Object.prototype.hasOwnProperty.call(options, 'expectedVersion')) {
+                document._version = (options.expectedVersion || 0) + 1
+            }
             fs.writeFileSync(`${fileName}.json`, JSON.stringify(document))
         },
         upsert: function (collection, document, filter) {
@@ -119,7 +122,16 @@ describe('Teste end to end', () => {
             "deposits": [],
             "loans": [],
             "loockedForNewMembers": false,
-            "name": "e2e-test"
+            "name": "e2e-test",
+            "balances": {
+                "ledgerActive": true,
+                "balanceVersion": 0,
+                "cashBalanceCents": 0,
+                "reservedBalanceCents": 0,
+                "availableBalanceCents": 0
+            },
+            "_version": 2,
+            "_id": "646e588a78404a6458745770"
         }).toStrictEqual(JSON.parse(result))
 
 
@@ -164,7 +176,16 @@ describe('Teste end to end', () => {
             ],
             "loans": [],
             "loockedForNewMembers": false,
-            "name": "e2e-test"
+            "name": "e2e-test",
+            "balances": {
+                "ledgerActive": true,
+                "balanceVersion": 1,
+                "cashBalanceCents": 2500,
+                "reservedBalanceCents": 0,
+                "availableBalanceCents": 2500
+            },
+            "_version": 3,
+            "_id": "646e588a78404a6458745770"
         }).toStrictEqual(result)
 
 
@@ -198,7 +219,7 @@ describe('Teste end to end', () => {
                 }
             ],
             "currentBalance": {
-                "value": 25
+                "value": 20
             },
             "deposits": [
                 {
@@ -256,7 +277,16 @@ describe('Teste end to end', () => {
                 }
             ],
             "loockedForNewMembers": false,
-            "name": "e2e-test"
+            "name": "e2e-test",
+            "balances": {
+                "ledgerActive": true,
+                "balanceVersion": 2,
+                "cashBalanceCents": 2500,
+                "reservedBalanceCents": 500,
+                "availableBalanceCents": 2000
+            },
+            "_version": 4,
+            "_id": "646e588a78404a6458745770"
         }).toStrictEqual(result)
 
         /**
@@ -350,7 +380,16 @@ describe('Teste end to end', () => {
                 }
             ],
             "loockedForNewMembers": false,
-            "name": "e2e-test"
+            "name": "e2e-test",
+            "balances": {
+                "ledgerActive": true,
+                "balanceVersion": 3,
+                "cashBalanceCents": 2000,
+                "reservedBalanceCents": 0,
+                "availableBalanceCents": 2000
+            },
+            "_version": 5,
+            "_id": "646e588a78404a6458745770"
         }).toStrictEqual(result)
 
         // 1 membro pagar o emprestimo
@@ -456,7 +495,16 @@ describe('Teste end to end', () => {
                 }
             ],
             "loockedForNewMembers": false,
-            "name": "e2e-test"
+            "name": "e2e-test",
+            "balances": {
+                "ledgerActive": true,
+                "balanceVersion": 4,
+                "cashBalanceCents": 2510,
+                "reservedBalanceCents": 0,
+                "availableBalanceCents": 2510
+            },
+            "_version": 6,
+            "_id": "646e588a78404a6458745770"
         }).toStrictEqual(result)
     })
 
