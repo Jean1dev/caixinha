@@ -1,6 +1,6 @@
 const { Member, Box } = require('caixinha-core/dist/src')
 const middleware = require('../utils/middleware')
-const { resolveCircularStructureBSON } = require('../utils/')
+const { resolveCircularStructureBSON, preserveLedgerBalances } = require('../utils/')
 const { connect, getByIdOrThrow, replaceDocumentById } = require('../v2/mongo-operations')
 
 async function handle(_context, req) {
@@ -11,9 +11,14 @@ async function handle(_context, req) {
         email
     })
 
-    const caixinha = Box.fromJson(await getByIdOrThrow(caixinhaID))
+    const boxEntity = await getByIdOrThrow(caixinhaID)
+    const caixinha = Box.fromJson(boxEntity)
     caixinha.removeMember(member)
-    await replaceDocumentById(caixinhaID, 'caixinhas', resolveCircularStructureBSON(caixinha))
+    const document = resolveCircularStructureBSON(caixinha)
+    preserveLedgerBalances(document, boxEntity)
+    await replaceDocumentById(caixinhaID, 'caixinhas', document, {
+        expectedVersion: boxEntity._version
+    })
 }
 
 module.exports = async (context, req) => await middleware(context, req, handle)

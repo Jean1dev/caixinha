@@ -1,4 +1,4 @@
-const { resolveCircularStructureBSON } = require("../utils");
+const { resolveCircularStructureBSON, preserveLedgerBalances } = require("../utils");
 const { getDocumentById, insertDocument, replaceDocumentById, connect } = require("../v2/mongo-operations")
 const { Box } = require("caixinha-core/dist/src");
 
@@ -17,6 +17,7 @@ async function flip() {
     const caixinhaObject = Box.fromJson(caixinha)
     caixinhaObject.flipLock()
     const replacedDocument = resolveCircularStructureBSON(caixinhaObject)
+    preserveLedgerBalances(replacedDocument, caixinha)
     await replaceDocumentById(idCaixinha, 'caixinhas', replacedDocument)
 }
 

@@ -86,4 +86,69 @@ describe('Renegociacao teste test', () => {
         expect(caixinhaAtualizada.loans[0].installments).toBe(2)
         expect(caixinhaAtualizada.loans[0].uid).toBe(reneg.newLoan.uid)
     }, 30000)
+
+    it('preserva balances.ledgerActive ao renegociar', async () => {
+        const member = new Member('joao')
+        const box = new Box()
+        box.joinMember(member)
+        box['currentBalance'] = { value: 500 }
+        const input = {
+            approved: true,
+            member,
+            date: getDataMenosXDias(31).toString(),
+            totalValue: { value: 10 },
+            valueRequested: { value: 10 },
+            remainingAmount: { value: 10 },
+            fees: { value: 0 },
+            interest: { value: 0 },
+            box,
+            description: 'fake',
+            approvals: 1,
+            memberName: member.memberName,
+            requiredNumberOfApprovals: 0,
+            billingDates: [getDataMenosXDias(31).toString()],
+            uid: 'uid-ledger',
+            listOfMembersWhoHaveAlreadyApproved: [member],
+            payments: []
+        }
+
+        box['loans'] = [Loan.fromBox(input)]
+        const { id } = await saveAndReturnCaixinhaIds(box)
+        const { replaceDocumentById } = require('../v2/mongo-operations')
+        const persisted = await getByIdOrThrow(id, 'caixinhas')
+        persisted.balances = {
+            ledgerActive: true,
+            balanceVersion: 2,
+            cashBalanceCents: 50000,
+            reservedBalanceCents: 0,
+            availableBalanceCents: 50000
+        }
+        persisted.currentBalance = { value: 500 }
+        await replaceDocumentById(id, 'caixinhas', persisted)
+
+        delete box['loans'][0]['box']
+        await insertDocument('emprestimos', box['loans'][0])
+        const { insertedId: renegociacaoId } = await insertDocument('renegociacoes', {
+            oldLoan: box['loans'][0],
+            status: 'PENDING',
+            delayedDays: 62,
+            createdAt: new Date(),
+            boxId: id
+        })
+
+        await Func({ log: jest.fn() }, {
+            body: { renegociacaoId, valorProposta: 25, parcelas: 2 }
+        })
+
+        const caixinhaAtualizada = await getByIdOrThrow(id, 'caixinhas')
+        expect(caixinhaAtualizada.balances).toEqual(expect.objectContaining({
+            ledgerActive: true,
+            availableBalanceCents: 50000,
+            cashBalanceCents: 50000
+        }))
+        expect(caixinhaAtualizada.currentBalance.value).toBe(500)
+
+        const ledger = await find('caixinha_ledger', { boxId: caixinhaAtualizada._id })
+        expect(ledger.some(entry => entry.type === 'RENEGOTIATION')).toBe(true)
+    }, 30000)
 })

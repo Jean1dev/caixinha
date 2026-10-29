@@ -1,4 +1,4 @@
-const { resolveCircularStructureBSON } = require('../utils')
+const { resolveCircularStructureBSON, preserveLedgerBalances } = require('../utils')
 const middleware = require('../utils/middleware')
 const { connect, getByIdOrThrow, replaceDocumentById } = require('../v2/mongo-operations')
 const { Box } = require('caixinha-core/dist/src')
@@ -12,7 +12,8 @@ async function addChavePix(_context, req) {
     } = req.body
 
     await connect()
-    const box = Box.fromJson(await getByIdOrThrow(caixinhaId))
+    const boxEntity = await getByIdOrThrow(caixinhaId)
+    const box = Box.fromJson(boxEntity)
 
     if (replace) {
         box['bankAccount'] = null
@@ -20,7 +21,11 @@ async function addChavePix(_context, req) {
     
     box.addBankAccount(key, url)
 
-    await replaceDocumentById(caixinhaId, 'caixinhas', resolveCircularStructureBSON(box))
+    const document = resolveCircularStructureBSON(box)
+    preserveLedgerBalances(document, boxEntity)
+    await replaceDocumentById(caixinhaId, 'caixinhas', document, {
+        expectedVersion: boxEntity._version
+    })
 }
 
 module.exports = async (context, req) => await middleware(context, req, addChavePix)

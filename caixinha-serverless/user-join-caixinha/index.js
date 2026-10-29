@@ -1,4 +1,4 @@
-const { resolveCircularStructureBSON } = require('../utils')
+const { resolveCircularStructureBSON, preserveLedgerBalances } = require('../utils')
 const middleware = require('../utils/middleware')
 const { Member, Box } = require('caixinha-core/dist/src')
 const { connect, replaceDocumentById, getByIdOrThrow } = require('../v2/mongo-operations')
@@ -15,7 +15,11 @@ async function joinCaixinha(_context, req) {
     const box = Box.fromJson(boxEntity)
     box.joinMember(member)
 
-    await replaceDocumentById(boxEntity._id, caixinhaCollection, resolveCircularStructureBSON(box))
+    const document = resolveCircularStructureBSON(box)
+    preserveLedgerBalances(document, boxEntity)
+    await replaceDocumentById(boxEntity._id, caixinhaCollection, document, {
+        expectedVersion: boxEntity._version
+    })
 }
 
 module.exports = async (context, req) => await middleware(context, req, joinCaixinha)
