@@ -1,5 +1,5 @@
 const { Box } = require('caixinha-core/dist/src')
-const { resolveCircularStructureBSON } = require('../utils')
+const { resolveCircularStructureBSON, preserveLedgerBalances } = require('../utils')
 const middleware = require('../utils/middleware')
 const { connect, getByIdOrThrow, replaceDocumentById, withTransaction = async work => work() } = require('../v2/mongo-operations')
 const dispatchEvent = require('../amqp/events')
@@ -24,6 +24,7 @@ async function addRendimento(context, req) {
                 reservedDeltaCents: 0,
                 occurredAt: new Date()
             }, session)
+            preserveLedgerBalances(document, boxEntity)
             await replaceDocumentById(iterator.id, 'caixinhas', document, { expectedVersion: boxEntity._version, session })
             return caixinha
         })

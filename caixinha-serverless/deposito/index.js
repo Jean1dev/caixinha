@@ -1,7 +1,7 @@
 const middleware = require('../utils/middleware')
 const { Box, Deposit, Member } = require('caixinha-core/dist/src')
 const { connect, getByIdOrThrow, replaceDocumentById, insertDocument, withTransaction = async work => work() } = require('../v2/mongo-operations')
-const { resolveCircularStructureBSON } = require('../utils')
+const { resolveCircularStructureBSON, preserveLedgerBalances } = require('../utils')
 const dispatchEvent = require('../amqp/events')
 const { appendLedgerEntry } = require('../v2/ledger-operations')
 const { ENTRY_TYPES } = require('../v2/balance-ledger')
@@ -26,6 +26,7 @@ async function deposito(_context, req) {
             operationId, type: ENTRY_TYPES.DEPOSIT,
             cashDeltaCents: toCents(valorNumber), reservedDeltaCents: 0, occurredAt: new Date()
         }, session)
+        preserveLedgerBalances(document, boxEntity)
         await replaceDocumentById(caixinhaId, collection, document, {
             expectedVersion: boxEntity._version, session
         })

@@ -1,5 +1,5 @@
 const middleware = require('../utils/middleware')
-const { resolveCircularStructureBSON } = require('../utils/')
+const { resolveCircularStructureBSON, preserveLedgerBalances } = require('../utils/')
 const { Box, Member, Payment } = require('caixinha-core/dist/src')
 const { connect, getByIdOrThrow, replaceDocumentById, upsert, withTransaction = async work => work() } = require('../v2/mongo-operations')
 const dispatchEvent = require('../amqp/events')
@@ -26,6 +26,7 @@ async function pagamentoEmprestimo(_context, req) {
             operationId, type: ENTRY_TYPES.LOAN_PAYMENT,
             cashDeltaCents: toCents(valor), reservedDeltaCents: 0, occurredAt: new Date()
         }, session)
+        preserveLedgerBalances(document, boxEntity)
         await replaceDocumentById(caixinhaId, collectionName, document, {
             expectedVersion: boxEntity._version, session
         })

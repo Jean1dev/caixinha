@@ -1,5 +1,5 @@
 const middleware = require('../utils/middleware')
-const { resolveCircularStructureBSON } = require('../utils/')
+const { resolveCircularStructureBSON, preserveLedgerBalances } = require('../utils/')
 const { Box, Member } = require('caixinha-core/dist/src')
 const { 
     connect, 
@@ -35,6 +35,7 @@ async function handle(context, req) {
                 occurredAt: new Date()
             }, session)
         }
+        preserveLedgerBalances(document, boxEntity)
         await replaceDocumentById(caixinhaId, 'caixinhas', document, { expectedVersion: boxEntity._version, session })
         await deleteByProjection({ uid: emprestimoUid }, 'emprestimos', { session })
         await insertDocument('emprestimos_removidos', emprestimo, { session })

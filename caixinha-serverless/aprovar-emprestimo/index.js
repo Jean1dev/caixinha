@@ -1,7 +1,7 @@
 const middleware = require('../utils/middleware')
 const { Box, Member } = require('caixinha-core/dist/src')
 const { connect, getByIdOrThrow, replaceDocumentById, upsert, withTransaction = async work => work() } = require('../v2/mongo-operations')
-const { resolveCircularStructureBSON } = require('../utils')
+const { resolveCircularStructureBSON, preserveLedgerBalances } = require('../utils')
 const dispatch = require('../amqp/events')
 const { assertAvailableBalance, getSafeAvailableBalance } = require('../utils/safe-balance')
 const { appendLedgerEntry } = require('../v2/ledger-operations')
@@ -46,6 +46,7 @@ async function aprovarEmprestimo(context, req) {
             }, session)
             await upsert('emprestimos', { approved: true }, { uid: emprestimo.UUID }, { session })
         }
+        preserveLedgerBalances(document, caixinhaEntity)
         await replaceDocumentById(caixinhaEntity._id, collectionName, document, {
             expectedVersion: caixinhaEntity._version, session
         })

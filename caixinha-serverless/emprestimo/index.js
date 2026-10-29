@@ -1,4 +1,4 @@
-const { resolveCircularStructureBSON } = require('../utils')
+const { resolveCircularStructureBSON, preserveLedgerBalances } = require('../utils')
 const middleware = require('../utils/middleware')
 const { Member, Box, Loan } = require('caixinha-core/dist/src')
 const { connect, replaceDocumentById, insertDocument, getByIdOrThrow, withTransaction = async work => work() } = require('../v2/mongo-operations')
@@ -39,6 +39,7 @@ async function emprestimo(context, req) {
             reservedDeltaCents: emprestimo.isApproved ? 0 : toCents(valueRequested),
             occurredAt: new Date()
         }, session)
+        preserveLedgerBalances(document, boxEntity)
         await replaceDocumentById(boxEntity._id, 'caixinhas', document, {
             expectedVersion: boxEntity._version, session
         })
